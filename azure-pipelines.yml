@@ -13,6 +13,7 @@ steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
+    options: --collect 'Code coverage'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.17'
@@ -20,3 +21,9 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+  
+-task: PublishCodeCoverageResults@1
+  inputs:
+      codeCoverageTool: 'JaCoCo' 
+      summaryFileLocation: '**/jacoco.exec'
+      reportDirectory: '**/site/jacoco'
