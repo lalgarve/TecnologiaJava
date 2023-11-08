@@ -19,9 +19,18 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    goals: 'package''jacoco:report'
     codeCoverageToolOption: JaCoCo
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
 - task: PublishCodeCoverageResults@2
   inputs:
     summaryFileLocation: '**/jacoco.exec'
-    reportDirectory: '**/site/jacoco/'
+    pathToSources: '**/site/jacoco/'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: '**/*.jar'
+    publishLocation: 'Container'
