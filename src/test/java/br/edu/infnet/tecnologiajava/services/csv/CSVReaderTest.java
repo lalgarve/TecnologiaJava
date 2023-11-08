@@ -41,11 +41,11 @@ public class CSVReaderTest {
     builder.append(CABECALHO_CORRETO).append('\n')
            .append(LINHA_SIMPLES1).append('\n');
     ByteArrayInputStream bis = new ByteArrayInputStream(builder.toString().getBytes());
-    
-    CSVReader<ModeloTeste> instance = new CSVReader<>(new InputStreamReader(bis), new TestMapper());
-    ModeloTeste esperado = mapaEsperados.get(LINHA_SIMPLES1);
-    ModeloTeste resultado = instance.leDados().findFirst().get();
-    assertEquals(esperado, resultado);
+    try(CSVReader<ModeloTeste> instance = new CSVReader<>(new InputStreamReader(bis), new TestMapper())){
+      ModeloTeste esperado = mapaEsperados.get(LINHA_SIMPLES1);
+      ModeloTeste resultado = instance.leDados().findFirst().get();
+      assertEquals(esperado, resultado);
+    }
   }
 
   private static class ModeloTeste{
