@@ -21,7 +21,7 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
     codeCoverageToolOption: JaCoCo
-- task: PublishCodeCoverageResults@2
+- task: PublishCodeCoverageResults@1
   inputs:
     summaryFileLocation: '**/jacoco.exec'
-    pathToSources: '**/site/jacoco/'
+    reportDirectory: '**/site/jacoco/'
