@@ -15,9 +15,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * O arquivo possui campos separados por vírgula.
- * Linhas vazias são ignoradas.
- * Campos do tipo String podem ter vírgula se o texto estiver entre aspas.
+ * Classe usada para ler arquivos do tipo CSV, ou seja,
+ * arquivo possui campos separados por vírgula.
+ * Formato:
+ * <ul>
+ * <li> Linhas vazias são ignoradas.</li>
+ * <li> Campos do tipo String podem ter vírgula se o texto estiver entre aspas.</li>
+ * <li> Campos sem conteúdo não são suportados.</li>
+ * </ul>
  * 
  * @author leila
  * @param <T> Classe do objeto a ser lido
@@ -34,7 +39,7 @@ public class CSVReader<T> implements AutoCloseable {
   }
 
   /**
-   * Lê os dados do arquivo CSV. Linhas em branco são ignoradas.
+   * Lê os dados do arquivo CSV. 
    * @return uma Stream com os objetos lidos. Se o arquivo está vazio, a stream 
    *    não possui elementos;
    * @throws UncheckedIOException Se houve uma {@link java.io.IOException IOException}
@@ -65,10 +70,15 @@ public class CSVReader<T> implements AutoCloseable {
     }
   }
 
-  private T leCampos(List<String> cabecalho, String linha) {
-    ListIterator<String> iteratorCabecalho = cabecalho.listIterator();
+  private T leCampos(List<String> cabecalho, String linha) {  
     List<String> valores = extraiValores(linha);
-    
+    if(cabecalho.size()!=valores.size()){
+      throw new CSVMapperException(String.format(
+              "Esperados %d valores, foram encontrados %d.", 
+              cabecalho.size(), valores.size()
+      ));
+    }
+    ListIterator<String> iteratorCabecalho = cabecalho.listIterator();
     mapper.reset();
     while (iteratorCabecalho.hasNext()) {
       String valor = valores.get(iteratorCabecalho.nextIndex());
