@@ -24,4 +24,4 @@ steps:
 - task: PublishCodeCoverageResults@2
   inputs:
     summaryFileLocation: '**/jacoco.exec'
-    pathToSources: '**/site/jacoco'
+    pathToSources: '**/site/jacoco/'
