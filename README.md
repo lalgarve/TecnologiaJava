@@ -1,15 +1,15 @@
 # Introdução 
 Projeto para a disciplina Tecnologia Java e Orientação a Objetos [23E4_2]
 
-# Arquitetura 
+# Feature 4 
 
-## Banco de dados
-Um conjunto de produtos será pre-definido e carregado em memória. Para o carregamento
-será construído um serviço para ler arquivos do tipo CSV. Os objetos dos modelo
+## Leitura de um arquivo no formato CSV
+No projeto há três arquivos CSV com dados de produtos. Esses produtos são usados
+para inicializar o banco de dados na memória. Os objetos dos modelo
 serão criadas usando uma versão simplificada do Padrão Builder, através de uma interface
 especificada pelo serviço.
 
-As operações CRUD do banco de dados serão realizadas em memória.
+
 
 
 

@@ -4,7 +4,7 @@ package br.edu.infnet.tecnologiajava.services.csv;
  * Identifica um erro durante o mapeamento dos dados.
  * @author leila
  */
-public class CSVMapperException extends Exception {
+public class CSVMapperException extends RuntimeException {
 
   public CSVMapperException() {
   }
