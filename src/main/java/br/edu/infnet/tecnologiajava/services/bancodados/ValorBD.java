@@ -9,6 +9,7 @@ package br.edu.infnet.tecnologiajava.services.bancodados;
  *
  * @author leila
  */
-public interface ValorBD<T> extends Cloneable{
-  T getChave();
+public interface ValorBD<C>{
+  C getChave();
+  ValorBD<C> getClone();
 }

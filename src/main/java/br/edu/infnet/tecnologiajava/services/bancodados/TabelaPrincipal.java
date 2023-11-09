@@ -1,6 +1,7 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -37,7 +38,7 @@ public class TabelaPrincipal<C, V extends ValorBD<C>> implements TabelaComDepend
   }
 
   @Override
-  public V consultaPorId(C chave) throws BancoDadosException{
+  public Optional<V> consultaPorId(C chave) throws BancoDadosException{
     throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
