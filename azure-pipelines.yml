@@ -21,16 +21,13 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
     codeCoverageToolOption: JaCoCo
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-- task: PublishCodeCoverageResults@2
-  inputs:
-    summaryFileLocation: '**/jacoco.exec'
-    pathToSources: '**/site/jacoco/'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: '**/*.jar'
+    ArtifactName: '*.jar'
     publishLocation: 'Container'
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'JaCoCo' 
+    summaryFileLocation: '**/site/jacoco/jacoco.xml'
+    reportDirectory: '**/site/jacoco/'
