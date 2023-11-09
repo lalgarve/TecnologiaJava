@@ -21,6 +21,11 @@ import java.util.function.Predicate;
 public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
 
   private final Map<C,V> dadosTabela = new HashMap<>();
+  private final String nome;
+  
+  public TabelaImpl(String nome){
+    this.nome = nome;
+  }
   
   @Override
   public void adiciona(V valor) throws BancoDadosException {
@@ -40,15 +45,22 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
     if (valor==null){
       throw new BancoDadosException("A chave "+chave+" não existe na tabela.");
     }
-  }
+  } 
 
   @Override
   public void altera(V valor) throws BancoDadosException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    Objects.requireNonNull(valor, "O valor não pode ser nulo.");
+    Objects.requireNonNull(valor.getChave(), "A chave não pode ser nula.");
+    V valorOriginal = dadosTabela.get(valor.getChave());
+    if(valorOriginal==null){
+      throw new BancoDadosException("Não exite chave "+valor.getChave()+" para ser alterada.");
+    }
+    dadosTabela.put(valor.getChave(), valor);
   }
 
   @Override
   public Optional<V> consultaPorId(C chave) throws BancoDadosException {
+    Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.get(chave);
     valor = valor==null?null:(V)valor.getClone();  
     return Optional.ofNullable(valor);
@@ -56,7 +68,9 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
 
   @Override
   public List<V> getValores() throws BancoDadosException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    return dadosTabela.values().stream()
+            .map((valor) -> (V)valor.getClone())
+            .toList();
   }
 
   @Override
