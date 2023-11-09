@@ -7,19 +7,24 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
+ * Testa se as classe implementaram a interface 
+ * {@link br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD TabelaBD}
+ * corretamente. Os testes são parametrizados para incluir todas as classes.
+ * 
  * @author leila
  */
-public class TabelaImplTest {
+public class TabelaBDTest {
   
   private static List<ValorSemDependente> valoresTeste;
   private static List<ValorSemDependente> valoresTesteMesmaChave;
   
-  public TabelaImplTest() {
+  public TabelaBDTest() {
   }
   
   @BeforeAll
@@ -42,10 +47,11 @@ public class TabelaImplTest {
     
   }
 
-  @Test
-  public void testAdiciona() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testAdiciona(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
     assertTrue(resultado.isPresent());
@@ -53,60 +59,67 @@ public class TabelaImplTest {
     assertFalse(valor==resultado.get(),"Um clone deveria ter sido retornado/");
   }
   
-  @Test
-  public void testAdicionaMesmaChave() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testAdicionaMesmaChave(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
     ValorSemDependente valorMesmaChave = valoresTesteMesmaChave.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     BancoDadosException excecao = assertThrows(BancoDadosException.class, ()->instance.adiciona(valorMesmaChave));
     assertEquals("A chave 0 já existe na tabela.", excecao.getMessage());
   }
   
-  @Test 
-  public void testAdicionaChaveNula() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAdicionaChaveNula(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = new ValorSemDependente();
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.adiciona(valor));
     assertEquals("A chave não pode ser nula.", excecao.getMessage());
   }
   
-  @Test 
-  public void testAdicionaValorNulo() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAdicionaValorNulo(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = null;
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.adiciona(valor));
     assertEquals("O valor não pode ser nulo.", excecao.getMessage());
   }
   
-  @Test
-  public void testRemove() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testRemove(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);    
     instance.removePorId(valor.getChave());
     Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
     assertTrue(resultado.isEmpty());
   }  
 
-  @Test
-  public void testRemoveValorNaoExiste() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testRemoveValorNaoExiste(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> instance.removePorId(0));
     assertEquals("A chave 0 não existe na tabela.", excecao.getMessage());
   }
   
-  @Test
-  public void testRemoveChaveNula() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testRemoveChaveNula(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.removePorId(null));
     assertEquals("A chave não pode ser nula.", excecao.getMessage());
   }  
   
-  @Test
-  public void testAltera() throws Exception{
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAltera(FabricaTabelaBD fabrica) throws Exception{
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0);
     instance.altera(valorAlterado);
@@ -116,54 +129,59 @@ public class TabelaImplTest {
     assertFalse(valor==resultado.get(),"Um clone deveria ter sido retornado/");
   }
   
-  @Test
-  public void testAlteraChaveInexistente() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAlteraChaveInexistente(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela"); 
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela"); 
     BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> instance.altera(valor));
     assertEquals("Não exite chave 0 para ser alterada.", excecao.getMessage());
   }
   
-  @Test
-  public void testAlteraValorNulo() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAlteraValorNulo(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = null;
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela"); 
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela"); 
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.altera(valor));
     assertEquals("O valor não pode ser nulo.", excecao.getMessage());
   }  
 
     
-  @Test
-  public void testAlteraChaveNula() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testAlteraChaveNula(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = new ValorSemDependente();
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela"); 
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela"); 
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.altera(valor));
     assertEquals("A chave não pode ser nula.", excecao.getMessage());
   } 
   
-  @Test
-  public void testConsultaPorIdChaveNula() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testConsultaPorIdChaveNula(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
-    Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
     NullPointerException excecao = assertThrows(NullPointerException.class, () ->  instance.consultaPorId(null));
     assertEquals("A chave não pode ser nula.", excecao.getMessage());
   }
   
  
-  @Test
-  public void testConsultaPorIdChaveNaoExiste() throws Exception {
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testConsultaPorIdChaveNaoExiste(FabricaTabelaBD fabrica) throws Exception {
     ValorSemDependente valor = valoresTeste.get(0);
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave()+1);
     assertTrue(resultado.isEmpty());
   } 
   
-  @Test
-  public void testGetValores() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testGetValores(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     valoresTeste.forEach((valor) -> {
       try {
         instance.adiciona(valor);
@@ -182,16 +200,18 @@ public class TabelaImplTest {
     assertTrue(naoExiste.isEmpty(), "Um valor não é clone encontrado: "+naoExiste.orElse(null));
   }
   
-  @Test
-  public void testGetValoresTabelaVazia() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testGetValoresTabelaVazia(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     List<ValorSemDependente> valores = instance.getValores();
     assertEquals(0, valores.size());
   }
   
-  @Test
-  public void testGetValoresComFiltro() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testGetValoresComFiltro(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     valoresTeste.forEach((valor) -> {
       try {
         instance.adiciona(valor);
@@ -207,6 +227,22 @@ public class TabelaImplTest {
     assertEquals(count, 0);
 
   }
+  
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testGetValoresComFiltroNulo(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
+    valoresTeste.forEach((valor) -> {
+      try {
+        instance.adiciona(valor);
+      } catch (BancoDadosException ex) {
+        fail(ex);
+      }
+    });
+    
+    assertThrows(NullPointerException.class, () -> instance.getValores(null));
+
+  }  
   
   @Test
   public void testGetNome() throws Exception {
