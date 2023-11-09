@@ -1,15 +1,22 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  *
  * @author leila
- * @param <T>
+ * @param <V> classe dos valores armazenados na tabela
+ * @param <C> classe das chaves dos valores armazenados
  */
-public interface TabelaBD<T extends ValorBD> {
+public interface TabelaBD<C, V extends ValorBD<C>> {
   
-  void adiciona(T valor);
-  void removePorId(Object chave);
-  void altera(T valor);
-  void consultaPorId(Object chave);
+  void adiciona(V valor) throws BancoDadosException;
+  void removePorId(C chave) throws BancoDadosException;
+  void altera(V valor) throws BancoDadosException;
+  V consultaPorId(C chave) throws BancoDadosException;
+  List<V> getValores() throws BancoDadosException;
+  List<V> getValores(Predicate<V> filtro) throws BancoDadosException;
+  String getNome();
   
 }
