@@ -24,6 +24,10 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   private final String nome;
   
   public TabelaImpl(String nome){
+    Objects.requireNonNull(nome,"O nome não pode ser nulo.");
+    if(nome.isBlank()){
+      throw new IllegalArgumentException("O nome não pode estar vazio ou em branco.");
+    }
     this.nome = nome;
   }
   
@@ -75,12 +79,15 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
 
   @Override
   public List<V> getValores(Predicate<V> filtro) throws BancoDadosException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    return dadosTabela.values().stream()
+            .filter(filtro)
+            .map((valor) -> (V)valor.getClone())
+            .toList();
   }
 
   @Override
   public String getNome() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    return nome;
   }
   
 }

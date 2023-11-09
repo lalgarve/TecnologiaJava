@@ -4,6 +4,7 @@ package br.edu.infnet.tecnologiajava.services.bancodados;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -186,5 +187,44 @@ public class TabelaImplTest {
     TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
     List<ValorSemDependente> valores = instance.getValores();
     assertEquals(0, valores.size());
+  }
+  
+  @Test
+  public void testGetValoresComFiltro() throws Exception {
+    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    valoresTeste.forEach((valor) -> {
+      try {
+        instance.adiciona(valor);
+      } catch (BancoDadosException ex) {
+        fail(ex);
+      }
+    });
+    Predicate<ValorSemDependente> filtraPares = (valor) -> valor.getId()%2 == 0;
+    
+    List<ValorSemDependente> valores = instance.getValores(filtraPares);
+    assertEquals(3, valores.size());
+    long count = valores.stream().filter(filtraPares.negate()).count();
+    assertEquals(count, 0);
+
+  }
+  
+  @Test
+  public void testGetNome() throws Exception {
+    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+    assertEquals("minhatabela", instance.getNome());
+  }
+  
+    
+  @Test
+  public void testNomeNull() throws Exception {
+    NullPointerException excecao = assertThrows(NullPointerException.class, () -> new TabelaImpl<>(null));
+    assertEquals("O nome não pode ser nulo.", excecao.getMessage());
+  }
+  
+      
+  @Test
+  public void testNomeBlack() throws Exception {
+    IllegalArgumentException excecao = assertThrows(IllegalArgumentException.class, () -> new TabelaImpl<>("  "));
+    assertEquals("O nome não pode estar vazio ou em branco.", excecao.getMessage());
   }
 }
