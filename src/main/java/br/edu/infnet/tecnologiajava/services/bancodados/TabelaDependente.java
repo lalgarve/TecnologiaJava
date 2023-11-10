@@ -33,7 +33,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
   public void removePorId(C chave) throws BancoDadosException{
     Optional<DecoradorValor> decoradorOption = tabelaImpl.consultaPorId(chave);
     if(decoradorOption.map((decorador) -> decorador.estaSendoUsado()).orElse(Boolean.FALSE)){
-      throw new BancoDadosException("O valor está sendo usado com. Chave: "+chave);
+      throw new BancoDadosException("O valor está sendo usado. Chave: "+chave);
     }
     tabelaImpl.removePorId(chave);
   }
@@ -53,7 +53,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     return nome;
   }
   
-  public void adicionaUso(C chave, TabelaBD tabela) throws BancoDadosException{
+  public void adicionaUso(C chave, TabelaBD<?,?> tabela) throws BancoDadosException{
     Optional<DecoradorValor> decoradorOptional = tabelaImpl.consultaPorId(chave);
     if(decoradorOptional.isEmpty()){
       throw new BancoDadosException("A chave não existe: "+chave);
@@ -62,8 +62,12 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     tabelaImpl.altera(decoradorOptional.get());
   }
   
-  public void removeUso(C chave, TabelaBD tabela) throws BancoDadosException{
-    
+  public void removeUso(C chave, TabelaBD<?,?> tabela) throws BancoDadosException{
+    Optional<DecoradorValor> decoradorOptional = tabelaImpl.consultaPorId(chave);
+    if (!decoradorOptional.get().removeUso(tabela)){
+      throw new BancoDadosException(String.format("Não há uso para a chave %s na tabela %s.", chave, tabela.getNome()));
+    }
+    tabelaImpl.altera(decoradorOptional.get());
   }
 
   @Override
@@ -81,7 +85,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
   
   private class DecoradorValor implements ValorBD<C>{
     private final V valor;
-    private Map<TabelaBD, Integer> contador = new HashMap<>();
+    private Map<TabelaBD<?,?>, Integer> contador = new HashMap<>();
     
     DecoradorValor(V valor){
       this.valor = valor;
@@ -100,9 +104,22 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
       return decorador;
     }
 
-    void adicionaUso(TabelaBD tabela){
+    void adicionaUso(TabelaBD<?,?> tabela){
       Integer numeroUsos = contador.getOrDefault(tabela, 0);
       contador.put(tabela, numeroUsos+1);
+    }
+
+    boolean removeUso(TabelaBD<?,?> tabela){
+      Integer numeroUsos = contador.get(tabela);
+      if(numeroUsos==null){
+        return false;
+      }
+      if(numeroUsos==1){
+        contador.remove(tabela);
+      }else{
+        contador.put(tabela, numeroUsos-1);
+      }
+      return true;
     }
     
     boolean estaSendoUsado(){
