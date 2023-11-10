@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
 import java.util.HashMap;
@@ -79,6 +74,7 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
 
   @Override
   public List<V> getValores(Predicate<V> filtro) throws BancoDadosException {
+    Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
     return dadosTabela.values().stream()
             .filter(filtro)
             .map((valor) -> (V)valor.getClone())

@@ -240,27 +240,33 @@ public class TabelaBDTest {
       }
     });
     
-    assertThrows(NullPointerException.class, () -> instance.getValores(null));
-
+    NullPointerException excecao = assertThrows(NullPointerException.class, 
+            () -> instance.getValores(null));
+    assertEquals("O filtro não pode ser nulo.", excecao.getMessage());
   }  
   
-  @Test
-  public void testGetNome() throws Exception {
-    TabelaImpl<Integer, ValorSemDependente> instance = new TabelaImpl<>("minhatabela");
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testGetNome(FabricaTabelaBD fabrica) throws Exception {
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     assertEquals("minhatabela", instance.getNome());
   }
   
     
-  @Test
-  public void testNomeNull() throws Exception {
-    NullPointerException excecao = assertThrows(NullPointerException.class, () -> new TabelaImpl<>(null));
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testNomeNull(FabricaTabelaBD fabrica) throws Exception {
+    NullPointerException excecao = assertThrows(NullPointerException.class, 
+            () -> fabrica.constroiTabela(null));
     assertEquals("O nome não pode ser nulo.", excecao.getMessage());
   }
   
       
-  @Test
-  public void testNomeBlack() throws Exception {
-    IllegalArgumentException excecao = assertThrows(IllegalArgumentException.class, () -> new TabelaImpl<>("  "));
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class)
+  public void testNomeBlack(FabricaTabelaBD fabrica) throws Exception {
+    IllegalArgumentException excecao = assertThrows(IllegalArgumentException.class, 
+            () -> fabrica.constroiTabela("  "));
     assertEquals("O nome não pode estar vazio ou em branco.", excecao.getMessage());
   }
 }

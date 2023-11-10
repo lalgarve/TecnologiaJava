@@ -1,6 +1,7 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -43,7 +44,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
 
   @Override
   public String getNome() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    return nome;
   }
   
   public void adicionaRelacao(TabelaBD tabela) throws BancoDadosException{
@@ -66,6 +67,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
 
   @Override
   public List<V> getValores(Predicate<V> filtro) throws BancoDadosException {
+     Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
      return tabelaImpl.getValores((decorador)->filtro.test(decorador.valor)).stream()
                      .map((decorator) -> decorator.valor).toList();   
   }
