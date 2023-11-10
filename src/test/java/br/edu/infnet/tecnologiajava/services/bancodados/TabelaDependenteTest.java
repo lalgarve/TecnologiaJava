@@ -97,6 +97,27 @@ public class TabelaDependenteTest {
         ), excecao.getMessage());  
   }
 
+  @ParameterizedTest
+  @ValueSource(ints = {0,1,4} )
+  public void testRemoveUsoVariasChamadas(int chave) throws Exception {
+    tabelaDependente.adicionaUso(chave, tabelaRelacao1);
+    tabelaDependente.adicionaUso(chave, tabelaRelacao1);
+    tabelaDependente.adicionaUso(chave, tabelaRelacao1);
+    tabelaDependente.removeUso(chave, tabelaRelacao1);
+    tabelaDependente.removeUso(chave, tabelaRelacao1);
+    tabelaDependente.removeUso(chave, tabelaRelacao1);
+    tabelaDependente.removePorId(chave);
+    Optional<ValorSemDependente> valor = tabelaDependente.consultaPorId(chave);
+    assertTrue(valor.isEmpty(), "Valor deveria ter sido removido");
+  }
+
+  @Test
+  public void testRemoveUsoChaveNula() throws Exception {
+    NullPointerException excecao = assertThrows(NullPointerException.class, 
+            () -> tabelaDependente.removeUso(null, tabelaRelacao1));
+    assertEquals("A chave não pode ser nula.", excecao.getMessage()); 
+  }
+
   private void excecaoRemovePorId(int chave) {
     BancoDadosException excecao = assertThrows(BancoDadosException.class, 
             () -> tabelaDependente.removePorId(chave));
