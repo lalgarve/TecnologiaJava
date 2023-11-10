@@ -40,7 +40,7 @@ public class TabelaBDTest {
       valoresTeste.add(valor);
       
       valor = new ValorSemDependente(i);
-      valor.setDescricao("valor"+i);
+      valor.setDescricao("valorMesmaChave"+i);
       valoresTesteMesmaChave.add(valor);
 
     }

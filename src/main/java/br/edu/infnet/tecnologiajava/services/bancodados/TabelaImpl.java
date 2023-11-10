@@ -61,14 +61,14 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   public Optional<V> consultaPorId(C chave) throws BancoDadosException {
     Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.get(chave);
-    valor = valor==null?null:(V)valor.getClone();  
+    valor = valor==null?null:(V)valor.getDeepClone(true);  
     return Optional.ofNullable(valor);
   }
 
   @Override
   public List<V> getValores() throws BancoDadosException {
     return dadosTabela.values().stream()
-            .map((valor) -> (V)valor.getClone())
+            .map((valor) -> (V)valor.getDeepClone(true))
             .toList();
   }
 
@@ -77,7 +77,7 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
     Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
     return dadosTabela.values().stream()
             .filter(filtro)
-            .map((valor) -> (V)valor.getClone())
+            .map((valor) -> (V)valor.getDeepClone(true))
             .toList();
   }
 
@@ -85,5 +85,27 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   public String getNome() {
     return nome;
   }
-  
+
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 79 * hash + Objects.hashCode(this.nome);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final TabelaImpl<?, ?> other = (TabelaImpl<?, ?>) obj;
+    return Objects.equals(this.nome, other.nome);
+  }
+
 }

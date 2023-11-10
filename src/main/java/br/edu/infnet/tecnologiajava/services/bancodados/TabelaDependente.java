@@ -1,6 +1,8 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -29,6 +31,10 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
 
   @Override
   public void removePorId(C chave) throws BancoDadosException{
+    Optional<DecoradorValor> decoradorOption = tabelaImpl.consultaPorId(chave);
+    if(decoradorOption.map((decorador) -> decorador.estaSendoUsado()).orElse(Boolean.FALSE)){
+      throw new BancoDadosException("O valor está sendo usado com. Chave: "+chave);
+    }
     tabelaImpl.removePorId(chave);
   }
 
@@ -47,15 +53,16 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     return nome;
   }
   
-  public void adicionaRelacao(TabelaBD tabela) throws BancoDadosException{
-    
-  }
-  
   public void adicionaUso(C chave, TabelaBD tabela) throws BancoDadosException{
-    
+    Optional<DecoradorValor> decoradorOptional = tabelaImpl.consultaPorId(chave);
+    if(decoradorOptional.isEmpty()){
+      throw new BancoDadosException("A chave não existe: "+chave);
+    }
+    decoradorOptional.get().adicionaUso(tabela);
+    tabelaImpl.altera(decoradorOptional.get());
   }
   
-  public void removeUso(C chave, TabelaBD tabela){
+  public void removeUso(C chave, TabelaBD tabela) throws BancoDadosException{
     
   }
 
@@ -74,6 +81,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
   
   private class DecoradorValor implements ValorBD<C>{
     private final V valor;
+    private Map<TabelaBD, Integer> contador = new HashMap<>();
     
     DecoradorValor(V valor){
       this.valor = valor;
@@ -85,12 +93,21 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     }
 
     @Override
-    public ValorBD<C> getClone() {
-      V clone = (V) valor.getClone();
-      return new DecoradorValor(clone);
+    public ValorBD<C> getDeepClone(boolean todosCampos) {
+      V clone = (V) valor.getDeepClone(true);
+      DecoradorValor decorador = new DecoradorValor(clone);
+      decorador.contador.putAll(contador);
+      return decorador;
     }
 
+    void adicionaUso(TabelaBD tabela){
+      Integer numeroUsos = contador.getOrDefault(tabela, 0);
+      contador.put(tabela, numeroUsos+1);
+    }
     
+    boolean estaSendoUsado(){
+      return !contador.isEmpty();
+    }
   }
   
 }
