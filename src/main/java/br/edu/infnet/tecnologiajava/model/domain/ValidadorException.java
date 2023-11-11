@@ -5,7 +5,7 @@ public class ValidadorException extends RuntimeException {
     private final Validador validador;
 
     public ValidadorException(String mensagem, Validador validador){
-        super(mensagem+": "+String.join(",", validador.getMensagens()));
+        super(mensagem+": " + validador.getMensagensConcatenadas()+".");
         this.validador = validador;
     }
 

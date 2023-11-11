@@ -2,7 +2,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 
 import java.util.Locale;
 
-public class Bebida extends Produto {
+public final class Bebida extends Produto {
   
   private final boolean gelada;
   private final float tamanho;
@@ -27,6 +27,9 @@ public class Bebida extends Produto {
   private void valida(){
     Validador validador = new Validador();
     super.validaCamposProduto(validador);
+    validador.valida("A marca não pode ser nula", marca!=null);
+    validador.valida("A marca não pode estar em branco", marca==null || !marca.isBlank());
+    validador.valida("O tamanho precisa estar entre 0,1 L e 10 L", tamanho >= 0.1 && tamanho <= 10.0f);
     if(validador.temErro()){
       throw  new ValidadorException("Há campos da bebida inválidos", validador);
     }
@@ -80,10 +83,7 @@ public class Bebida extends Produto {
       return false;
     if (Float.floatToIntBits(tamanho) != Float.floatToIntBits(other.tamanho))
       return false;
-    if (marca == null) {
-      if (other.marca != null)
-        return false;
-    } else if (!marca.equals(other.marca))
+    if (!marca.equals(other.marca))
       return false;
     return super.comparaCamposProduto(other);
   }
