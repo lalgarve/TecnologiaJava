@@ -41,7 +41,7 @@ public class BebidaTest {
             dynamicTest("Igual, instancia diferente", ()-> 
                 assertTrue(bebida.equals(new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f)))),
             dynamicTest("Classe diferente", ()-> 
-                assertFalse(bebida.equals(new Sobremesa("Pudim", 10.5f))))      
+                assertFalse(bebida.equals(new Sobremesa("pudim", true, "sem gosto", 1.0f, 1.0f))))      
         );
 
     }
@@ -57,8 +57,7 @@ public class BebidaTest {
                new Bebida("Cerveja", "Brahma", 1.0f, false, 10.5f).getDetalhe())),
             dynamicTest("Duas casas decimais", () -> 
                assertEquals( "Bebida Cerveja Brahma - 1,0 L - quente",
-               new Bebida("Cerveja", "Brahma", 1.02f, false, 10.5f).getDetalhe()))               
-                
+               new Bebida("Cerveja", "Brahma", 1.02f, false, 10.5f).getDetalhe()))                              
         );
 
     }
@@ -71,7 +70,8 @@ public class BebidaTest {
             dynamicTest("valor", () -> assertEquals(10.5f, bebida.getValor())),
             dynamicTest("codigo", () -> assertEquals(20, bebida.getCodigo())),
             dynamicTest("tamanho", () -> assertEquals(1.0f, bebida.getTamanho())),
-            dynamicTest("marca", () -> assertEquals("Brahma", bebida.getMarca()))
+            dynamicTest("marca", () -> assertEquals("Brahma", bebida.getMarca())),
+            dynamicTest("gelada", () -> assertEquals(true, bebida.isGelada()))
         );
         
     }
