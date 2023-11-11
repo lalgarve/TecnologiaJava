@@ -31,7 +31,8 @@ public final class Sobremesa extends Produto {
         Validador validador = new Validador();
         super.validaCamposProduto(validador);
         validador.valida("A informação não pode ser nula", informacao!=null);
-        validador.valida("A quantidade precisa ser maior que 0", quantidade > 0.0);
+        validador.valida("A informação não pode estar em branco", informacao==null || !informacao.isBlank());
+        validador.valida("A quantidade precisa ser maior que zero", quantidade > 0.0);
         if(validador.temErro()){
           throw  new ValidadorException("Há campos da sobremesa inválidos", validador);
         }

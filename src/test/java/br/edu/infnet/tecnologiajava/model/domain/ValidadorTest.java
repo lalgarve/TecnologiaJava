@@ -47,4 +47,19 @@ public class ValidadorTest {
         assertEquals("mensagem 1, mensagem 2, mensagem 3, mensagem 4", validador.getMensagensConcatenadas());      
     }
 
+    @Test
+    public void testToStringSemErro(){
+        Validador validador = new Validador();
+        mensagens.forEach((mensagem) -> validador.valida(mensagem, true));
+        assertEquals("Validador sem erros.", validador.toString());
+    }
+
+ 
+    @Test
+    public void testToStringComErro(){
+        Validador validador = new Validador();
+        mensagens.forEach((mensagem) -> validador.valida(mensagem, false));
+        assertEquals("Validador com 4 erro(s): mensagem 1, mensagem 2, mensagem 3, mensagem 4.", validador.toString());
+    }   
+
 }

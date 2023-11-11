@@ -31,4 +31,13 @@ public class Validador {
         String primeiraLetra = mensagemOriginal.substring(0, 1).toLowerCase();
         return primeiraLetra + mensagemOriginal.substring(1, mensagemOriginal.length());
     }
+
+    @Override
+    public String toString() {
+        if(temErro()){
+            return String.format("Validador com %d erro(s): %s.", mensagens.size(), getMensagensConcatenadas());
+        }else{
+            return "Validador sem erros.";
+        }
+    }
 }
