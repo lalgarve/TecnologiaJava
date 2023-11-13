@@ -21,8 +21,14 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         podeModificar = true;
     }
 
+    /**
+     * A lista interna é copiada automaticamente caso alguma alteração seja
+     * executada.
+     * 
+     * @param listaASerCopiada
+     */
     public ListaComCopiaSegura(ListaComCopiaSegura<T> listaASerCopiada){
-        lista = Collections.unmodifiableList(listaASerCopiada.lista);
+        lista = listaASerCopiada.lista;
         podeModificar = false;
     }
     
