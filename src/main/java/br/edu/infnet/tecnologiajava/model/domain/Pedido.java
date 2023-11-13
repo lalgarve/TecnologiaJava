@@ -2,11 +2,14 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Pedido {
   private String descricao;
   private LocalDateTime data;
   private boolean web;
+  private List<Produto> produtos = new ArrayList<>();
 
 
   public String getDescricao() {

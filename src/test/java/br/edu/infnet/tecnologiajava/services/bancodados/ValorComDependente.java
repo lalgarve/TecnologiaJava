@@ -3,9 +3,7 @@ package br.edu.infnet.tecnologiajava.services.bancodados;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
+
 public class ValorComDependente implements ValorBD<Integer>{
 
   private final Integer chave;
@@ -16,16 +14,12 @@ public class ValorComDependente implements ValorBD<Integer>{
     valoresDependentes = new ArrayList<>();
   } 
   
-  public ValorComDependente(ValorComDependente aSerCopiado, boolean todosCampos){
+  public ValorComDependente(ValorComDependente aSerCopiado){
     this.chave = aSerCopiado.chave;
-    if(!todosCampos){
-      valoresDependentes = null;
-    } else {
-      valoresDependentes = new ArrayList<>();
-      aSerCopiado.valoresDependentes.forEach(
-              (original) -> valoresDependentes.add(original.getDeepClone(true))
-      );
-    }
+    valoresDependentes = new ArrayList<>();
+    aSerCopiado.valoresDependentes.forEach(
+            (original) -> valoresDependentes.add(original.getInstanciaCopiaSegura())
+    );
   }
   
   @Override
@@ -42,8 +36,8 @@ public class ValorComDependente implements ValorBD<Integer>{
   }
 
   @Override
-  public ValorComDependente getDeepClone(boolean todosCampos) {
-    return new ValorComDependente(this, todosCampos);
+  public ValorComDependente getInstanciaCopiaSegura() {
+    return new ValorComDependente(this);
   }
   
 }

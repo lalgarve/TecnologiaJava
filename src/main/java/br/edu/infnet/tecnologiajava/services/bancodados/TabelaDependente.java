@@ -97,8 +97,8 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     }
 
     @Override
-    public ValorBD<C> getDeepClone(boolean todosCampos) {
-      V clone = (V) valor.getDeepClone(true);
+    public ValorBD<C> getInstanciaCopiaSegura() {
+      V clone = (V) valor.getInstanciaCopiaSegura();
       DecoradorValor decorador = new DecoradorValor(clone);
       decorador.contador.putAll(contador);
       return decorador;

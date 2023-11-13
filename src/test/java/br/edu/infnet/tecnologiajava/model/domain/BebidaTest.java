@@ -19,7 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class BebidaTest {
     @TestFactory
-    public Collection<DynamicTest> testEquals() {
+    public Collection<DynamicTest> testEquals() throws ValidadorException{
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         return Arrays.asList(
             dynamicTest("Codigo diferente", ()->
@@ -50,20 +50,20 @@ public class BebidaTest {
     public Collection<DynamicTest> testGetDetalhes() {
         return Arrays.asList(
             dynamicTest("Bebida gelada", () -> 
-               assertEquals( "Bebida Cerveja Brahma - 1,0 L - gelada",
+               assertEquals( "Bebida Brahma - 1,0 L - gelada",
                new Bebida("Cerveja", "Brahma", 1.0f, true, 10.5f).getDetalhe())),
             dynamicTest("Bebida quente", () -> 
-               assertEquals( "Bebida Cerveja Brahma - 1,0 L - quente",
+               assertEquals( "Bebida Brahma - 1,0 L - quente",
                new Bebida("Cerveja", "Brahma", 1.0f, false, 10.5f).getDetalhe())),
             dynamicTest("Duas casas decimais", () -> 
-               assertEquals( "Bebida Cerveja Brahma - 1,0 L - quente",
+               assertEquals( "Bebida Brahma - 1,0 L - quente",
                new Bebida("Cerveja", "Brahma", 1.02f, false, 10.5f).getDetalhe()))                              
         );
 
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters(){
+    public Collection<DynamicTest> testGetters() throws ValidadorException{
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         return Arrays.asList(
             dynamicTest("nome", () -> assertEquals("Cerveja1", bebida.getNome())),
@@ -77,7 +77,7 @@ public class BebidaTest {
     }
 
     @Test
-    public void testToString() {
+    public void testToString() throws ValidadorException{
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         assertEquals("Bebida: codigo=20, nome=Cerveja1, marca=Brahma, tamanho=1.0, gelada=true, valor=10.50", bebida.toString());
     }

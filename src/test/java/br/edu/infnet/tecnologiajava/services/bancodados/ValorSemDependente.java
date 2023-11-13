@@ -43,7 +43,7 @@ public class ValorSemDependente implements ValorBD<Integer>, Cloneable{
   }
   
   @Override
-  public ValorSemDependente getDeepClone(boolean todosCampos){
+  public ValorSemDependente getInstanciaCopiaSegura(){
     try {
       return (ValorSemDependente) super.clone();
     } catch (CloneNotSupportedException ex) {

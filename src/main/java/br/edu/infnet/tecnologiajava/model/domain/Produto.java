@@ -1,13 +1,28 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
-public abstract sealed class Produto permits Bebida, Sobremesa{
+import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
+
+public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permits Bebida, Sobremesa, Comida{
   
   private static int proximoCodigo = 1;
 
   private final String nome;
   private final float valor;
   private final int codigo;
+  private static final Set<TipoProduto> tiposProdutos; 
+  
+  static{
+    Set<TipoProduto> modificavel = new TreeSet<>();
+    modificavel.add(new TipoProduto("Sobremesa", Sobremesa.class));
+    modificavel.add(new TipoProduto("Bebida", Bebida.class));
+    modificavel.add(new TipoProduto("Comida", Comida.class));
+    tiposProdutos=Collections.unmodifiableSet(modificavel);
+  }
   
   public Produto(final String nome, final float valor, final int codigo) {
     this.nome = nome;
@@ -33,6 +48,21 @@ public abstract sealed class Produto permits Bebida, Sobremesa{
     return codigo;
   }
 
+
+  @Override
+  public Integer getChave(){
+     return codigo;
+  }
+
+  @Override
+  public Produto getInstanciaCopiaSegura(){
+    return this;
+  }
+   
+  public static Set<TipoProduto> getTiposprodutos() {
+    return tiposProdutos;
+  }
+
   public abstract String getDetalhe();
 
   protected boolean comparaCamposProduto(Produto other){        
@@ -51,7 +81,5 @@ public abstract sealed class Produto permits Bebida, Sobremesa{
     validador.valida("O valor precisa ser maior que zero", valor > 0);
     validador.valida("O código precisa ser maior que zero", codigo>0);
   }
-
-  
   
 }

@@ -1,6 +1,6 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  */
 public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
 
-  private final Map<C,V> dadosTabela = new HashMap<>();
+  private final Map<C,V> dadosTabela = new LinkedHashMap<>();
   private final String nome;
   
   public TabelaImpl(String nome){
@@ -61,14 +61,14 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   public Optional<V> consultaPorId(C chave) throws BancoDadosException {
     Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.get(chave);
-    valor = valor==null?null:(V)valor.getDeepClone(true);  
+    valor = valor==null?null:(V)valor.getInstanciaCopiaSegura();  
     return Optional.ofNullable(valor);
   }
 
   @Override
   public List<V> getValores() throws BancoDadosException {
     return dadosTabela.values().stream()
-            .map((valor) -> (V)valor.getDeepClone(true))
+            .map((valor) -> (V)valor.getInstanciaCopiaSegura())
             .toList();
   }
 
@@ -77,7 +77,7 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
     Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
     return dadosTabela.values().stream()
             .filter(filtro)
-            .map((valor) -> (V)valor.getDeepClone(true))
+            .map((valor) -> (V)valor.getInstanciaCopiaSegura())
             .toList();
   }
 

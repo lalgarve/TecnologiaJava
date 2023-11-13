@@ -17,7 +17,7 @@ import org.junit.jupiter.api.function.Executable;
 
 public class SobremesaTest {
     @TestFactory
-    public Collection<DynamicTest> testEquals() {
+    public Collection<DynamicTest> testEquals() throws ValidadorException{
         Sobremesa sobremesa = new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f,1.0f);
         return Arrays.asList(
             dynamicTest("Código diferente", () ->
@@ -44,22 +44,22 @@ public class SobremesaTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetDetalhes() {
+    public Collection<DynamicTest> testGetDetalhes() throws ValidadorException {
         Sobremesa sobremesaDoce = new Sobremesa("Pudim", true, "sem glútem", 1.5f, 10.5f);
         Sobremesa sobremesaSalgada = new Sobremesa("Pudim", false, "sem glútem", 1.5f, 10.5f);
         Sobremesa sobremesaTresCasas = new Sobremesa("Pudim", true, "sem glútem", 1.534f, 10.5f);
         return Arrays.asList(
             dynamicTest("Sobremesa doce", () -> 
-               assertEquals("Sobremesa doce sem glútem - 1,50 Kg", sobremesaDoce.getDetalhe())),
+               assertEquals("doce sem glútem - 1,50 Kg", sobremesaDoce.getDetalhe())),
             dynamicTest("Sobremesa salgada", () -> 
-               assertEquals("Sobremesa salgada sem glútem - 1,50 Kg", sobremesaSalgada.getDetalhe())),
+               assertEquals("salgada sem glútem - 1,50 Kg", sobremesaSalgada.getDetalhe())),
             dynamicTest("Sobremesa doce", () -> 
-               assertEquals("Sobremesa doce sem glútem - 1,53 Kg", sobremesaTresCasas.getDetalhe()))    
+               assertEquals("doce sem glútem - 1,53 Kg", sobremesaTresCasas.getDetalhe()))    
         );
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters(){
+    public Collection<DynamicTest> testGetters() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
         return Arrays.asList(
             dynamicTest("Código", () -> assertEquals(20, sobremesa.getCodigo())),
@@ -72,7 +72,7 @@ public class SobremesaTest {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() throws ValidadorException{
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
         assertEquals("Sobremesa: codigo=20, nome=Pudim, informacao=sem glútem, doce=true, quantidade=1.50, valor=10.50", sobremesa.toString());
     } 

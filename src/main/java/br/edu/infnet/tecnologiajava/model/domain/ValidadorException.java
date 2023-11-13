@@ -1,6 +1,6 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-public class ValidadorException extends RuntimeException {
+public class ValidadorException extends Exception {
 
     private final Validador validador;
 

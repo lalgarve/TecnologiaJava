@@ -11,7 +11,8 @@ public final class Sobremesa extends Produto {
 
     
 
-    public Sobremesa(int codigo, String nome, boolean doce, String informacao, float quantidade, float valor) {
+    public Sobremesa(int codigo, String nome, boolean doce, String informacao, float quantidade, 
+            float valor) throws ValidadorException{
         super(nome, valor, codigo);
         this.doce = doce;
         this.informacao = informacao;
@@ -19,7 +20,8 @@ public final class Sobremesa extends Produto {
         valida();
     }
 
-    public Sobremesa(String nome, boolean doce, String informacao, float quantidade, float valor) {
+    public Sobremesa(String nome, boolean doce, String informacao, float quantidade, 
+            float valor) throws ValidadorException{
         super(nome, valor);
         this.doce = doce;
         this.informacao = informacao;
@@ -27,7 +29,7 @@ public final class Sobremesa extends Produto {
         valida();
     }
 
-    private void valida(){
+    private void valida() throws ValidadorException{
         Validador validador = new Validador();
         super.validaCamposProduto(validador);
         validador.valida("A informação não pode ser nula", informacao!=null);
@@ -53,7 +55,7 @@ public final class Sobremesa extends Produto {
 
     @Override
     public String getDetalhe() {
-        return String.format(Locale.forLanguageTag("PT"), "Sobremesa %s %s - %.2f Kg", 
+        return String.format(Locale.forLanguageTag("PT"), "%s %s - %.2f Kg", 
         doce?"doce":"salgada", informacao, quantidade);
     }
 

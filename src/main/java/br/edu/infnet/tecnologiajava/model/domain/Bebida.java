@@ -8,7 +8,8 @@ public final class Bebida extends Produto {
   private final float tamanho;
   private final String marca;
 
-  public Bebida(int codigo, String nome, String marca, float tamanho, boolean gelada, float valor) {
+  public Bebida(int codigo, String nome, String marca, float tamanho, 
+        boolean gelada, float valor)throws ValidadorException{
     super(nome, valor, codigo);
     this.gelada = gelada;
     this.tamanho = tamanho;
@@ -16,7 +17,8 @@ public final class Bebida extends Produto {
     valida();
   }
 
-  public Bebida(String nome, String marca, float tamanho, boolean gelada, float valor) {
+  public Bebida(String nome, String marca, float tamanho, boolean gelada, 
+        float valor)  throws ValidadorException{
     super(nome, valor);
     this.gelada = gelada;
     this.tamanho = tamanho;
@@ -24,7 +26,7 @@ public final class Bebida extends Produto {
     valida();
   }
 
-  private void valida(){
+  private void valida() throws ValidadorException {
     Validador validador = new Validador();
     super.validaCamposProduto(validador);
     validador.valida("A marca não pode ser nula", marca!=null);
@@ -49,8 +51,8 @@ public final class Bebida extends Produto {
 
   @Override
   public String getDetalhe() {
-    return String.format(Locale.forLanguageTag("PT"), "Bebida %s %s - %.1f L - %s", 
-      getNome(), marca, tamanho, gelada?"gelada":"quente");
+    return String.format(Locale.forLanguageTag("PT"), "Bebida %s - %.1f L - %s", 
+      marca, tamanho, gelada?"gelada":"quente");
   }
 
   @Override
