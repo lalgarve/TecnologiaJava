@@ -21,11 +21,6 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
     codeCoverageToolOption: JaCoCo
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: '*.jar'
-    publishLocation: 'Container'
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo' 
@@ -33,10 +28,5 @@ steps:
     reportDirectory: '**/site/jacoco/'
 - task: CopyFiles@2
   inputs:
-    Contents: '**'
+    Contents: '**/target/*.jar'
     TargetFolder: '$(build.artifactstagingdirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'tecnologiajava'
-    publishLocation: 'Container'

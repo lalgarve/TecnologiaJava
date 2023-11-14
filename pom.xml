@@ -19,16 +19,28 @@
     </properties>
     <repositories>
         <repository>
-            <id>MavenDemo</id>
-            <url>https://pkgs.dev.azure.com//leilaalgarve/Deployo/_packaging/FEED-NAME/maven/v1</url>
+            <id>leilaalgarve</id>
+            <url>https://pkgs.dev.azure.com/leilaalgarve/_packaging/leilaalgarve/maven/v1</url>
             <releases>
-                <enabled>true</enabled>
+              <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>true</enabled>
+              <enabled>true</enabled>
             </snapshots>
-        </repository>
+          </repository>
     </repositories>
+    <distributionManagement>
+        <repository>
+            <id>leilaalgarve</id>
+            <url>https://pkgs.dev.azure.com/leilaalgarve/_packaging/leilaalgarve/maven/v1</url>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>true</enabled>
+            </snapshots>
+          </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
