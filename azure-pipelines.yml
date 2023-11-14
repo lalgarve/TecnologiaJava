@@ -26,7 +26,3 @@ steps:
     codeCoverageTool: 'JaCoCo' 
     summaryFileLocation: '**/site/jacoco/jacoco.xml'
     reportDirectory: '**/site/jacoco/'
-- task: CopyFiles@2
-  inputs:
-    Contents: '**/target/*.jar'
-    TargetFolder: '$(build.artifactstagingdirectory)'
