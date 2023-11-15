@@ -1,7 +1,9 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -10,6 +12,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -76,19 +79,19 @@ public class SolicitanteTest {
                         () -> testValidaCampo("O nome não pode ser nulo", nomeNulo)),
                 dynamicTest("Nome em Branco",
                         () -> testValidaCampo("O nome não pode estar em branco", nomeEmBranco)),
-                 dynamicTest("Email Nulo",
+                dynamicTest("Email Nulo",
                         () -> testValidaCampo("O email não pode ser nulo", emailNulo)),
                 dynamicTest("Email em Branco",
-                        () -> testValidaCampo("O email não pode estar em branco", emailEmBranco)), 
+                        () -> testValidaCampo("O email não pode estar em branco", emailEmBranco)),
                 dynamicTest("Email Sem Arroba",
                         () -> testValidaCampo("O email é inválido", emailSemArroba)),
                 dynamicTest("Email Sem Usuário",
                         () -> testValidaCampo("O email é inválido", emailSemUsuario)),
-                 dynamicTest("Email Duas Arrobas",
+                dynamicTest("Email Duas Arrobas",
                         () -> testValidaCampo("O email é inválido", emailDuasArrobas)),
                 dynamicTest("Email Sem Usuário",
-                        () -> testValidaCampo("O email é inválido", emailDominioInvalido))                                                                        
-                                                                                               
+                        () -> testValidaCampo("O email é inválido", emailDominioInvalido))
+
         );
 
     }
@@ -106,7 +109,52 @@ public class SolicitanteTest {
     private void testValidaCampo(String mensagemEsperada, Executable criaSolicitante) {
         ValidadorException excecao = assertThrows(ValidadorException.class, criaSolicitante);
         assertEquals(mensagemEsperada, excecao.getValidador().getMensagens().get(0));
-        String mensagemExcecao = "Há erros nos dados do solicitante: " + mensagemEsperada+".";
+        String mensagemExcecao = "Há erros nos dados do solicitante: " + mensagemEsperada + ".";
         assertEquals(mensagemExcecao.toLowerCase(), excecao.getMessage().toLowerCase());
     }
+
+    @TestFactory
+    public Collection<DynamicTest> testGetters() throws ValidadorException {
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        return Arrays.asList(
+                dynamicTest("Nome", () -> assertEquals("João", solicitante.getNome())),
+                dynamicTest("email", () -> assertEquals("joao@yahoo.com.br", solicitante.getEmail())),
+                dynamicTest("cpf", () -> assertEquals("062.427.708-90", solicitante.getCPF())));
+    }
+
+    @Test
+    public void testToString() throws ValidadorException {
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        assertEquals("Solicitante: cpf=062.427.708-90, nome=João, email=joao@yahoo.com.br", solicitante.toString());
+    }
+
+    @Test
+    public void testToStringVazio() {
+        assertEquals("Solicitante vazio", Solicitante.getVazio().toString());
+    }
+
+    @TestFactory
+    public Collection<DynamicTest> testEquals() throws ValidadorException{
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        return Arrays.asList(
+            dynamicTest("CPF diferente", 
+               () -> assertFalse(solicitante.equals(new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br")))),
+            dynamicTest("Nome diferente", 
+               () -> assertFalse(solicitante.equals(new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br")))) ,
+            dynamicTest("Email diferente", 
+               () -> assertFalse(solicitante.equals(new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br")))),
+            dynamicTest("Mesma instance", 
+                () -> assertTrue(solicitante.equals(solicitante))),                 
+            dynamicTest("Igual, instancia diferente", 
+                () -> assertTrue(solicitante.equals(new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br")))),
+            dynamicTest("Classe diferente", 
+                () -> assertFalse(solicitante.equals(Boolean.FALSE))),
+            dynamicTest("Instancia Vazia", 
+                () -> assertFalse(solicitante.equals(Solicitante.getVazio()))),
+            dynamicTest("Valor nulo", 
+                () -> assertFalse(solicitante.equals(null)))                                      
+                            
+        );
+    }
+
 }

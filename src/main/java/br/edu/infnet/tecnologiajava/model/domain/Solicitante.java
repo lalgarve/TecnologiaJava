@@ -1,10 +1,6 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
-
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Streams;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
@@ -14,6 +10,7 @@ public class Solicitante implements ValorBD<String>, Imutavel {
     private final String email;
     private final String cpf;
     private final String nome;
+    private static Solicitante vazio;
 
     public Solicitante(String cpf, String nome, String email) throws ValidadorException {
         this.email = email;
@@ -28,11 +25,24 @@ public class Solicitante implements ValorBD<String>, Imutavel {
         }
     }
 
+    private Solicitante(){
+        email="";
+        cpf="";
+        nome="";
+    }
+
+    public static Solicitante getVazio(){
+        if(vazio==null){
+            vazio=new Solicitante();
+        }
+        return vazio;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public String getCpf() {
+    public String getCPF() {
         return cpf;
     }
 
@@ -100,5 +110,44 @@ public class Solicitante implements ValorBD<String>, Imutavel {
     public ValorBD<String> getInstanciaCopiaSegura() {
         return this;
     }
+
+    @Override
+    public String toString(){
+        if(cpf.isBlank()){
+            return "Solicitante vazio";
+        } else {
+            return String.format("Solicitante: cpf=%s, nome=%s, email=%s", cpf, nome, email);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Solicitante other = (Solicitante) obj;
+        if (!email.equals(other.email))
+            return false;
+        if (!cpf.equals(other.cpf))
+            return false;
+        if (!nome.equals(other.nome))
+            return false;
+        return true;
+    }
+
+    
 
 }
