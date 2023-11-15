@@ -68,7 +68,8 @@ public final class Comida extends Produto {
         int result = 1;
         result = prime * result + Float.floatToIntBits(peso);
         result = prime * result + (vegano ? 1231 : 1237);
-        result = prime * result + ((ingredientes == null) ? 0 : ingredientes.hashCode());
+        result = prime * result + ingredientes.hashCode();
+        result = prime * result + super.hashCode();
         return result;
     }
 

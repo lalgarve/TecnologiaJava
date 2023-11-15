@@ -71,8 +71,9 @@ public final class Sobremesa extends Produto {
         final int prime = 31;
         int result = 1;
         result = prime * result + (doce ? 1231 : 1237);
-        result = prime * result + ((informacao == null) ? 0 : informacao.hashCode());
+        result = prime * result + informacao.hashCode();
         result = prime * result + Float.floatToIntBits(quantidade);
+        result = prime * result + super.hashCode();
         return result;
     }
 

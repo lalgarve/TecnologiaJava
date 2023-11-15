@@ -68,8 +68,9 @@ public final class Bebida extends Produto {
     int result = 1;
     result = prime * result + (gelada ? 1231 : 1237);
     result = prime * result + Float.floatToIntBits(tamanho);
-    result = prime * result + ((marca == null) ? 0 : marca.hashCode());
-    return result + super.hashCode();
+    result = prime * result + marca.hashCode();
+    result = prime * result + super.hashCode();
+    return result;
   }
 
   @Override
