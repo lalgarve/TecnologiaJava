@@ -37,9 +37,9 @@ public class SolicitanteTest {
     @ParameterizedTest
     @MethodSource("forneceCPFValido")
     public void testCPFValido(String cpf) {
-        try{
+        try {
             new Solicitante(cpf, "João", "joao@dominio.com.br");
-        }catch(ValidadorException ex){
+        } catch (ValidadorException ex) {
             fail(cpf + " é válido.", ex);
         }
     }
@@ -55,6 +55,44 @@ public class SolicitanteTest {
                 "054.202.451-91", "339.664.423-96");
     }
 
+    @TestFactory
+    public Collection<DynamicTest> testValidacoesSimples() {
+        Executable cpfNulo = () -> new Solicitante(null, "João", "joao@google.com");
+        Executable cpfEmBranco = () -> new Solicitante("   ", "João", "joao@google.com");
+        Executable nomeNulo = () -> new Solicitante("062.427.708-90", null, "joao@google.com");
+        Executable nomeEmBranco = () -> new Solicitante("062.427.708-90", "  ", "joao@google.com");
+        Executable emailNulo = () -> new Solicitante("062.427.708-90", "João", null);
+        Executable emailEmBranco = () -> new Solicitante("062.427.708-90", "João", "  ");
+        Executable emailSemArroba = () -> new Solicitante("062.427.708-90", "João", "joaogmail.com");
+        Executable emailSemUsuario = () -> new Solicitante("062.427.708-90", "João", "@gmail.com");
+        Executable emailDuasArrobas = () -> new Solicitante("062.427.708-90", "João", "joao@@gmail.com");
+        Executable emailDominioInvalido = () -> new Solicitante("062.427.708-90", "João", "joao@gmail");
+        return Arrays.asList(
+                dynamicTest("CPF Nulo",
+                        () -> testValidaCampo("O CPF não pode ser nulo", cpfNulo)),
+                dynamicTest("CPF em Branco",
+                        () -> testValidaCampo("O CPF não pode estar em branco", cpfEmBranco)),
+                dynamicTest("Nome Nulo",
+                        () -> testValidaCampo("O nome não pode ser nulo", nomeNulo)),
+                dynamicTest("Nome em Branco",
+                        () -> testValidaCampo("O nome não pode estar em branco", nomeEmBranco)),
+                 dynamicTest("Email Nulo",
+                        () -> testValidaCampo("O email não pode ser nulo", emailNulo)),
+                dynamicTest("Email em Branco",
+                        () -> testValidaCampo("O email não pode estar em branco", emailEmBranco)), 
+                dynamicTest("Email Sem Arroba",
+                        () -> testValidaCampo("O email é inválido", emailSemArroba)),
+                dynamicTest("Email Sem Usuário",
+                        () -> testValidaCampo("O email é inválido", emailSemUsuario)),
+                 dynamicTest("Email Duas Arrobas",
+                        () -> testValidaCampo("O email é inválido", emailDuasArrobas)),
+                dynamicTest("Email Sem Usuário",
+                        () -> testValidaCampo("O email é inválido", emailDominioInvalido))                                                                        
+                                                                                               
+        );
+
+    }
+
     private void testValidaCPF(String cpf) {
         Executable criaSolicitante = () -> new Solicitante(cpf, "Luiz da Silva", "meuemail@domain.com");
         testValidaCampo("O CPF é inválido", criaSolicitante);
@@ -68,5 +106,7 @@ public class SolicitanteTest {
     private void testValidaCampo(String mensagemEsperada, Executable criaSolicitante) {
         ValidadorException excecao = assertThrows(ValidadorException.class, criaSolicitante);
         assertEquals(mensagemEsperada, excecao.getValidador().getMensagens().get(0));
+        String mensagemExcecao = "Há erros nos dados do solicitante: " + mensagemEsperada+".";
+        assertEquals(mensagemExcecao.toLowerCase(), excecao.getMessage().toLowerCase());
     }
 }
