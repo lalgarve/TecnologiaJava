@@ -87,6 +87,18 @@ public class TabelaBDTest {
     NullPointerException excecao = assertThrows(NullPointerException.class, () -> instance.adiciona(valor));
     assertEquals("O valor não pode ser nulo.", excecao.getMessage());
   }
+
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAdicionaEEditaValorAdicionado(FabricaTabelaBD fabrica) throws Exception {
+    ValorSemDependente valor = new ValorSemDependente(10);
+    valor.setDescricao("valor 1");
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
+    instance.adiciona(valor);
+    valor.setDescricao("Nova descricao");
+    ValorSemDependente valorTabela = instance.consultaPorId(10).get();
+    assertFalse(valorTabela.equals(valor));
+  }
   
   @ParameterizedTest
   @EnumSource(FabricaTabelaBD.class) 
@@ -117,16 +129,31 @@ public class TabelaBDTest {
   
   @ParameterizedTest
   @EnumSource(FabricaTabelaBD.class) 
-  public void testAltera(FabricaTabelaBD fabrica) throws Exception{
+  public void testAlteraEEditaValorAdicionado(FabricaTabelaBD fabrica) throws Exception{
     ValorSemDependente valor = valoresTeste.get(0);
     TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0);
     instance.altera(valorAlterado);
+    
     Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
     assertTrue(resultado.isPresent());
     assertEquals(valorAlterado, resultado.get());
     assertFalse(valor==resultado.get(),"Um clone deveria ter sido retornado/");
+  }
+
+  @ParameterizedTest
+  @EnumSource(FabricaTabelaBD.class) 
+  public void testAltera(FabricaTabelaBD fabrica) throws Exception{
+    ValorSemDependente valor = valoresTeste.get(0);
+    TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
+    instance.adiciona(valor);
+    ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0).getInstanciaCopiaSegura();
+    instance.altera(valorAlterado);
+    valorAlterado.setDescricao("Outra descricao");
+    Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
+    assertTrue(resultado.isPresent());
+    assertFalse(valorAlterado.equals(resultado.get()));
   }
   
   @ParameterizedTest

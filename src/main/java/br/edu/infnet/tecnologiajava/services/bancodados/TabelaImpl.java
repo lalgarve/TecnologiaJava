@@ -34,7 +34,7 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
     if(valorExistente!=null){
       throw new BancoDadosException("A chave "+valor.getChave()+" já existe na tabela.");
     }
-    dadosTabela.put(valor.getChave(), valor);
+    dadosTabela.put(valor.getChave(), (V) valor.getInstanciaCopiaSegura());
   }
 
   @Override
@@ -54,7 +54,7 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
     if(valorOriginal==null){
       throw new BancoDadosException("Não exite chave "+valor.getChave()+" para ser alterada.");
     }
-    dadosTabela.put(valor.getChave(), valor);
+    dadosTabela.put(valor.getChave(), (V) valor.getInstanciaCopiaSegura());
   }
 
   @Override
