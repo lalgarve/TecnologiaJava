@@ -96,10 +96,10 @@ public class Pedido implements ValorBD<Integer> {
   @Override
   public String toString(){
     if(solicitante==Solicitante.getVazio()){
-      return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%d, data=%d b Y H:Mt descricao=%, web=%b, sem solicitante, número produtos=%d, valor total=%.2f",
+      return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, sem solicitante, número produtos=%5$d, valor total=%6$.2f",
         codigo, data, descricao, web, produtos.size(), getValorTotal());
     } else {
-      return String.format("Pedido: codigo=%d, data=%d b Y H:Mt, descricao=%, web=%b, solicitante=%s, número produtos=%d, valor total=%.2f",
+      return String.format("Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, solicitante=%5$s, número produtos=%6$d, valor total=%7$.2f",
         codigo, data, descricao, web, solicitante.getCPF(), produtos.size(), getValorTotal());
     }
   }
@@ -140,8 +140,6 @@ public class Pedido implements ValorBD<Integer> {
       return false;
     return true;
   }
-
-  
 
 
 }

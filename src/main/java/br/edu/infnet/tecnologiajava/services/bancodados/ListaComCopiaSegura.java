@@ -80,10 +80,6 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         return lista.get(arg0);
     }
 
-    public int hashCode() {
-        return lista.hashCode();
-    }
-
     public int indexOf(Object arg0) {
         return lista.indexOf(arg0);
     }
@@ -165,6 +161,38 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
 
     public <C> C[] toArray(IntFunction<C[]> arg0) {
         return lista.toArray(arg0);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + lista.size();
+        result = prime * result + lista.stream().limit(10).parallel().map((valor)->valor.hashCode()).reduce(0,(a,b)->a+b);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ListaComCopiaSegura<?> other = (ListaComCopiaSegura<?>) obj;
+        if (lista != other.lista){
+            if(lista.size() != other.lista.size())
+                return false;
+            for(int i=0; i<lista.size(); i++){
+                if(!lista.get(i).equals(other.lista.get(i)))
+                    return false;
+            }
+        }
+        return true;
     }  
+
+    
+
     
 }
