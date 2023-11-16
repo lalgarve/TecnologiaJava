@@ -4,6 +4,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
@@ -35,6 +36,10 @@ public class Pedido implements ValorBD<Integer> {
     this.data = data;
     this.web = web;
     this.solicitante = solicitante;
+    Validador validador=valida();
+    if(validador.temErro()){
+      throw new ValidadorException("Há erros nos campos do pedido: ", validador);
+    }
   }
 
   public Pedido(Pedido pedido) {
@@ -44,6 +49,16 @@ public class Pedido implements ValorBD<Integer> {
     codigo = pedido.codigo;
     produtos = new ListaComCopiaSegura<>(pedido.produtos);
     solicitante = pedido.solicitante;
+  }
+
+  private Validador valida(){
+    Validador validador = new Validador();
+    validador.valida("O código precisa ser maior que zero", codigo>0);
+    validador.valida("A descrição não pode ser nula", descricao!=null);
+    validador.valida("A descrição não pode estar em branco", descricao==null || !descricao.isBlank());
+    validador.valida("A data não pode ser nula", data != null);
+    validador.valida("O solicitante não pode ser nulo", solicitante != null);
+    return validador;
   }
 
   public String getDescricao() {
@@ -58,6 +73,10 @@ public class Pedido implements ValorBD<Integer> {
     return web;
   }
 
+  public int getCodigo(){
+    return codigo;
+  }
+
   public Stream<Produto> getProdutos(){
      return produtos.stream();
   }
@@ -66,7 +85,8 @@ public class Pedido implements ValorBD<Integer> {
     return solicitante;
   }
 
-  public void setProdutos(List<Produto> produtos) throws ValidadorException{
+  public void setProdutos(List<Produto> produtos){
+    Objects.requireNonNull(produtos, "A lista com produtos não pode ser nula.");
     this.produtos.clear();
     this.produtos.addAll(produtos);
     valorTotal=-1;
