@@ -51,6 +51,10 @@ public class Pedido implements ValorBD<Integer> {
     solicitante = pedido.solicitante;
   }
 
+  public static void inicializaContadorCodigo(){
+    proximoCodigo=1;
+  }
+
   private Validador valida(){
     Validador validador = new Validador();
     validador.valida("O código precisa ser maior que zero", codigo>0);

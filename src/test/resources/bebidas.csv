@@ -1,0 +1,21 @@
+nome,marca,tamanho,preco,gelada
+Coca-Cola,Coca-Cola Company,2,5.99,false
+Guaraná Antártica,Ambev,2,4.99,false
+Fanta Laranja,Coca-Cola Company,2,4.99,false
+Sprite,Coca-Cola Company,2,4.99,false
+Pepsi,PepsiCo,2,5.99,false
+Dolly Guaraná,Dolly,2,3.99,false
+Sukita,Coca-Cola Company,2,4.99,false
+Fanta Uva,Coca-Cola Company,2,4.99,false
+Schweppes Tônica,Schweppes,2,6.99,false
+Fanta Maracujá,Coca-Cola Company,2,4.99,false
+Coca-Cola,Coca-Cola Company,2,6.99,true
+Guaraná Antártica,Ambev,2,5.99,true
+Fanta Laranja,Coca-Cola Company,2,5.99,true
+Sprite,Coca-Cola Company,2,5.99,true
+Pepsi,PepsiCo,2,6.99,true
+Dolly Guaraná,Dolly,2,4.99,true
+Sukita,Coca-Cola Company,2,5.99,true
+Fanta Uva,Coca-Cola Company,2,5.99,true
+Schweppes Tônica,Schweppes,2,7.99,true
+Fanta Maracujá,Coca-Cola Company,2,5.99,true

@@ -1,9 +1,5 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
-
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 
@@ -14,15 +10,6 @@ public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permi
   private final String nome;
   private final float valor;
   private final int codigo;
-  private static final Set<TipoProduto> tiposProdutos; 
-  
-  static{
-    Set<TipoProduto> modificavel = new TreeSet<>();
-    modificavel.add(new TipoProduto("Sobremesa", Sobremesa.class));
-    modificavel.add(new TipoProduto("Bebida", Bebida.class));
-    modificavel.add(new TipoProduto("Comida", Comida.class));
-    tiposProdutos=Collections.unmodifiableSet(modificavel);
-  }
   
   public Produto(final String nome, final float valor, final int codigo) {
     this.nome = nome;
@@ -34,6 +21,10 @@ public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permi
     this.nome = nome;
     this.valor = valor;
     this.codigo = proximoCodigo++;
+  }
+
+  public static void inicializaContadorCodigo(){
+    proximoCodigo=1;
   }
 
   public String getNome() {
@@ -48,7 +39,6 @@ public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permi
     return codigo;
   }
 
-
   @Override
   public Integer getChave(){
      return codigo;
@@ -59,10 +49,6 @@ public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permi
     return this;
   }
    
-  public static Set<TipoProduto> getTiposprodutos() {
-    return tiposProdutos;
-  }
-
   public abstract String getDetalhe();
 
   protected boolean comparaCamposProduto(Produto other){        

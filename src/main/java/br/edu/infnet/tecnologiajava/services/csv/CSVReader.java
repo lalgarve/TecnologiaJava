@@ -64,7 +64,7 @@ public class CSVReader<T> implements AutoCloseable {
 
   private List<String> leCabecalho(String linha) {
     if (linha == null) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     } else {
       return Arrays.asList(linha.split(","));
     }

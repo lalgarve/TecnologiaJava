@@ -209,6 +209,7 @@ public class TabelaBDTest {
   @EnumSource(FabricaTabelaBD.class)
   public void testGetValores(FabricaTabelaBD fabrica) throws Exception {
     TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
+    
     valoresTeste.forEach((valor) -> {
       try {
         instance.adiciona(valor);
@@ -216,15 +217,19 @@ public class TabelaBDTest {
         fail(ex);
       }
     });
+    
     List<ValorSemDependente> valores = instance.getValores();
     assertEquals(valoresTeste.size(), valores.size());
+    
     Optional<ValorSemDependente> naoExiste = valoresTeste.stream().filter((valorTeste) -> !valores.contains(valorTeste)).findFirst();
-    assertTrue(naoExiste.isEmpty(), "Um valor não foi encontrado: "+naoExiste.orElse(null));
+    assertTrue(naoExiste.isEmpty(), "Um valor não foi encontrado: " + naoExiste.orElse(null));
+    
     Optional<ValorSemDependente> naoEClone = valoresTeste.stream().filter((valorTeste) -> {
       int index = valores.indexOf(valorTeste);
-      return valores.get(index) != valorTeste;
+      return valores.get(index) == valorTeste;
     }).findFirst();
-    assertTrue(naoExiste.isEmpty(), "Um valor não é clone encontrado: "+naoExiste.orElse(null));
+    
+    assertTrue(naoEClone.isEmpty(), "Um valor não é clone encontrado: "+naoExiste.orElse(null));
   }
   
   @ParameterizedTest

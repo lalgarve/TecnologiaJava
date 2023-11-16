@@ -383,22 +383,6 @@ public class CSVReaderTest {
       return testModel;
     }
 
-    private int converteInt(String valorComoString) throws CSVMapperException {
-      try {
-        return Integer.parseInt(valorComoString);
-      } catch (NumberFormatException ex) {
-        throw new CSVMapperException("Valor inteiro esperado. Valor recebido: " + valorComoString);
-      }
-    }
-
-    private float converteFloat(String valorComoString) throws CSVMapperException {
-      try {
-        return Float.parseFloat(valorComoString);
-      } catch (NumberFormatException ex) {
-        throw new CSVMapperException("Valor inteiro esperado. Valor recebido: " + valorComoString);
-      }
-    }
-
     @Override
     public void reset() {
       testModel = new ModeloTeste();

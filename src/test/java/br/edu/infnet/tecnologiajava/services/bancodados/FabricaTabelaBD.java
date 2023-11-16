@@ -6,8 +6,8 @@ package br.edu.infnet.tecnologiajava.services.bancodados;
  * @author leila
  */
 public enum FabricaTabelaBD {
-  TABELAIMPL ((nome) -> new TabelaImpl(nome)),
-  TABELA_DEPENDENTE ((nome) -> new TabelaDependente(nome));
+  TABELAIMPL ((nome) -> new TabelaImpl<Integer, ValorSemDependente>(nome)),
+  TABELA_DEPENDENTE ((nome) -> new TabelaDependente<Integer, ValorSemDependente>(nome));
   
   private final FabricaTabela<Integer, ValorSemDependente> fabrica;
   private FabricaTabelaBD(FabricaTabela<Integer, ValorSemDependente> fabrica){
