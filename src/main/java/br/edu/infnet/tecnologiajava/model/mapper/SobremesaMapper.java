@@ -29,7 +29,7 @@ public class SobremesaMapper implements CSVMapper<Sobremesa>{
     @Override
     public void setValor(String campo, String valorComoString) throws CSVMapperException {
         if(camposSetados.contains(campo)){
-            throw new CSVMapperException("Campo já foi setado");
+            throw new CSVMapperException("O campo "+campo+" já foi setado.");
         }
         
         switch (campo) {
