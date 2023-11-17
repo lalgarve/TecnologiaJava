@@ -1,0 +1,16 @@
+nome,ingredientes,peso,valor,vegano
+Arroz com feijão,"Arroz, Feijão",0.5,5.99,true
+Macarrão à bolonhesa,"Macarrão, Carne moída, Molho de tomate",0.5,7.99,false
+Frango assado,"Frango, Batata, Cenoura",1.0,15.99,false
+Lasanha de frango,"Massa de lasanha, Frango, Molho branco, Molho de tomate",1.0,20.99,false
+Sopa de legumes,"Abóbora, Cenoura, Batata, Ervilha",0.5,4.99,true
+Feijoada,"Feijão preto, Carne seca, Linguiça, Arroz",1.0,25.99,false
+Strogonoff de carne,"Carne, Creme de leite, Molho de tomate, Arroz",0.5,12.99,false
+Arroz à grega,"Arroz, Cenoura, Ervilha, Milho, Azeitona",0.5,6.99,true
+Bife à parmegiana,"Bife, Queijo, Molho de tomate, Arroz",0.5,14.99,false
+Torta de frango,"Frango, Massa de torta, Creme de leite, Leite",0.5,10.99,false
+Pão de queijo,"Polvilho, Queijo, Ovo, Leite",0.5,7.99,false
+Coxinha de frango,"Frango, Massa de coxinha, Farinha de rosca, Ovo",0.5,8.99,false
+Risoto de camarão,"Arroz arbóreo, Camarão, Cebola, Tomate",1.0,35.99,false
+Picanha na chapa,"Picanha, Batata frita, Arroz",0.5,22.99,false
+Pizza de calabresa,"Massa de pizza, Queijo, Calabresa, Molho de tomate",0.5,18.99,false

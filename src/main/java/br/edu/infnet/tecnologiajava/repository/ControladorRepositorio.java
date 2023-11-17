@@ -5,9 +5,11 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Iterator;
 
+import br.edu.infnet.tecnologiajava.model.domain.Bebida;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
+import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
 import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
@@ -37,6 +39,22 @@ public class ControladorRepositorio {
         catch(CSVMapperException ex){
             throw new BancoDadosException("Erro nos campos da sobremesa.",ex);
         }
+    }
+
+    public static void carregaBebida(Reader reader) throws BancoDadosException{
+        BebidaMapper mapper = new BebidaMapper();
+        try (CSVReader<Bebida> csvReader = new CSVReader<>(reader, mapper)){        
+            Iterator<Bebida> iterator =  csvReader.leDados().iterator();
+            while(iterator.hasNext()){
+                RepositorioProduto.getInstance().adiciona(iterator.next());
+            }
+        }
+        catch(IOException | UncheckedIOException ex){
+            throw new BancoDadosException("Erro lendo dados da bebida.", ex);
+        }
+        catch(CSVMapperException ex){
+            throw new BancoDadosException("Erro nos campos da bebida.",ex);
+        }        
     }
     
 }

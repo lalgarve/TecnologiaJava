@@ -3,6 +3,7 @@ package br.edu.infnet.tecnologiajava.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,9 @@ public class RepositorioPedidoTest {
         ControladorRepositorio.inicializa();
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
             ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
+        }
+        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/bebida.csv")) {
+            ControladorRepositorio.carregaBebida(new InputStreamReader(is));
         }
     }
 
@@ -64,14 +68,50 @@ public class RepositorioPedidoTest {
         assertEquals(pedido, pedidoBanco);
         assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
-        for(Produto produto:produtos){
-           assertThrows(BancoDadosException.class, () -> repositorioProduto.removePorId(produto.getChave()),
-                "O produto está sendo usado, não poderia ter sido removido.");         
+        for (Produto produto : produtos) {
+            assertThrows(BancoDadosException.class, () -> repositorioProduto.removePorId(produto.getChave()),
+                    "O produto está sendo usado, não poderia ter sido removido.");
         }
     }
 
     @Test
-    void testAltera() {
+    public void testAltera() throws BancoDadosException, ValidadorException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = getAlgunsProdutos(3);
+
+        Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        repositorioPedido.adiciona(pedido);
+
+        List<Produto> novosProdutos = getAlgunsProdutos(2);
+        pedido.setProdutos(novosProdutos);
+        repositorioPedido.altera(pedido);
+
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+
+        assertEquals(pedido, pedidoBanco);
+        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+
+        assertEquals(pedido, pedidoBanco);
+        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+
+        List<Produto> listaPodeDeletar = new ArrayList<>(produtos);
+        listaPodeDeletar.removeAll(novosProdutos);
+
+        for (Produto produto : listaPodeDeletar) {
+            try {
+                repositorioProduto.removePorId(produto.getChave());
+            } catch (BancoDadosException ex) {
+                fail(ex);
+            }
+        }
+
+        for (Produto produto : novosProdutos) {
+            assertThrows(BancoDadosException.class, () -> repositorioProduto.removePorId(produto.getChave()),
+                    "O produto está sendo usado, não poderia ter sido removido.");
+        }
 
     }
 

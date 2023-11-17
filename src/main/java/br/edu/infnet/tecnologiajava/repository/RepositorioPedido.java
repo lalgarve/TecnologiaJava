@@ -45,8 +45,22 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido>{
         tabelaPedido.removePorId(chave);
     }
 
-    public void altera(Pedido valor) throws BancoDadosException {
-        tabelaPedido.altera(valor);
+    public void altera(Pedido pedido) throws BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance(); 
+        Pedido pedidoAnterior = tabelaPedido.consultaPorId(pedido.getChave()).orElse(null);
+        tabelaPedido.altera(pedido);
+        
+        Iterator<Produto> iterator = pedidoAnterior.getProdutos().iterator();
+        while(iterator.hasNext()){
+            Produto produto = iterator.next();
+            repositorioProduto.removeUso(produto.getChave(), this);
+        }          
+        
+        iterator = pedido.getProdutos().iterator();
+        while(iterator.hasNext()){
+            Produto produto = iterator.next();
+            repositorioProduto.adicionaUso(produto.getChave(), this);
+        }        
     }
 
     public Optional<Pedido> consultaPorId(Integer chave) throws BancoDadosException {
