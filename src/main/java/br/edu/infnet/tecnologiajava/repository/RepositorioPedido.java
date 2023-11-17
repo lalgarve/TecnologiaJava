@@ -11,56 +11,71 @@ import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaImpl;
 
-public class RepositorioPedido implements TabelaBD<Integer, Pedido>{
+public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
 
     private static RepositorioPedido instance;
     private final TabelaImpl<Integer, Pedido> tabelaPedido;
 
-    private RepositorioPedido(){
+    private RepositorioPedido() {
         tabelaPedido = new TabelaImpl<>("pedido");
     }
 
-    public static RepositorioPedido getInstance() throws BancoDadosException{
-        if(instance == null){
+    public static RepositorioPedido getInstance() throws BancoDadosException {
+        if (instance == null) {
             throw new BancoDadosException("Repositorio pedido não foi criado");
         }
         return instance;
     }
 
-    static void criaRepositorio(){
+    static void criaRepositorio() {
         instance = new RepositorioPedido();
     }
 
-    public void adiciona(Pedido pedido) throws BancoDadosException {     
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();   
+    public void adiciona(Pedido pedido) throws BancoDadosException {
+        verificaChavesProdutoExistem(pedido);
+        
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         tabelaPedido.adiciona(pedido);
         Iterator<Produto> iterator = pedido.getProdutos().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Produto produto = iterator.next();
             repositorioProduto.adicionaUso(produto.getChave(), this);
         }
     }
 
-    public void removePorId(Integer chave) throws BancoDadosException {
-        tabelaPedido.removePorId(chave);
-    }
-
     public void altera(Pedido pedido) throws BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance(); 
+        verificaChavesProdutoExistem(pedido);
+
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         Pedido pedidoAnterior = tabelaPedido.consultaPorId(pedido.getChave()).orElse(null);
         tabelaPedido.altera(pedido);
-        
+
         Iterator<Produto> iterator = pedidoAnterior.getProdutos().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Produto produto = iterator.next();
             repositorioProduto.removeUso(produto.getChave(), this);
-        }          
-        
+        }
+
         iterator = pedido.getProdutos().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Produto produto = iterator.next();
             repositorioProduto.adicionaUso(produto.getChave(), this);
-        }        
+        }
+    }
+
+    private void verificaChavesProdutoExistem(Pedido pedido) throws BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        Iterator<Integer> chaves = pedido.getProdutos().map((produto) -> produto.getChave()).iterator();
+        while (chaves.hasNext()) {
+            Integer chave = chaves.next();
+            if (repositorioProduto.consultaPorId(chave).isEmpty()) {
+                throw new BancoDadosException("Há produtos que não estão no banco de dados.");
+            }
+        }
+    }
+
+    public void removePorId(Integer chave) throws BancoDadosException {
+        tabelaPedido.removePorId(chave);
     }
 
     public Optional<Pedido> consultaPorId(Integer chave) throws BancoDadosException {
@@ -79,9 +94,4 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido>{
         return tabelaPedido.getNome();
     }
 
-    public boolean equals(Object obj) {
-        return tabelaPedido.equals(obj);
-    }
-    
-    
 }

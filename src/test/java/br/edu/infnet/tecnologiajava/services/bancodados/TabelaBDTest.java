@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -56,7 +55,7 @@ public class TabelaBDTest {
     Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
     assertTrue(resultado.isPresent());
     assertEquals(valor, resultado.get());
-    assertFalse(valor==resultado.get(),"Um clone deveria ter sido retornado/");
+    assertFalse(valor==resultado.get(),"Um clone deveria ter sido retornado.");
   }
   
   @ParameterizedTest
@@ -67,7 +66,7 @@ public class TabelaBDTest {
     TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     instance.adiciona(valor);
     BancoDadosException excecao = assertThrows(BancoDadosException.class, ()->instance.adiciona(valorMesmaChave));
-    assertEquals("A chave 0 já existe na tabela.", excecao.getMessage());
+    assertEquals("A chave 0 já existe na tabela minhatabela.", excecao.getMessage());
   }
   
   @ParameterizedTest
@@ -116,7 +115,7 @@ public class TabelaBDTest {
   public void testRemoveValorNaoExiste(FabricaTabelaBD fabrica) throws Exception {
     TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
     BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> instance.removePorId(0));
-    assertEquals("A chave 0 não existe na tabela.", excecao.getMessage());
+    assertEquals("A chave 0 não existe na tabela minhatabela.", excecao.getMessage());
   }
   
   @ParameterizedTest

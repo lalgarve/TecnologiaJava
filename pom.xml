@@ -22,24 +22,24 @@
             <id>leilaalgarve</id>
             <url>https://pkgs.dev.azure.com/leilaalgarve/_packaging/leilaalgarve/maven/v1</url>
             <releases>
-              <enabled>true</enabled>
+                <enabled>true</enabled>
             </releases>
             <snapshots>
-              <enabled>true</enabled>
+                <enabled>true</enabled>
             </snapshots>
-          </repository>
+        </repository>
     </repositories>
     <distributionManagement>
         <repository>
             <id>leilaalgarve</id>
             <url>https://pkgs.dev.azure.com/leilaalgarve/_packaging/leilaalgarve/maven/v1</url>
             <releases>
-              <enabled>true</enabled>
+                <enabled>true</enabled>
             </releases>
             <snapshots>
-              <enabled>true</enabled>
+                <enabled>true</enabled>
             </snapshots>
-          </repository>
+        </repository>
     </distributionManagement>
 
     <dependencies>
@@ -59,6 +59,21 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-parent</artifactId>
+            <version>1.15.3</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.pitest/pitest-junit5-plugin -->
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -85,6 +100,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.15.3</version>
+                <configuration>
+                    <targetClasses>
+                        <param>br.edu.infnet.tecnologiajava.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>br.edu.infnet.tecnologiajava.*</param>
+                    </targetTests>
+                </configuration>
             </plugin>
         </plugins>
     </build>

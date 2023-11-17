@@ -13,26 +13,26 @@ import java.util.function.Predicate;
  * @param <C> Classe da chave do valor
  * @param <V> Classe do valor armazenado
  */
-public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
+public class TabelaImpl<C, V extends ValorBD<C>> implements TabelaBD<C, V> {
 
-  private final Map<C,V> dadosTabela = new LinkedHashMap<>();
+  private final Map<C, V> dadosTabela = new LinkedHashMap<>();
   private final String nome;
-  
-  public TabelaImpl(String nome){
-    Objects.requireNonNull(nome,"O nome não pode ser nulo.");
-    if(nome.isBlank()){
+
+  public TabelaImpl(String nome) {
+    Objects.requireNonNull(nome, "O nome não pode ser nulo.");
+    if (nome.isBlank()) {
       throw new IllegalArgumentException("O nome não pode estar vazio ou em branco.");
     }
     this.nome = nome;
   }
-  
+
   @Override
   public void adiciona(V valor) throws BancoDadosException {
     Objects.requireNonNull(valor, "O valor não pode ser nulo.");
     Objects.requireNonNull(valor.getChave(), "A chave não pode ser nula.");
     V valorExistente = dadosTabela.get(valor.getChave());
-    if(valorExistente!=null){
-      throw new BancoDadosException("A chave "+valor.getChave()+" já existe na tabela.");
+    if (valorExistente != null) {
+      throw new BancoDadosException("A chave " + valor.getChave() + " já existe na tabela " + nome + ".");
     }
     dadosTabela.put(valor.getChave(), (V) valor.getInstanciaCopiaSegura());
   }
@@ -41,18 +41,18 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   public void removePorId(C chave) throws BancoDadosException {
     Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.remove(chave);
-    if (valor==null){
-      throw new BancoDadosException("A chave "+chave+" não existe na tabela.");
+    if (valor == null) {
+      throw new BancoDadosException("A chave " + chave + " não existe na tabela " + nome + ".");
     }
-  } 
+  }
 
   @Override
   public void altera(V valor) throws BancoDadosException {
     Objects.requireNonNull(valor, "O valor não pode ser nulo.");
     Objects.requireNonNull(valor.getChave(), "A chave não pode ser nula.");
     V valorOriginal = dadosTabela.get(valor.getChave());
-    if(valorOriginal==null){
-      throw new BancoDadosException("Não exite chave "+valor.getChave()+" para ser alterada.");
+    if (valorOriginal == null) {
+      throw new BancoDadosException("Não exite chave " + valor.getChave() + " para ser alterada.");
     }
     dadosTabela.put(valor.getChave(), (V) valor.getInstanciaCopiaSegura());
   }
@@ -61,24 +61,24 @@ public class TabelaImpl<C,V extends ValorBD<C>> implements TabelaBD<C, V> {
   public Optional<V> consultaPorId(C chave) throws BancoDadosException {
     Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.get(chave);
-    valor = valor==null?null:(V)valor.getInstanciaCopiaSegura();  
+    valor = valor == null ? null : (V) valor.getInstanciaCopiaSegura();
     return Optional.ofNullable(valor);
   }
 
   @Override
   public List<V> getValores() throws BancoDadosException {
     return dadosTabela.values().stream()
-            .map((valor) -> (V)valor.getInstanciaCopiaSegura())
-            .toList();
+        .map((valor) -> (V) valor.getInstanciaCopiaSegura())
+        .toList();
   }
 
   @Override
   public List<V> getValores(Predicate<V> filtro) throws BancoDadosException {
     Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
     return dadosTabela.values().stream()
-            .filter(filtro)
-            .map((valor) -> (V)valor.getInstanciaCopiaSegura())
-            .toList();
+        .filter(filtro)
+        .map((valor) -> (V) valor.getInstanciaCopiaSegura())
+        .toList();
   }
 
   @Override
