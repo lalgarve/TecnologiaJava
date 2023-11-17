@@ -12,7 +12,7 @@ import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 
 public class SobremesaMapperTest {
     @BeforeEach
-    public void resetaCodigo(){
+    public void resetaCodigo() {
         Sobremesa.inicializaContadorCodigo();
     }
 
@@ -26,7 +26,7 @@ public class SobremesaMapperTest {
         mapper.setValor("quantidade", "0.5");
         mapper.setValor("doce", "true");
         Sobremesa resultado = mapper.build();
-        Sobremesa esperado = new Sobremesa(1,"pudim", true, "possui leite", 0.5f, 10.5f);
+        Sobremesa esperado = new Sobremesa(1, "pudim", true, "possui leite", 0.5f, 10.5f);
         assertEquals(esperado, resultado);
     }
 
@@ -36,12 +36,11 @@ public class SobremesaMapperTest {
         mapper.reset();
         mapper.setValor("nome", "pudim");
         mapper.setValor("informacao", "possui leite");
-        CSVMapperException execao = assertThrows(CSVMapperException.class, 
-            () -> mapper.setValor("informacao", "possui açucar"));
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.setValor("informacao", "possui açucar"));
         assertEquals("O campo informacao já foi setado.", execao.getMessage());
-    }    
+    }
 
- 
     @Test
     public void testBuildUmCampoFaltando() throws ValidadorException {
         SobremesaMapper mapper = new SobremesaMapper();
@@ -50,24 +49,86 @@ public class SobremesaMapperTest {
         mapper.setValor("informacao", "possui leite");
         mapper.setValor("quantidade", "0.5");
         mapper.setValor("doce", "true");
-        CSVMapperException execao = assertThrows(CSVMapperException.class, 
-            () -> mapper.build());
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.build());
         assertEquals("O campo valor não foi setado.", execao.getMessage());
-    }  
-    
-     @Test
+    }
+
+    @Test
     public void testBuildTrêsCampoaFaltando() throws ValidadorException {
         SobremesaMapper mapper = new SobremesaMapper();
         mapper.reset();
         mapper.setValor("nome", "pudim");
         mapper.setValor("doce", "true");
-        CSVMapperException execao = assertThrows(CSVMapperException.class, 
-            () -> mapper.build());
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.build());
         assertEquals("Os seguintes campos não foram setados: informacao, valor, quantidade.", execao.getMessage());
-    }       
+    }
 
     @Test
-    void testReset() {
-
+    public void testResetNaoAcionado() {
+        SobremesaMapper mapper = new SobremesaMapper();
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.setValor("nome", "pudim"));
+        assertEquals("O método reset não foi chamado.", execao.getMessage());        
     }
+
+    @Test
+    public void testResetNaoAcionadoDepoisBuild() {
+        SobremesaMapper mapper = new SobremesaMapper();
+        mapper.reset();
+        mapper.setValor("nome", "pudim");
+        mapper.setValor("informacao", "possui leite");
+        mapper.setValor("valor", "10.5");
+        mapper.setValor("quantidade", "0.5");
+        mapper.setValor("doce", "true");
+        mapper.build();        
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.setValor("nome", "pudim"));
+        assertEquals("O método reset não foi chamado.", execao.getMessage());        
+    } 
+    
+    @Test
+    public void testSetValorCampoInexistente(){
+        SobremesaMapper mapper = new SobremesaMapper();
+        mapper.reset();
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+            () -> mapper.setValor("Nome", "pudim"));
+        assertEquals("O campo Nome não existe.", execao.getMessage());     
+    }
+
+    @Test
+    public void testSetValorFloatInvalido(){
+        SobremesaMapper mapper = new SobremesaMapper();
+        mapper.reset();
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+            () -> mapper.setValor("valor", "aaaa"));
+        assertEquals("aaaa não é um número ponto flutuante.", execao.getMessage());
+    }
+
+ 
+    @Test
+    public void testSetValorBooleanoInvalido(){
+        SobremesaMapper mapper = new SobremesaMapper();
+        mapper.reset();
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+            () -> mapper.setValor("doce", "sim"));
+        assertEquals("sim não é um valor booleano.", execao.getMessage());
+    }   
+
+    @Test
+    public void testBuildErroValidacao(){
+        SobremesaMapper mapper = new SobremesaMapper();
+        mapper.reset();
+        mapper.setValor("nome", "pudim");
+        mapper.setValor("informacao", "    ");
+        mapper.setValor("valor", "10.5");
+        mapper.setValor("quantidade", "0.5");
+        mapper.setValor("doce", "true");     
+        CSVMapperException execao = assertThrows(CSVMapperException.class,
+                () -> mapper.build());
+        assertEquals("Informação mapeada inválida.", execao.getMessage()); 
+        assertEquals(ValidadorException.class, execao.getCause().getClass());
+    }
+    
 }

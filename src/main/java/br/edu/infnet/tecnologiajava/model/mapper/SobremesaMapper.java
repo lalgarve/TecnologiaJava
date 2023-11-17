@@ -28,6 +28,9 @@ public class SobremesaMapper implements CSVMapper<Sobremesa>{
 
     @Override
     public void setValor(String campo, String valorComoString) throws CSVMapperException {
+        if(camposSetados==null){
+            throw new CSVMapperException("O método reset não foi chamado.");
+        }
         if(camposSetados.contains(campo)){
             throw new CSVMapperException("O campo "+campo+" já foi setado.");
         }
@@ -38,7 +41,7 @@ public class SobremesaMapper implements CSVMapper<Sobremesa>{
             case "valor" -> valor = converteFloat(valorComoString);
             case "quantidade" -> quantidade = converteFloat(valorComoString);
             case "doce" -> doce = converteBoolean(valorComoString);
-            default -> throw new CSVMapperException("Campo "+campo+" não é válido");
+            default -> throw new CSVMapperException("O campo "+campo+" não existe.");
         }
         camposSetados.add(campo);
     }
@@ -56,9 +59,10 @@ public class SobremesaMapper implements CSVMapper<Sobremesa>{
             } 
         }
         try{
+            camposSetados=null;
             return new Sobremesa(nome, doce, informacao, quantidade, valor);
         }catch(ValidadorException ex){
-            throw new CSVMapperException("Informação mapeada inválida", ex); 
+            throw new CSVMapperException("Informação mapeada inválida.", ex); 
         }
     }
     

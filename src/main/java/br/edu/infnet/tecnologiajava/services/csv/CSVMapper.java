@@ -15,7 +15,7 @@ public interface CSVMapper<T> {
     try{
       return Float.parseFloat(valorComoString);
     }catch(NumberFormatException ex){
-      throw new CSVMapperException(valorComoString + "não é um número ponto flutuante.", ex);
+      throw new CSVMapperException(valorComoString + " não é um número ponto flutuante.", ex);
     }
   }
 
@@ -24,7 +24,7 @@ public interface CSVMapper<T> {
     try{
       return Integer.parseInt(valorComoString);
     }catch(NumberFormatException ex){
-      throw new CSVMapperException(valorComoString + "não é um número inteiro.", ex);
+      throw new CSVMapperException(valorComoString + " não é um número inteiro.", ex);
     }
   }
 
@@ -35,6 +35,6 @@ public interface CSVMapper<T> {
     if("false".compareToIgnoreCase(valorComoString)==0){
       return false;
     }
-    throw new CSVMapperException(valorComoString + "não é um valor booleano.");
+    throw new CSVMapperException(valorComoString + " não é um valor booleano.");
   }
 }
