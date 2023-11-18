@@ -36,6 +36,12 @@ public class RepositorioPedidoTest {
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/bebida.csv")) {
             ControladorRepositorio.carregaBebida(new InputStreamReader(is));
         }
+        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
+            ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
+        }
+        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/solicitante.csv")) {
+            ControladorRepositorio.carregaSolicitante(new InputStreamReader(is));
+        }
     }
 
     @Test

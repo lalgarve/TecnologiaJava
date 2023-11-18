@@ -3,6 +3,7 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,13 +26,13 @@ public class SobremesaMapperTest {
         mapper.setValor("valor", "10.5");
         mapper.setValor("quantidade", "0.5");
         mapper.setValor("doce", "true");
-        Sobremesa resultado = mapper.build();
-        Sobremesa esperado = new Sobremesa(1, "pudim", true, "possui leite", 0.5f, 10.5f);
+        Produto resultado = mapper.build();
+        Produto esperado = new Sobremesa(1, "pudim", true, "possui leite", 0.5f, 10.5f);
         assertEquals(esperado, resultado);
     }
 
     @Test
-    public void testBuildCampoDuplicado() throws ValidadorException {
+    public void testBuildCampoDuplicado()  {
         SobremesaMapper mapper = new SobremesaMapper();
         mapper.reset();
         mapper.setValor("nome", "pudim");
@@ -42,26 +43,24 @@ public class SobremesaMapperTest {
     }
 
     @Test
-    public void testBuildUmCampoFaltando() throws ValidadorException {
+    public void testBuildUmCampoFaltando()  {
         SobremesaMapper mapper = new SobremesaMapper();
         mapper.reset();
         mapper.setValor("nome", "pudim");
         mapper.setValor("informacao", "possui leite");
         mapper.setValor("quantidade", "0.5");
         mapper.setValor("doce", "true");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.build());
+        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
         assertEquals("O campo valor não foi setado.", excecao.getMessage());
     }
 
     @Test
-    public void testBuildTrêsCampoaFaltando() throws ValidadorException {
+    public void testBuildTresCamposFaltando()  {
         SobremesaMapper mapper = new SobremesaMapper();
         mapper.reset();
         mapper.setValor("nome", "pudim");
         mapper.setValor("doce", "true");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.build());
+        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
         assertEquals("Os seguintes campos não foram setados: informacao, valor, quantidade.", excecao.getMessage());
     }
 
@@ -125,8 +124,7 @@ public class SobremesaMapperTest {
         mapper.setValor("valor", "10.5");
         mapper.setValor("quantidade", "0.5");
         mapper.setValor("doce", "true");     
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.build());
+        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
         assertEquals("Informação mapeada inválida.", excecao.getMessage()); 
         assertEquals(ValidadorException.class, excecao.getCause().getClass());
     }

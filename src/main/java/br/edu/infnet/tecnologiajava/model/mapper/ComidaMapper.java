@@ -1,12 +1,13 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Comida;
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapper;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 
-public class ComidaMapper extends CSVMapperAbstrato<Comida>{
+public class ComidaMapper extends CSVMapperAbstrato<Produto>{
 
     private String nome;
     private String ingredientes;
@@ -32,7 +33,7 @@ public class ComidaMapper extends CSVMapperAbstrato<Comida>{
     }
 
     @Override
-    public Comida build() throws CSVMapperException {
+    public Produto build() throws CSVMapperException {
         verificaTodosCamposSetatos();
         try{
             finaliza();
