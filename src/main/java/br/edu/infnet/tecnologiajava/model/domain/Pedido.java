@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 
-public class Pedido implements ValorBD<Integer> {
+public class Pedido implements ValorBD<Integer, Pedido> {
   private final String descricao;
   private final LocalDateTime data;
   private final boolean web;

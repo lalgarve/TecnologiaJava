@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * @param <V> classe dos valores armazenados na tabela
  * @param <C> classe das chaves dos valores armazenados
  */
-public interface TabelaBD<C, V extends ValorBD<C>> {
+public interface TabelaBD<C, V extends ValorBD<C, V>> {
   
   void adiciona(V valor) throws BancoDadosException;
   void removePorId(C chave) throws BancoDadosException;

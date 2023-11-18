@@ -3,7 +3,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 
-public abstract sealed class Produto implements ValorBD<Integer>, Imutavel permits Bebida, Sobremesa, Comida{
+public abstract sealed class Produto implements ValorBD<Integer, Produto>, Imutavel permits Bebida, Sobremesa, Comida{
   
   private static int proximoCodigo = 1;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ValorComDependente implements ValorBD<Integer>{
+public class ValorComDependente implements ValorBD<Integer, ValorComDependente>{
 
   private final Integer chave;
   private final List<ValorSemDependente> valoresDependentes;

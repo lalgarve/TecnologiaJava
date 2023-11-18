@@ -6,7 +6,7 @@ import java.util.Objects;
  *
  * @author leila
  */
-public class ValorSemDependente implements ValorBD<Integer>, Cloneable{
+public class ValorSemDependente implements ValorBD<Integer, ValorSemDependente>, Cloneable{
   
   private final int id;
   private String descricao;

@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * @param <C> Classe da chave do valor
  * @param <V> Classe do valor armazenado
  */
-public class TabelaImpl<C, V extends ValorBD<C>> implements TabelaBD<C, V> {
+public class TabelaImpl<C, V extends ValorBD<C, V>> implements TabelaBD<C, V> {
 
   private final Map<C, V> dadosTabela = new LinkedHashMap<>();
   private final String nome;
@@ -54,14 +54,14 @@ public class TabelaImpl<C, V extends ValorBD<C>> implements TabelaBD<C, V> {
     if (valorOriginal == null) {
       throw new BancoDadosException("Não exite chave " + valor.getChave() + " para ser alterada.");
     }
-    dadosTabela.put(valor.getChave(), (V) valor.getInstanciaCopiaSegura());
+    dadosTabela.put(valor.getChave(), valor.getInstanciaCopiaSegura());
   }
 
   @Override
   public Optional<V> consultaPorId(C chave) throws BancoDadosException {
     Objects.requireNonNull(chave, "A chave não pode ser nula.");
     V valor = dadosTabela.get(chave);
-    valor = valor == null ? null : (V) valor.getInstanciaCopiaSegura();
+    valor = valor == null ? null : valor.getInstanciaCopiaSegura();
     return Optional.ofNullable(valor);
   }
 

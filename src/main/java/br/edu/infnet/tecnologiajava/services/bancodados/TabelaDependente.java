@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  * @param <C> Classe da chave dos valores armazenados na tabela
  * @param <V> Classe dos valores armazenados na tabela
  */
-public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> {
+public class TabelaDependente<C, V extends ValorBD<C, V>> implements TabelaBD<C,V> {
   private final String nome;
   private final TabelaImpl<C, DecoradorValor> tabelaImpl;
   
@@ -83,7 +83,7 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
                      .map((decorator) -> decorator.valor).toList();   
   }
   
-  private class DecoradorValor implements ValorBD<C>{
+  private class DecoradorValor implements ValorBD<C, DecoradorValor>{
     private final V valor;
     private Map<TabelaBD<?,?>, Integer> contador = new HashMap<>();
     
@@ -97,8 +97,8 @@ public class TabelaDependente<C, V extends ValorBD<C>> implements TabelaBD<C,V> 
     }
 
     @Override
-    public ValorBD<C> getInstanciaCopiaSegura() {
-      V clone = (V) valor.getInstanciaCopiaSegura();
+    public DecoradorValor getInstanciaCopiaSegura() {
+      V clone = valor.getInstanciaCopiaSegura();
       DecoradorValor decorador = new DecoradorValor(clone);
       decorador.contador.putAll(contador);
       return decorador;

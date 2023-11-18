@@ -4,7 +4,7 @@ package br.edu.infnet.tecnologiajava.services.bancodados;
  * Interface implementada por classes que serão salvas no banco de dados.
  * @author leila
  */
-public interface ValorBD<C>{
+public interface ValorBD<C, V>{
   C getChave();
 
   /**
@@ -13,5 +13,5 @@ public interface ValorBD<C>{
    * 
    * @return 
    */
-  ValorBD<C> getInstanciaCopiaSegura();
+  V getInstanciaCopiaSegura();
 }

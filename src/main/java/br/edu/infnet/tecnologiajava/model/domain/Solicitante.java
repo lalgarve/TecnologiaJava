@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 
-public class Solicitante implements ValorBD<String>, Imutavel {
+public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
 
     private final String email;
     private final String cpf;
@@ -107,7 +107,7 @@ public class Solicitante implements ValorBD<String>, Imutavel {
     }
 
     @Override
-    public ValorBD<String> getInstanciaCopiaSegura() {
+    public Solicitante getInstanciaCopiaSegura() {
         return this;
     }
 
