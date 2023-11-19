@@ -1,5 +1,12 @@
 package br.edu.infnet.tecnologiajava.services.csv;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+
 /**
  * Interface para realizar o mapeamento dos campos de um arquivo CSV
  * para a criação de um objeto.
@@ -36,5 +43,18 @@ public interface CSVMapper<T> {
       return false;
     }
     throw new CSVMapperException(valorComoString + " não é um valor booleano.");
+  }
+
+  default LocalDateTime converteData(String valorComoString) throws CSVMapperException {
+    LocalDateTime localDateTime = null;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    try {
+      localDateTime = LocalDateTime.parse(valorComoString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+    catch(DateTimeParseException e){
+      throw new CSVMapperException(valorComoString + " não é uma data.");
+    }
+
+    return localDateTime;
   }
 }

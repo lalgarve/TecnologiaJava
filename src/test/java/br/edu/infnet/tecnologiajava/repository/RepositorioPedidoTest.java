@@ -1,11 +1,5 @@
 package br.edu.infnet.tecnologiajava.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,21 +19,27 @@ import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class RepositorioPedidoTest {
 
     @BeforeEach
     public void iniciatiozaRepositorio() throws IOException, BancoDadosException {
         ControladorRepositorio.inicializa();
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
+            //noinspection ConstantConditions
             ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
         }
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/bebida.csv")) {
+            //noinspection ConstantConditions
             ControladorRepositorio.carregaBebida(new InputStreamReader(is));
         }
-        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
-            ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
+        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/comida.csv")) {
+            //noinspection ConstantConditions
+            ControladorRepositorio.carregaComida(new InputStreamReader(is));
         }
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/solicitante.csv")) {
+            //noinspection ConstantConditions
             ControladorRepositorio.carregaSolicitante(new InputStreamReader(is));
         }
     }
@@ -48,17 +48,17 @@ public class RepositorioPedidoTest {
     public void testAdiciona() throws ValidadorException, BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
-        produtos.add(repositorioProduto.consultaPorId(1).get());
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
-        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
         assertEquals(pedido, pedidoBanco);
-        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
         assertThrows(BancoDadosException.class, () -> repositorioProduto.removePorId(1),
                 "O produto está sendo usado, não poderia ter sido removido.");
@@ -74,10 +74,10 @@ public class RepositorioPedidoTest {
 
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
-        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
         assertEquals(pedido, pedidoBanco);
-        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
         for (Produto produto : produtos) {
             assertThrows(BancoDadosException.class, () -> repositorioProduto.removePorId(produto.getChave()),
@@ -128,11 +128,10 @@ public class RepositorioPedidoTest {
 
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
-        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
         assertEquals(produtosDiferenteDoBanco.size(), pedidoBanco.getNumeroProdutos());
-        List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(
-            (produto)->produtosDiferenteDoBanco.contains(produto)).toList();
+        List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(produtosDiferenteDoBanco::contains).toList();
         assertEquals(0, listProdutosIguais.size());   
         
         assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");        
@@ -154,13 +153,13 @@ public class RepositorioPedidoTest {
         pedido.setProdutos(novosProdutos);
         repositorioPedido.altera(pedido);
 
-        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
         assertEquals(pedido, pedidoBanco);
-        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
         assertEquals(pedido, pedidoBanco);
-        assertFalse(pedido == pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
         List<Produto> listaPodeDeletar = new ArrayList<>(produtos);
         listaPodeDeletar.removeAll(novosProdutos);
@@ -182,7 +181,7 @@ public class RepositorioPedidoTest {
 
 
     @Test
-    public void testConsultaPorIdNaoExiste() throws BancoDadosException, ValidadorException {
+    public void testConsultaPorIdNaoExiste() throws BancoDadosException {
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         Optional<Pedido> pedidoOptional = repositorioPedido.consultaPorId(2);
         assertTrue(pedidoOptional.isEmpty());
@@ -204,11 +203,10 @@ public class RepositorioPedidoTest {
         Pedido pedidoCopia = new Pedido(pedido);
         repositorioPedido.altera(pedido);
 
-        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).get();
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
         assertEquals(produtosDiferenteDoBanco.size(), pedidoBanco.getNumeroProdutos());
-        List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(
-            (produto)->produtosDiferenteDoBanco.contains(produto)).toList();
+        List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(produtosDiferenteDoBanco::contains).toList();
         assertEquals(0, listProdutosIguais.size());   
         
         assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");      
