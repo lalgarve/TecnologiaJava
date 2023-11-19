@@ -88,7 +88,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     private List<Produto> getProdutosDoBanco(Pedido pedido) throws BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtosBanco = new ArrayList<>(pedido.getNumeroProdutos());
-        Iterator<Integer> chaves = pedido.getProdutos().map((produto) -> produto.getChave()).iterator();
+        Iterator<Integer> chaves = pedido.getProdutos().map(Produto::getChave).iterator();
         while (chaves.hasNext()) {
             Integer chave = chaves.next();
             Optional<Produto> produtoOpcional = repositorioProduto.consultaPorId(chave);
