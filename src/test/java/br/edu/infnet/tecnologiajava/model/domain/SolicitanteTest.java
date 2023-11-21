@@ -130,8 +130,13 @@ class SolicitanteTest {
     }
 
     @Test
-    void testCriaSolicitanteCPFValido() throws ValidadorException {
-        Solicitante solicitante = new Solicitante("062.427.708-90");
+    void testCriaSolicitanteCPFValido() {
+        try {
+            Solicitante solicitante = new Solicitante("062.427.708-90");
+            assertFalse(solicitante.podeSerGravadoNoBanco());
+        }catch (ValidadorException ex){
+            fail(ex);
+        }
     }
 
     @TestFactory

@@ -9,11 +9,11 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-public class TabelaImplTest {
+class TabelaImplTest {
     private final TabelaImpl<Integer, ValorSemDependente> tabela = new TabelaImpl<>("minhatabela");
 
     @TestFactory
-    public Collection<DynamicTest> testEquals() throws BancoDadosException {
+    Collection<DynamicTest> testEquals() throws BancoDadosException {
         TabelaDependente<?, ?> tabelaDependente = new TabelaDependente<>("minhatabela");
         tabela.adiciona(new ValorSemDependente(0));
         TabelaImpl<Integer, ValorSemDependente> tabelaMesmaClasseIgual = new TabelaImpl<>("minhatabela");

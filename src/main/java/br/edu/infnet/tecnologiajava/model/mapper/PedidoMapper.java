@@ -1,6 +1,9 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
-import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.domain.Pedido;
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
+import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 
@@ -28,7 +31,13 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
         switch (campo) {
             case "descricao" -> descricao = valorComoString;
             case "data" -> data = converteData(valorComoString);
-            case "produtos" -> produtos = constroiListaProdutos(valorComoString);
+            case "produtos" -> {
+                try {
+                    produtos = constroiListaProdutos(valorComoString);
+                } catch (ValidadorException e) {
+                    throw new CSVMapperException("Código de produto inválido", e);
+                }
+            }
             case "cpfSolicitante" -> cpfSolicitante = valorComoString;
             default -> throw new CSVMapperException("O campo " + campo + " não existe.");
         }
@@ -50,14 +59,14 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
         }
     }
 
-    private List<Produto> constroiListaProdutos(String valorComoString) {
+    private List<Produto> constroiListaProdutos(String valorComoString) throws ValidadorException {
         String[] codigosComoString = valorComoString.split(", ");
         Iterator<Integer> iterator = Arrays.stream(codigosComoString)
                 .map(this::converteInt).iterator();
         List<Produto> produtosSoComCodigo = new ArrayList<>();
         while (iterator.hasNext()) {
-            Sobremesa sobremesa = new Sobremesa(iterator.next());
-            produtosSoComCodigo.add(sobremesa);
+            Produto produto = new ProdutoDesconhecido(iterator.next());
+            produtosSoComCodigo.add(produto);
         }
         return produtosSoComCodigo;
     }

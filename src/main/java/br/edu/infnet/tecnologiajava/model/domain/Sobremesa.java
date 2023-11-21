@@ -28,13 +28,6 @@ public final class Sobremesa extends Produto {
         valida();
     }
 
-    public Sobremesa(int codigo) {
-        super(codigo);
-        this.doce = false;
-        this.informacao = "";
-        this.quantidade = 0.0f;
-    }
-
     private void valida() throws ValidadorException {
         Validador validador = new Validador();
         super.validaCamposProduto(validador);

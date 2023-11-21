@@ -9,10 +9,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ValidadorTest {
+class ValidadorTest {
     private final List<String> mensagens;
 
-    public ValidadorTest() {
+    ValidadorTest() {
         mensagens = Arrays.asList(
                 "Mensagem 1", "Mensagem 2", "Mensagem 3", "Mensagem 4"
         );
@@ -20,7 +20,7 @@ public class ValidadorTest {
 
 
     @Test
-    public void testSemErros() {
+    void testSemErros() {
         Validador validador = new Validador();
         mensagens.forEach((mensagem) -> validador.valida(mensagem, true));
         assertTrue(validador.getMensagens().isEmpty());
@@ -29,7 +29,7 @@ public class ValidadorTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"Mensagem 1", "Mensagem 2", "Mensagem 3", "Mensagem 4"})
-    public void testUmaErrada(String mensagemErrada) {
+    void testUmaErrada(String mensagemErrada) {
         Validador validador = new Validador();
         mensagens.forEach((mensagem) -> validador.valida(mensagem, !mensagem.equals(mensagemErrada)));
         assertEquals(1, validador.getMensagens().size());
@@ -38,7 +38,7 @@ public class ValidadorTest {
     }
 
     @Test
-    public void testTodasErradas() {
+    void testTodasErradas() {
         Validador validador = new Validador();
         mensagens.forEach((mensagem) -> validador.valida(mensagem, false));
         assertEquals(4, validador.getMensagens().size());
@@ -47,7 +47,7 @@ public class ValidadorTest {
     }
 
     @Test
-    public void testToStringSemErro() {
+    void testToStringSemErro() {
         Validador validador = new Validador();
         mensagens.forEach((mensagem) -> validador.valida(mensagem, true));
         assertEquals("Validador sem erros.", validador.toString());
@@ -55,7 +55,7 @@ public class ValidadorTest {
 
 
     @Test
-    public void testToStringComErro() {
+    void testToStringComErro() {
         Validador validador = new Validador();
         mensagens.forEach((mensagem) -> validador.valida(mensagem, false));
         assertEquals("Validador com 4 erro(s): mensagem 1, mensagem 2, mensagem 3, mensagem 4.", validador.toString());

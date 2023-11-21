@@ -16,17 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author leila
  */
-public class TabelaDependenteTest {
+class TabelaDependenteTest {
 
     private TabelaDependente<Integer, ValorSemDependente> tabelaDependente;
     private TabelaImpl<Integer, ValorComDependente> tabelaRelacao1;
     private TabelaImpl<Integer, ValorComDependente> tabelaRelacao2;
 
-    public TabelaDependenteTest() {
+    TabelaDependenteTest() {
     }
 
     @BeforeEach
-    public void criaTabelaERelacoes() throws BancoDadosException {
+    void criaTabelaERelacoes() throws BancoDadosException {
         tabelaDependente = new TabelaDependente<>("tabeladependente");
         tabelaRelacao1 = new TabelaImpl<>("tabelarelacao1");
         tabelaRelacao2 = new TabelaImpl<>("tabelarelacao2");
@@ -40,7 +40,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 4})
-    public void testAdicionaUso(int chave) throws Exception {
+    void testAdicionaUso(int chave) throws Exception {
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
         excecaoRemovePorId(chave);
         Optional<ValorSemDependente> valor = tabelaDependente.consultaPorId(chave);
@@ -48,7 +48,7 @@ public class TabelaDependenteTest {
     }
 
     @Test
-    public void testAdicionaUsoChaveNula() throws Exception {
+    void testAdicionaUsoChaveNula() throws Exception {
         NullPointerException excecao = assertThrows(NullPointerException.class,
                 () -> tabelaDependente.adicionaUso(null, tabelaRelacao1));
         assertEquals("A chave não pode ser nula.", excecao.getMessage());
@@ -57,7 +57,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {20, 10, 14})
-    public void testAdicionaUsoChaveNaoExiste(int chave) throws Exception {
+    void testAdicionaUsoChaveNaoExiste(int chave) throws Exception {
         BancoDadosException excecao = assertThrows(BancoDadosException.class,
                 () -> tabelaDependente.adicionaUso(chave, tabelaRelacao1));
         assertEquals("A chave não existe: " + chave, excecao.getMessage());
@@ -65,7 +65,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 4})
-    public void testRemoveUso(int chave) throws Exception {
+    void testRemoveUso(int chave) throws Exception {
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
         tabelaDependente.removeUso(chave, tabelaRelacao1);
         tabelaDependente.removePorId(chave);
@@ -75,7 +75,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 4})
-    public void testRemoveUsoDuasTabelas(int chave) throws Exception {
+    void testRemoveUsoDuasTabelas(int chave) throws Exception {
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
         tabelaDependente.adicionaUso(chave, tabelaRelacao2);
         tabelaDependente.removeUso(chave, tabelaRelacao1);
@@ -87,7 +87,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 4})
-    public void testRemoveUsoSemAdicionar(int chave) throws Exception {
+    void testRemoveUsoSemAdicionar(int chave) throws Exception {
         BancoDadosException excecao = assertThrows(BancoDadosException.class,
                 () -> tabelaDependente.removeUso(chave, tabelaRelacao1));
         assertEquals(String.format(
@@ -97,7 +97,7 @@ public class TabelaDependenteTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 4})
-    public void testRemoveUsoVariasChamadas(int chave) throws Exception {
+    void testRemoveUsoVariasChamadas(int chave) throws Exception {
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
         tabelaDependente.adicionaUso(chave, tabelaRelacao1);
@@ -110,7 +110,7 @@ public class TabelaDependenteTest {
     }
 
     @Test
-    public void testRemoveUsoChaveNula() throws Exception {
+    void testRemoveUsoChaveNula() throws Exception {
         NullPointerException excecao = assertThrows(NullPointerException.class,
                 () -> tabelaDependente.removeUso(null, tabelaRelacao1));
         assertEquals("A chave não pode ser nula.", excecao.getMessage());

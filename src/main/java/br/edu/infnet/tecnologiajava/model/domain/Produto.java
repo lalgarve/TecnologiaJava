@@ -3,8 +3,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 
-public abstract sealed class Produto implements ValorBD<Integer, Produto>, Imutavel
-        permits Sobremesa, Comida, Bebida {
+public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
 
     private static int proximoCodigo = 1;
 
@@ -27,11 +26,16 @@ public abstract sealed class Produto implements ValorBD<Integer, Produto>, Imuta
         completo = true;
     }
 
-    protected Produto(int codigo) {
+    protected Produto(int codigo) throws ValidadorException {
         this.completo = false;
         this.codigo = codigo;
         this.valor = 0.0f;
         this.nome = "";
+        Validador validador = new Validador();
+        validador.valida("O código precisa ser maior zero.", codigo > 0);
+        if (validador.temErro()) {
+            throw new ValidadorException("Há erro de validação do produto: ", validador);
+        }
     }
 
     public static void inicializaContadorCodigo() {
