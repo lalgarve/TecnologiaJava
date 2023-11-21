@@ -1,22 +1,16 @@
 package br.edu.infnet.tecnologiajava.services.bancodados;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
 
-public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
+public final class ListaComCopiaSegura<T extends Imutavel> implements List<T> {
 
     private List<T> lista;
     private boolean podeModificar;
 
-    public ListaComCopiaSegura(){
+    public ListaComCopiaSegura() {
         lista = new ArrayList<>();
         podeModificar = true;
     }
@@ -24,17 +18,18 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
     /**
      * A lista interna é copiada automaticamente caso alguma alteração seja
      * executada.
-     * 
+     *
      * @param listaASerCopiada
      */
-    public ListaComCopiaSegura(ListaComCopiaSegura<T> listaASerCopiada){
+    public ListaComCopiaSegura(ListaComCopiaSegura<T> listaASerCopiada) {
+        Objects.requireNonNull(listaASerCopiada, "A lista a ser copiada não pode ser nula.");
         lista = listaASerCopiada.lista;
         podeModificar = false;
     }
-    
-    private void criaListaDelegadaSeNecessario(){
-        if(!podeModificar){
-            lista=new ArrayList<>(lista);
+
+    private void criaListaDelegadaSeNecessario() {
+        if (!podeModificar) {
+            lista = new ArrayList<>(lista);
             podeModificar = true;
         }
     }
@@ -72,6 +67,7 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         return lista.containsAll(arg0);
     }
 
+    @Override
     public void forEach(Consumer<? super T> arg0) {
         lista.forEach(arg0);
     }
@@ -122,6 +118,7 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         return lista.removeAll(arg0);
     }
 
+    @Override
     public void replaceAll(UnaryOperator<T> arg0) {
         criaListaDelegadaSeNecessario();
         lista.replaceAll(arg0);
@@ -141,6 +138,7 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         return lista.size();
     }
 
+    @Override
     public void sort(Comparator<? super T> arg0) {
         criaListaDelegadaSeNecessario();
         lista.sort(arg0);
@@ -159,6 +157,7 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         return lista.toArray(arg0);
     }
 
+    @Override
     public <C> C[] toArray(IntFunction<C[]> arg0) {
         return lista.toArray(arg0);
     }
@@ -168,7 +167,7 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         final int prime = 31;
         int result = 1;
         result = prime * result + lista.size();
-        result = prime * result + lista.stream().limit(10).parallel().map((valor)->valor.hashCode()).reduce(0,(a,b)->a+b);
+        result = prime * result + lista.stream().limit(10).parallel().map(Object::hashCode).reduce(0, (a, b) -> a + b);
         return result;
     }
 
@@ -181,18 +180,16 @@ public class ListaComCopiaSegura <T extends Imutavel> implements List<T> {
         if (getClass() != obj.getClass())
             return false;
         ListaComCopiaSegura<?> other = (ListaComCopiaSegura<?>) obj;
-        if (lista != other.lista){
-            if(lista.size() != other.lista.size())
+        if (lista != other.lista) {
+            if (lista.size() != other.lista.size())
                 return false;
-            for(int i=0; i<lista.size(); i++){
-                if(!lista.get(i).equals(other.lista.get(i)))
+            for (int i = 0; i < lista.size(); i++) {
+                if (!lista.get(i).equals(other.lista.get(i)))
                     return false;
             }
         }
         return true;
-    }  
+    }
 
-    
 
-    
 }

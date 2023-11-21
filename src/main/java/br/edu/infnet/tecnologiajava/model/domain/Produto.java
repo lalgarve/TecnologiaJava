@@ -1,71 +1,84 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
+import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 
-public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
-  
-  private static int proximoCodigo = 1;
+public abstract sealed class Produto implements ValorBD<Integer, Produto>, Imutavel
+        permits Sobremesa, Comida, Bebida {
 
-  private final String nome;
-  private final float valor;
-  private final int codigo;
-  
-  public Produto(final String nome, final float valor, final int codigo) {
-    this.nome = nome;
-    this.valor = valor;
-    this.codigo = codigo;
-  }
+    private static int proximoCodigo = 1;
 
-  public Produto(final String nome, final float valor) {
-    this.nome = nome;
-    this.valor = valor;
-    this.codigo = proximoCodigo++;
-  }
+    private final String nome;
+    private final float valor;
+    private final int codigo;
+    private final boolean completo;
 
-  public static void inicializaContadorCodigo(){
-    proximoCodigo=1;
-  }
+    protected Produto(final String nome, final float valor, final int codigo) {
+        this.nome = nome;
+        this.valor = valor;
+        this.codigo = codigo;
+        completo = true;
+    }
 
-  public String getNome() {
-    return nome;
-  }
+    protected Produto(final String nome, final float valor) {
+        this.nome = nome;
+        this.valor = valor;
+        this.codigo = proximoCodigo++;
+        completo = true;
+    }
 
-  public float getValor() {
-    return valor;
-  }
+    protected Produto(int codigo) {
+        this.completo = false;
+        this.codigo = codigo;
+        this.valor = 0.0f;
+        this.nome = "";
+    }
 
-  public int getCodigo() {
-    return codigo;
-  }
+    public static void inicializaContadorCodigo() {
+        proximoCodigo = 1;
+    }
 
-  @Override
-  public Integer getChave(){
-     return codigo;
-  }
+    public String getNome() {
+        return nome;
+    }
 
-  @Override
-  public Produto getInstanciaCopiaSegura(){
-    return this;
-  }
-   
-  public abstract String getDetalhe();
+    public float getValor() {
+        return valor;
+    }
 
-  protected boolean comparaCamposProduto(Produto other){        
-    if (!nome.equals(other.nome))
-      return false;
-    if (Float.floatToIntBits(valor) != Float.floatToIntBits(other.valor))
-      return false;
-    if (codigo != other.codigo)
-      return false;
-    return true;
-  }
+    public int getCodigo() {
+        return codigo;
+    }
 
-  protected void validaCamposProduto(Validador validador){
-    validador.valida("O nome não pode ser nulo", nome!=null);
-    validador.valida("O nome não pode estar em branco", nome==null || !nome.isBlank());
-    validador.valida("O valor precisa ser maior que zero", valor > 0);
-    validador.valida("O código precisa ser maior que zero", codigo>0);
-  }
-  
+    @Override
+    public Integer getChave() {
+        return codigo;
+    }
+
+    @Override
+    public Produto getInstanciaCopiaSegura() {
+        return this;
+    }
+
+    public abstract String getDetalhe();
+
+    protected boolean comparaCamposProduto(Produto other) {
+        if (!nome.equals(other.nome))
+            return false;
+        if (Float.floatToIntBits(valor) != Float.floatToIntBits(other.valor))
+            return false;
+        return codigo == other.codigo;
+    }
+
+    protected void validaCamposProduto(Validador validador) {
+        validador.valida("O nome não pode ser nulo", nome != null);
+        validador.valida("O nome não pode estar em branco", nome == null || !nome.isBlank());
+        validador.valida("O valor precisa ser maior que zero", valor > 0);
+        validador.valida("O código precisa ser maior que zero", codigo > 0);
+    }
+
+    @Override
+    public boolean podeSerGravadoNoBanco() {
+        return completo;
+    }
 }

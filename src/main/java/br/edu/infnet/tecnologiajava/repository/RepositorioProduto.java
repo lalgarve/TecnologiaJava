@@ -4,23 +4,23 @@ import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaDependente;
 
-public class RepositorioProduto extends TabelaDependente<Integer, Produto>{
+public class RepositorioProduto extends TabelaDependente<Integer, Produto> {
 
     private static RepositorioProduto instance = new RepositorioProduto();
 
-    RepositorioProduto() {
+    private RepositorioProduto() {
         super("produto");
     }
 
-    public static RepositorioProduto getInstance() throws BancoDadosException{
-        if(instance == null){
+    public static RepositorioProduto getInstance() throws BancoDadosException {
+        if (instance == null) {
             throw new BancoDadosException("Repositorio produto não foi inicializado.");
         }
         return instance;
     }
 
-    static void criaRepositorio(){
+    static void criaRepositorio() {
         instance = new RepositorioProduto();
     }
-    
+
 }

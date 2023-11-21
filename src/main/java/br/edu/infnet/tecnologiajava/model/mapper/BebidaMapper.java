@@ -14,33 +14,33 @@ public class BebidaMapper extends CSVMapperAbstrato<Produto> {
     private float valor;
     private boolean gelada;
 
-    public BebidaMapper(){
+    public BebidaMapper() {
         super(new String[]{"nome", "marca", "valor", "tamanho", "gelada"});
     }
 
 
     @Override
     public void setValor(String campo, String valorComoString) throws CSVMapperException {
-        adicionaCampoSetado(campo);        
+        adicionaCampoSetado(campo);
         switch (campo) {
-            case "nome" -> nome=valorComoString;
-            case "marca" -> marca=valorComoString;
+            case "nome" -> nome = valorComoString;
+            case "marca" -> marca = valorComoString;
             case "valor" -> valor = converteFloat(valorComoString);
             case "tamanho" -> tamanho = converteFloat(valorComoString);
             case "gelada" -> gelada = converteBoolean(valorComoString);
-            default -> throw new CSVMapperException("O campo "+campo+" não existe.");
+            default -> throw new CSVMapperException("O campo " + campo + " não existe.");
         }
     }
 
     @Override
     public Produto build() throws CSVMapperException {
         verificaTodosCamposSetatos();
-        try{
+        try {
             finaliza();
             return new Bebida(nome, marca, tamanho, gelada, valor);
-        }catch(ValidadorException ex){
-            throw new CSVMapperException("Informação mapeada inválida.", ex); 
+        } catch (ValidadorException ex) {
+            throw new CSVMapperException("Informação mapeada inválida.", ex);
         }
     }
-    
+
 }

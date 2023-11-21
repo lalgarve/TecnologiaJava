@@ -1,17 +1,5 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -19,9 +7,17 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class PedidoTest {
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+class PedidoTest {
     @TestFactory
-    public Collection<DynamicTest> testEquals() throws ValidadorException {
+    Collection<DynamicTest> testEquals() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();
         List<Produto> sobremesas = new ArrayList<>();
         adicionaSobremesa(sobremesas, 5, "sobremesa");
@@ -37,47 +33,47 @@ public class PedidoTest {
 
         Pedido codigoDiferente = new Pedido(20, "Pedido 1", data, false, solicitante);
         codigoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Codigo diferente", () -> assertFalse(pedido.equals(codigoDiferente))));
+        testes.add(dynamicTest("Codigo diferente", () -> assertNotEquals(pedido, codigoDiferente)));
 
         Pedido descricaoDiferente = new Pedido(20, "Pedido 2", data, false, solicitante);
         descricaoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Descricao diferente", () -> assertFalse(pedido.equals(descricaoDiferente))));
+        testes.add(dynamicTest("Descricao diferente", () -> assertNotEquals(pedido, descricaoDiferente)));
 
         Pedido dataDiferente = new Pedido(20, "Pedido 1", LocalDateTime.now(), false, solicitante);
         dataDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Data diferente", () -> assertFalse(pedido.equals(dataDiferente))));
+        testes.add(dynamicTest("Data diferente", () -> assertNotEquals(pedido, dataDiferente)));
 
         Pedido webDiferente = new Pedido(10, "Pedido 1", data, true, solicitante);
         webDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Web diferente", () -> assertFalse(pedido.equals(webDiferente))));
+        testes.add(dynamicTest("Web diferente", () -> assertNotEquals(pedido, webDiferente)));
 
         Pedido produtosDiferentesMesmaQuantidade = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesMesmaQuantidade.setProdutos(sobremesas);
         testes.add(dynamicTest("Produtos diferentes, mesma quantidade",
-                () -> assertFalse(pedido.equals(produtosDiferentesMesmaQuantidade))));
+                () -> assertNotEquals(pedido, produtosDiferentesMesmaQuantidade)));
 
         Pedido produtosDiferentesQuantidadeDiferente = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesQuantidadeDiferente.setProdutos(comidas);
         testes.add(dynamicTest("Produtos diferentes, quantidade diferente",
-                () -> assertFalse(pedido.equals(produtosDiferentesQuantidadeDiferente))));
+                () -> assertNotEquals(pedido, produtosDiferentesQuantidadeDiferente)));
 
         Pedido solicitanteDiferente = new Pedido(10, "Pedido 1", data, false, Solicitante.getVazio());
         solicitanteDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Solicitante diferente", () -> assertFalse(pedido.equals(solicitanteDiferente))));
+        testes.add(dynamicTest("Solicitante diferente", () -> assertNotEquals(pedido, solicitanteDiferente)));
 
         Pedido igual = new Pedido(pedido);
-        testes.add(dynamicTest("Mesma Instancia", () -> assertTrue(pedido.equals(pedido))));
-        testes.add(dynamicTest("Instancia diferente, objeto igual", () -> assertTrue(pedido.equals(igual))));
-        testes.add(dynamicTest("Classe diferente", () -> assertFalse(pedido.equals(Solicitante.getVazio()))));
-        testes.add(dynamicTest("Null", () -> assertFalse(pedido.equals(null))));
+        testes.add(dynamicTest("Mesma Instancia", () -> assertEquals(pedido, pedido)));
+        testes.add(dynamicTest("Instancia diferente, objeto igual", () -> assertEquals(pedido, igual)));
+        testes.add(dynamicTest("Classe diferente", () -> assertNotEquals(pedido, Solicitante.getVazio())));
+        testes.add(dynamicTest("Null", () -> assertNotEquals(null, pedido)));
 
         return testes;
 
     }
 
     @ParameterizedTest
-    @ValueSource(ints = { 1, 3, 10 })
-    public void testSetProdutos(int quantidadeProdutos) throws ValidadorException {
+    @ValueSource(ints = {1, 3, 10})
+    void testSetProdutos(int quantidadeProdutos) throws ValidadorException {
         Pedido pedido = new Pedido("Pedido 1", false, Solicitante.getVazio());
         List<Produto> produtos = new ArrayList<>();
         adicionaSobremesa(produtos, quantidadeProdutos, "sobremesa");
@@ -89,14 +85,14 @@ public class PedidoTest {
     }
 
     @Test
-    public void testSetProdutosNull() throws ValidadorException{
+    void testSetProdutosNull() throws ValidadorException {
         Pedido pedido = new Pedido("Pedido 1", false, Solicitante.getVazio());
         NullPointerException excecao = assertThrows(NullPointerException.class, () -> pedido.setProdutos(null));
         assertEquals("A lista com produtos não pode ser nula.", excecao.getMessage());
     }
 
     @Test
-    public void testToStringSolicitanteVazio1() throws ValidadorException {
+    void testToStringSolicitanteVazio1() throws ValidadorException {
         LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
         Pedido pedido = new Pedido(10, "Pedido 1", data, false, Solicitante.getVazio());
         List<Produto> produtos = new ArrayList<>();
@@ -108,7 +104,7 @@ public class PedidoTest {
     }
 
     @Test
-    public void testToStringSolicitanteVazio2() throws ValidadorException {
+    void testToStringSolicitanteVazio2() throws ValidadorException {
         LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
         Pedido pedido = new Pedido(10, "Pedido 1", data, false, Solicitante.getVazio());
         List<Produto> produtos = new ArrayList<>();
@@ -120,7 +116,7 @@ public class PedidoTest {
     }
 
     @Test
-    public void testToStringSolicitantePreenchido() throws ValidadorException {
+    void testToStringSolicitantePreenchido() throws ValidadorException {
         LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         Pedido pedido = new Pedido(10, "Pedido 1", data, false, solicitante);
@@ -134,42 +130,42 @@ public class PedidoTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testValidacaoConstrutor() throws ValidadorException {
+    Collection<DynamicTest> testValidacaoConstrutor() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();
         LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
-        testes.add(testValidacao("Codigo negativo", "O código precisa ser maior que zero", 
-            () -> new Pedido(-20, "Pedido 1", data, false, solicitante)));
-        testes.add(testValidacao("Descrição Nula", "A descrição não pode ser nula", 
-            () -> new Pedido(20, null, data, false, Solicitante.getVazio())));
-        testes.add(testValidacao("Descrição em Branco", "A descrição não pode estar em branco", 
-            () -> new Pedido(20, " ", data, false, solicitante)));    
-        testes.add(testValidacao("Data nula", "A data não pode ser nula", 
-            () -> new Pedido(20, "Pedido 1", null, false, solicitante)));  
-        testes.add(testValidacao("Solicitante nulo", "O solicitante não pode ser nulo", 
-            () -> new Pedido(20, "Pedido 1", data, false, null)));      
+        testes.add(testValidacao("Codigo negativo", "O código precisa ser maior que zero",
+                () -> new Pedido(-20, "Pedido 1", data, false, solicitante)));
+        testes.add(testValidacao("Descrição Nula", "A descrição não pode ser nula",
+                () -> new Pedido(20, null, data, false, Solicitante.getVazio())));
+        testes.add(testValidacao("Descrição em Branco", "A descrição não pode estar em branco",
+                () -> new Pedido(20, " ", data, false, solicitante)));
+        testes.add(testValidacao("Data nula", "A data não pode ser nula",
+                () -> new Pedido(20, "Pedido 1", null, false, solicitante)));
+        testes.add(testValidacao("Solicitante nulo", "O solicitante não pode ser nulo",
+                () -> new Pedido(20, "Pedido 1", data, false, null)));
         return testes;
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters() throws ValidadorException{       
+    Collection<DynamicTest> testGetters() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();
         LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
-        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");        
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         Pedido pedido = new Pedido(10, "Pedido 1", data, true, solicitante);
         List<Produto> produtos = new ArrayList<>();
         adicionaSobremesa(produtos, 3, "sobremesa");
-        
-        testes.add(dynamicTest("Codigo", ()->assertEquals(10, pedido.getCodigo())));
-        testes.add(dynamicTest("Solicitante", ()->assertEquals(solicitante, pedido.getSolicitante())));
-        testes.add(dynamicTest("Descricao", ()->assertEquals("Pedido 1", pedido.getDescricao())));
-        testes.add(dynamicTest("Data", ()->assertEquals(data, pedido.getData())));
-        testes.add(dynamicTest("Web", ()->assertEquals(true, pedido.isWeb())));
+
+        testes.add(dynamicTest("Codigo", () -> assertEquals(10, pedido.getCodigo())));
+        testes.add(dynamicTest("Solicitante", () -> assertEquals(solicitante, pedido.getSolicitante())));
+        testes.add(dynamicTest("Descricao", () -> assertEquals("Pedido 1", pedido.getDescricao())));
+        testes.add(dynamicTest("Data", () -> assertEquals(data, pedido.getData())));
+        testes.add(dynamicTest("Web", () -> assertTrue(pedido.isWeb())));
 
         return testes;
     }
 
-    private DynamicTest testValidacao(String nomeTeste, String mensagemEsperada, Executable criacaoErrada){
+    private DynamicTest testValidacao(String nomeTeste, String mensagemEsperada, Executable criacaoErrada) {
         Executable teste = () -> {
             ValidadorException excecao = assertThrows(ValidadorException.class, criacaoErrada);
             assertEquals(1, excecao.getValidador().getMensagens().size());

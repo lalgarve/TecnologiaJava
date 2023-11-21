@@ -1,5 +1,10 @@
 package br.edu.infnet.tecnologiajava.repository;
 
+import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -7,24 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import br.edu.infnet.tecnologiajava.model.domain.Bebida;
-import br.edu.infnet.tecnologiajava.model.domain.Comida;
-import br.edu.infnet.tecnologiajava.model.domain.Pedido;
-import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
-import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RepositorioPedidoTest {
+class RepositorioPedidoTest {
 
     @BeforeEach
-    public void iniciatiozaRepositorio() throws IOException, BancoDadosException {
+    void iniciatiozaRepositorio() throws IOException, BancoDadosException {
         ControladorRepositorio.inicializa();
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
             //noinspection ConstantConditions
@@ -45,7 +38,7 @@ public class RepositorioPedidoTest {
     }
 
     @Test
-    public void testAdiciona() throws ValidadorException, BancoDadosException {
+    void testAdiciona() throws ValidadorException, BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
@@ -65,7 +58,7 @@ public class RepositorioPedidoTest {
     }
 
     @Test
-    public void testAdicionaVariosProduto() throws ValidadorException, BancoDadosException {
+    void testAdicionaVariosProduto() throws ValidadorException, BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = getAlgunsProdutos(3);
 
@@ -86,7 +79,7 @@ public class RepositorioPedidoTest {
     }
 
     @Test
-    public void testAdicionaProdutoNaoExiste() throws ValidadorException, BancoDadosException {
+    void testAdicionaProdutoNaoExiste() throws ValidadorException, BancoDadosException {
         List<Produto> produtos = new ArrayList<>();
         adicionaBebida(produtos, 3, "bebida");
 
@@ -100,7 +93,7 @@ public class RepositorioPedidoTest {
     }
 
     @Test
-    public void testAcionaPedidoJaExiste() throws ValidadorException, BancoDadosException {
+    void testAcionaPedidoJaExiste() throws ValidadorException, BancoDadosException {
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
@@ -110,13 +103,12 @@ public class RepositorioPedidoTest {
         repositorioPedido.adiciona(pedido);
         BancoDadosException excecao = assertThrows(BancoDadosException.class,
                 () -> repositorioPedido.adiciona(pedido));
-        assertEquals("A chave 1 já existe na tabela pedido.", excecao.getMessage());        
+        assertEquals("A chave 1 já existe na tabela pedido.", excecao.getMessage());
     }
 
 
-
     @Test
-    public void testAdicionaVariosProdutoSoIdExsite() throws ValidadorException, BancoDadosException {
+    void testAdicionaVariosProdutoSoIdExsite() throws ValidadorException, BancoDadosException {
         List<Produto> produtosDiferenteDoBanco = new ArrayList<>();
         adicionaComida(produtosDiferenteDoBanco, 1, 5, "comida");
 
@@ -132,14 +124,14 @@ public class RepositorioPedidoTest {
 
         assertEquals(produtosDiferenteDoBanco.size(), pedidoBanco.getNumeroProdutos());
         List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(produtosDiferenteDoBanco::contains).toList();
-        assertEquals(0, listProdutosIguais.size());   
-        
-        assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");        
-    }   
-    
-    
+        assertEquals(0, listProdutosIguais.size());
+
+        assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");
+    }
+
+
     @Test
-    public void testAltera() throws BancoDadosException, ValidadorException {
+    void testAltera() throws BancoDadosException, ValidadorException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = getAlgunsProdutos(3);
 
@@ -181,14 +173,14 @@ public class RepositorioPedidoTest {
 
 
     @Test
-    public void testConsultaPorIdNaoExiste() throws BancoDadosException {
+    void testConsultaPorIdNaoExiste() throws BancoDadosException {
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         Optional<Pedido> pedidoOptional = repositorioPedido.consultaPorId(2);
         assertTrue(pedidoOptional.isEmpty());
     }
 
     @Test
-    public void testAlteraVariosProdutosSoIdExiste() throws BancoDadosException, ValidadorException {
+    void testAlteraVariosProdutosSoIdExiste() throws BancoDadosException, ValidadorException {
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
@@ -207,14 +199,14 @@ public class RepositorioPedidoTest {
 
         assertEquals(produtosDiferenteDoBanco.size(), pedidoBanco.getNumeroProdutos());
         List<Produto> listProdutosIguais = pedidoBanco.getProdutos().filter(produtosDiferenteDoBanco::contains).toList();
-        assertEquals(0, listProdutosIguais.size());   
-        
-        assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");      
+        assertEquals(0, listProdutosIguais.size());
+
+        assertEquals(pedido, pedidoCopia, "Pedido gravado não deve ser modificado");
     }
 
 
     @Test
-    public void testAlteraProdutosNaoExiste() throws BancoDadosException, ValidadorException {
+    void testAlteraProdutosNaoExiste() throws BancoDadosException, ValidadorException {
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
@@ -226,13 +218,13 @@ public class RepositorioPedidoTest {
         List<Produto> novosProdutos = new ArrayList<>();
         adicionaSobremesa(novosProdutos, 5, "sobremesa");
         pedido.setProdutos(novosProdutos);
-        BancoDadosException excecao = assertThrows(BancoDadosException.class, 
-            () -> repositorioPedido.altera(pedido));
-        assertEquals("Há produtos que não estão no banco de dados.", excecao.getMessage());    
-    }    
+        BancoDadosException excecao = assertThrows(BancoDadosException.class,
+                () -> repositorioPedido.altera(pedido));
+        assertEquals("Há produtos que não estão no banco de dados.", excecao.getMessage());
+    }
 
     @Test
-    public void testAdicionaListProdutoVazia() throws BancoDadosException, ValidadorException {
+    void testAdicionaListProdutoVazia() throws BancoDadosException, ValidadorException {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
 
         RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
@@ -241,7 +233,7 @@ public class RepositorioPedidoTest {
     }
 
     @Test
-    public void testAlteraListProdutosVazia() throws BancoDadosException, ValidadorException {
+    void testAlteraListProdutosVazia() throws BancoDadosException, ValidadorException {
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
@@ -251,7 +243,7 @@ public class RepositorioPedidoTest {
         repositorioPedido.adiciona(pedido);
 
         pedido.setProdutos(new ArrayList<>());
-        BancoDadosException excecao = assertThrows(BancoDadosException.class, () ->repositorioPedido.altera(pedido));
+        BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.altera(pedido));
         assertEquals("A lista de produtos não pode ser vazia.", excecao.getMessage());
     }
 

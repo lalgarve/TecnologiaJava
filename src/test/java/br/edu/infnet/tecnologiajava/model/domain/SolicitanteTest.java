@@ -1,16 +1,5 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -18,10 +7,17 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class SolicitanteTest {
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+class SolicitanteTest {
 
     @TestFactory
-    public Collection<DynamicTest> testValidaCPF() {
+    Collection<DynamicTest> testValidaCPF() {
         return Arrays.asList(
                 dynamicTest("CPF inválido os dois dígitos", () -> testValidaCPF("062.427.708-44")),
                 dynamicTest("CPF inválido digito1", () -> testValidaCPF("062.427.708-80")),
@@ -31,7 +27,7 @@ public class SolicitanteTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testValidaFormatoCPF() {
+    Collection<DynamicTest> testValidaFormatoCPF() {
         return Arrays.asList(
                 dynamicTest("CPF sem pontuação", () -> testValidaFormatoCPF("12312323433")),
                 dynamicTest("Número errado dígitos", () -> testValidaFormatoCPF("123.123.234-333")));
@@ -39,7 +35,7 @@ public class SolicitanteTest {
 
     @ParameterizedTest
     @MethodSource("forneceCPFValido")
-    public void testCPFValido(String cpf) {
+    void testCPFValido(String cpf) {
         try {
             new Solicitante(cpf, "João", "joao@dominio.com.br");
         } catch (ValidadorException ex) {
@@ -47,7 +43,7 @@ public class SolicitanteTest {
         }
     }
 
-    public static Stream<String> forneceCPFValido() {
+    static Stream<String> forneceCPFValido() {
         return Stream.of(
                 "062.427.708-90", "775.007.216-09", "307.137.992-77",
                 "666.395.597-73", "929.204.815-50", "745.374.268-45",
@@ -59,7 +55,7 @@ public class SolicitanteTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testValidacoesSimples() {
+    Collection<DynamicTest> testValidacoesSimples() {
         Executable cpfNulo = () -> new Solicitante(null, "João", "joao@google.com");
         Executable cpfEmBranco = () -> new Solicitante("   ", "João", "joao@google.com");
         Executable nomeNulo = () -> new Solicitante("062.427.708-90", null, "joao@google.com");
@@ -114,7 +110,7 @@ public class SolicitanteTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters() throws ValidadorException {
+    Collection<DynamicTest> testGetters() throws ValidadorException {
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         return Arrays.asList(
                 dynamicTest("Nome", () -> assertEquals("João", solicitante.getNome())),
@@ -123,37 +119,42 @@ public class SolicitanteTest {
     }
 
     @Test
-    public void testToString() throws ValidadorException {
+    void testToString() throws ValidadorException {
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         assertEquals("Solicitante: cpf=062.427.708-90, nome=João, email=joao@yahoo.com.br", solicitante.toString());
     }
 
     @Test
-    public void testToStringVazio() {
+    void testToStringVazio() {
         assertEquals("Solicitante vazio", Solicitante.getVazio().toString());
     }
 
+    @Test
+    void testCriaSolicitanteCPFValido() throws ValidadorException {
+        Solicitante solicitante = new Solicitante("062.427.708-90");
+    }
+
     @TestFactory
-    public Collection<DynamicTest> testEquals() throws ValidadorException{
+    Collection<DynamicTest> testEquals() throws ValidadorException {
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         return Arrays.asList(
-            dynamicTest("CPF diferente", 
-               () -> assertFalse(solicitante.equals(new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br")))),
-            dynamicTest("Nome diferente", 
-               () -> assertFalse(solicitante.equals(new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br")))) ,
-            dynamicTest("Email diferente", 
-               () -> assertFalse(solicitante.equals(new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br")))),
-            dynamicTest("Mesma instance", 
-                () -> assertTrue(solicitante.equals(solicitante))),                 
-            dynamicTest("Igual, instancia diferente", 
-                () -> assertTrue(solicitante.equals(new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br")))),
-            dynamicTest("Classe diferente", 
-                () -> assertFalse(solicitante.equals(Boolean.FALSE))),
-            dynamicTest("Instancia Vazia", 
-                () -> assertFalse(solicitante.equals(Solicitante.getVazio()))),
-            dynamicTest("Valor nulo", 
-                () -> assertFalse(solicitante.equals(null)))                                      
-                            
+                dynamicTest("CPF diferente",
+                        () -> assertNotEquals(solicitante, new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br"))),
+                dynamicTest("Nome diferente",
+                        () -> assertNotEquals(solicitante, new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br"))),
+                dynamicTest("Email diferente",
+                        () -> assertNotEquals(solicitante, new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br"))),
+                dynamicTest("Mesma instance",
+                        () -> assertEquals(solicitante, solicitante)),
+                dynamicTest("Igual, instancia diferente",
+                        () -> assertEquals(solicitante, new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br"))),
+                dynamicTest("Classe diferente",
+                        () -> assertNotEquals(solicitante, Boolean.FALSE)),
+                dynamicTest("Instancia Vazia",
+                        () -> assertNotEquals(solicitante, Solicitante.getVazio())),
+                dynamicTest("Valor nulo",
+                        () -> assertNotEquals(null, solicitante))
+
         );
     }
 

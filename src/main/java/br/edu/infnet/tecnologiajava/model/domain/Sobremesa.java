@@ -4,15 +4,14 @@ import java.util.Locale;
 
 public final class Sobremesa extends Produto {
 
-    
+
     private final boolean doce;
     private final String informacao;
     private final float quantidade;
 
-    
 
-    public Sobremesa(int codigo, String nome, boolean doce, String informacao, float quantidade, 
-            float valor) throws ValidadorException{
+    public Sobremesa(int codigo, String nome, boolean doce, String informacao, float quantidade,
+                     float valor) throws ValidadorException {
         super(nome, valor, codigo);
         this.doce = doce;
         this.informacao = informacao;
@@ -20,8 +19,8 @@ public final class Sobremesa extends Produto {
         valida();
     }
 
-    public Sobremesa(String nome, boolean doce, String informacao, float quantidade, 
-            float valor) throws ValidadorException{
+    public Sobremesa(String nome, boolean doce, String informacao, float quantidade,
+                     float valor) throws ValidadorException {
         super(nome, valor);
         this.doce = doce;
         this.informacao = informacao;
@@ -29,14 +28,21 @@ public final class Sobremesa extends Produto {
         valida();
     }
 
-    private void valida() throws ValidadorException{
+    public Sobremesa(int codigo) {
+        super(codigo);
+        this.doce = false;
+        this.informacao = "";
+        this.quantidade = 0.0f;
+    }
+
+    private void valida() throws ValidadorException {
         Validador validador = new Validador();
         super.validaCamposProduto(validador);
-        validador.valida("A informação não pode ser nula", informacao!=null);
-        validador.valida("A informação não pode estar em branco", informacao==null || !informacao.isBlank());
+        validador.valida("A informação não pode ser nula", informacao != null);
+        validador.valida("A informação não pode estar em branco", informacao == null || !informacao.isBlank());
         validador.valida("A quantidade precisa ser maior que zero", quantidade > 0.0);
-        if(validador.temErro()){
-          throw  new ValidadorException("Há campos da sobremesa inválidos", validador);
+        if (validador.temErro()) {
+            throw new ValidadorException("Há campos da sobremesa inválidos", validador);
         }
     }
 
@@ -44,7 +50,7 @@ public final class Sobremesa extends Produto {
         return doce;
     }
 
-   public String getInformacao() {
+    public String getInformacao() {
         return informacao;
     }
 
@@ -55,15 +61,15 @@ public final class Sobremesa extends Produto {
 
     @Override
     public String getDetalhe() {
-        return String.format(Locale.forLanguageTag("PT"), "%s %s - %.2f Kg", 
-        doce?"doce":"salgada", informacao, quantidade);
+        return String.format(Locale.forLanguageTag("PT"), "%s %s - %.2f Kg",
+                doce ? "doce" : "salgada", informacao, quantidade);
     }
 
     @Override
-    public String toString() { 
-        return String.format(Locale.US, 
-        "Sobremesa: codigo=%d, nome=%s, informacao=%s, doce=%b, quantidade=%.2f, valor=%.2f",
-        getCodigo(), getNome(), informacao, doce, quantidade, getValor());
+    public String toString() {
+        return String.format(Locale.US,
+                "Sobremesa: codigo=%d, nome=%s, informacao=%s, doce=%b, quantidade=%.2f, valor=%.2f",
+                getCodigo(), getNome(), informacao, doce, quantidade, getValor());
     }
 
     @Override
@@ -86,16 +92,14 @@ public final class Sobremesa extends Produto {
         if (getClass() != obj.getClass())
             return false;
         Sobremesa other = (Sobremesa) obj;
-        if (!super.comparaCamposProduto(other)){
+        if (!super.comparaCamposProduto(other)) {
             return false;
         }
         if (doce != other.doce)
             return false;
         if (!informacao.equals(other.informacao))
             return false;
-        if (Float.floatToIntBits(quantidade) != Float.floatToIntBits(other.quantidade))
-            return false;
-        return true;
+        return Float.floatToIntBits(quantidade) == Float.floatToIntBits(other.quantidade);
     }
-    
+
 }

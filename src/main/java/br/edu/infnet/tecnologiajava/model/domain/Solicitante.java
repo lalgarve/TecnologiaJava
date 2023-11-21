@@ -1,9 +1,9 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import java.util.regex.Pattern;
-
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+
+import java.util.regex.Pattern;
 
 public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
 
@@ -12,6 +12,8 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     private final String nome;
     private static Solicitante vazio;
 
+    private static final String CPF_VAZIO = "000.000.000-00";
+
     public Solicitante(String cpf, String nome, String email) throws ValidadorException {
         this.email = email;
         this.cpf = cpf;
@@ -19,23 +21,32 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
         Validador validador = new Validador();
         validaCPF(validador);
         validaEmail(validador);
-        validaNome (validador); 
-        if(validador.temErro()) {
+        validaNome(validador);
+        if (validador.temErro()) {
             throw new ValidadorException("Há erros nos dados do solicitante", validador);
         }
     }
 
-    private Solicitante(){
-        email="";
-        cpf="";
-        nome="";
+    public Solicitante(String cpf) {
+        this.cpf = cpf;
+        nome = "";
+        email = "";
     }
 
-    public static Solicitante getVazio(){
-        if(vazio==null){
-            vazio=new Solicitante();
+    private Solicitante() {
+        this(CPF_VAZIO);
+    }
+
+    public static Solicitante getVazio() {
+        if (vazio == null) {
+            vazio = new Solicitante();
         }
         return vazio;
+    }
+
+    @Override
+    public boolean podeSerGravadoNoBanco() {
+        return cpf.equals(CPF_VAZIO) || !nome.isBlank();
     }
 
     public String getEmail() {
@@ -53,8 +64,8 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     private void validaCPF(Validador validador) {
         if (validaCPFPreenchido(validador) && validaFormatoCPF(validador)) {
             int[] digitos = cpf.chars()
-                    .filter((digito) -> digito != '.' && digito != '-')
-                    .map((digito) -> digito - '0')
+                    .filter(digito -> digito != '.' && digito != '-')
+                    .map(digito -> digito - '0')
                     .toArray();
             int digitoVerificador1 = calculaDigitoVerificador(digitos, 10, 9);
             int digitoVerificador2 = calculaDigitoVerificador(digitos, 11, 10);
@@ -88,9 +99,10 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     // Usando validação OWASP
     private void validaEmail(Validador validador) {
         validador.valida("O email não pode ser nulo", email != null);
-        validador.valida("O email não pode estar em branco", email==null || !email.isBlank());
+        validador.valida("O email não pode estar em branco", email == null || !email.isBlank());
         boolean emailPreenchido = email != null && !email.isBlank();
-        if(emailPreenchido){
+        if (emailPreenchido) {
+            validador.valida("O email pode ter no máximo 150 caracteres", email.length() <= 150);
             String emailOWASPPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
             validador.valida("O email é inválido", Pattern.matches(emailOWASPPattern, email));
         }
@@ -98,7 +110,7 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
 
     private void validaNome(Validador validador) {
         validador.valida("O nome não pode ser nulo", nome != null);
-        validador.valida("O nome não pode estar em branco", nome==null || !nome.isBlank());
+        validador.valida("O nome não pode estar em branco", nome == null || !nome.isBlank());
     }
 
     @Override
@@ -112,8 +124,8 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     }
 
     @Override
-    public String toString(){
-        if(cpf.isBlank()){
+    public String toString() {
+        if (cpf.equals(CPF_VAZIO)) {
             return "Solicitante vazio";
         } else {
             return String.format("Solicitante: cpf=%s, nome=%s, email=%s", cpf, nome, email);
@@ -124,9 +136,9 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result +  email.hashCode();
-        result = prime * result +  cpf.hashCode();
-        result = prime * result +  nome.hashCode();
+        result = prime * result + email.hashCode();
+        result = prime * result + cpf.hashCode();
+        result = prime * result + nome.hashCode();
         return result;
     }
 
@@ -143,11 +155,8 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
             return false;
         if (!cpf.equals(other.cpf))
             return false;
-        if (!nome.equals(other.nome))
-            return false;
-        return true;
+        return nome.equals(other.nome);
     }
 
-    
 
 }

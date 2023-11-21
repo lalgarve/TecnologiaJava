@@ -9,7 +9,7 @@ public final class Comida extends Produto {
     private final String ingredientes;
 
     public Comida(int codigo, String nome, String ingredientes, float peso, boolean vegano,
-            float valor) throws ValidadorException {
+                  float valor) throws ValidadorException {
         super(nome, valor, codigo);
         this.peso = peso;
         this.vegano = vegano;
@@ -18,7 +18,7 @@ public final class Comida extends Produto {
     }
 
     public Comida(String nome, String ingredientes, float peso, boolean vegano,
-            float valor) throws ValidadorException {
+                  float valor) throws ValidadorException {
         super(nome, valor);
         this.peso = peso;
         this.vegano = vegano;
@@ -52,7 +52,7 @@ public final class Comida extends Produto {
     @Override
     public String getDetalhe() {
         return String.format(Locale.forLanguageTag("PT"), "%singredientes: %s - %.2f kg",
-                vegano?"vegano, ":"",ingredientes, peso);
+                vegano ? "vegano, " : "", ingredientes, peso);
     }
 
     @Override
@@ -82,15 +82,13 @@ public final class Comida extends Produto {
         if (getClass() != obj.getClass())
             return false;
         Comida other = (Comida) obj;
-        if(!super.comparaCamposProduto(other)){
+        if (!super.comparaCamposProduto(other)) {
             return false;
         }
         if (Float.floatToIntBits(peso) != Float.floatToIntBits(other.peso))
             return false;
         if (vegano != other.vegano)
             return false;
-        if (!ingredientes.equals(other.ingredientes))
-            return false;
-        return true;
+        return ingredientes.equals(other.ingredientes);
     }
 }
