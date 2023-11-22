@@ -17,7 +17,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
     private final ListaComCopiaSegura<Produto> produtos;
     private static int proximoCodigo = 1;
     private final int codigo;
-    private final Solicitante solicitante;
+    private Solicitante solicitante;
 
 
     public Pedido(String descricao, boolean web, Solicitante solicitante) throws ValidadorException {
@@ -49,6 +49,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         produtos = new ListaComCopiaSegura<>(pedido.produtos);
         solicitante = pedido.solicitante;
     }
+
 
     public static void inicializaContadorCodigo() {
         proximoCodigo = 1;
@@ -86,6 +87,10 @@ public class Pedido implements ValorBD<Integer, Pedido> {
 
     public Solicitante getSolicitante() {
         return solicitante;
+    }
+
+    public void setSolicitante(Solicitante solicitante) {
+        this.solicitante = solicitante;
     }
 
     public void setProdutos(List<Produto> produtos) {

@@ -247,6 +247,32 @@ class RepositorioPedidoTest {
         assertEquals("A lista de produtos não pode ser vazia.", excecao.getMessage());
     }
 
+    @Test
+    void testAdicionaComSolicitante() throws ValidadorException, BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        repositorioPedido.adiciona(pedido);
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
+
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        Solicitante solicitanteBanco = repositorioSolicitante.consultaPorId("775.007.216-09").orElseThrow();
+        pedido.setSolicitante(solicitanteBanco);
+
+        assertEquals(pedido, pedidoBanco);
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+
+        assertThrows(BancoDadosException.class, () -> repositorioSolicitante.removePorId("775.007.216-09"),
+                "O solicitante está sendo usado, não poderia ter sido removido.");
+        assertEquals("Paulo Rodrigues", pedidoBanco.getSolicitante().getNome());
+    }
+
     private List<Produto> getAlgunsProdutos(int modulo) throws BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         return repositorioProduto.getValores((produto) -> (produto.getCodigo() % modulo) == 0);

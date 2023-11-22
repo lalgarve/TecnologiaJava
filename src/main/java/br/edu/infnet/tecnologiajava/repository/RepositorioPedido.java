@@ -2,6 +2,7 @@ package br.edu.infnet.tecnologiajava.repository;
 
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaImpl;
@@ -45,16 +46,28 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         }
 
         List<Produto> produtos = getProdutosDoBanco(pedido);
+        Solicitante solicitante = getSolicitanteDoBanco(pedido);
 
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         Pedido pedidoParaBanco = new Pedido(pedido);
         pedidoParaBanco.setProdutos(produtos);
+        pedidoParaBanco.setSolicitante(solicitante);
         tabelaPedido.adiciona(pedidoParaBanco);
+
         Iterator<Produto> iterator = pedido.getProdutos().iterator();
         while (iterator.hasNext()) {
             Produto produto = iterator.next();
             repositorioProduto.adicionaUso(produto.getChave(), this);
         }
+
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        repositorioSolicitante.adicionaUso(solicitante.getChave(), this);
+    }
+
+    private Solicitante getSolicitanteDoBanco(Pedido pedido) throws BancoDadosException {
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        Optional<Solicitante> solicitanteBanco = repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave());
+        return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF "+pedido.getSolicitante().getCPF()+" não existe no banco."));
     }
 
     public void altera(Pedido pedido) throws BancoDadosException {
