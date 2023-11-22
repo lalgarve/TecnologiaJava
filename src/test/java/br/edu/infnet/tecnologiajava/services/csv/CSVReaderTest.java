@@ -149,16 +149,18 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDadosCabecalhoIncorreto1() throws CSVMapperException, IOException {
+    void testLeDadosCabecalhoIncorreto1() throws IOException {
         String builder = CABECALHO_INCORRETO1 + '\n' +
                 LINHA_SIMPLES1 + '\n';
         ByteArrayInputStream bis = new ByteArrayInputStream(builder.getBytes());
         try (CSVReader<ModeloTeste> instance = new CSVReader<>(new InputStreamReader(bis), new TestMapper())) {
             Stream<ModeloTeste> stream = instance.leDados();
-            Optional<ModeloTeste> resultado = stream.findFirst();
-            fail("Excecao esperada");
-        } catch (CSVMapperException ex) {
-            assertEquals("codigo1 não existe.", ex.getMessage());
+            try {
+                Optional<ModeloTeste> resultado = stream.findFirst();
+                fail("Excecao esperada");
+            } catch (CSVMapperException ex) {
+                assertEquals("codigo1 não existe.", ex.getMessage());
+            }
         }
     }
 
@@ -268,16 +270,19 @@ public class CSVReaderTest {
 
 
     @Test
-    void testLeDadosValoresAMais() throws CSVMapperException, IOException {
+    void testLeDadosValoresAMais() throws IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_VALORES_A_MAIS + '\n';
         ByteArrayInputStream bis = new ByteArrayInputStream(builder.getBytes());
         try (CSVReader<ModeloTeste> instance = new CSVReader<>(new InputStreamReader(bis), new TestMapper())) {
             Stream<ModeloTeste> stream = instance.leDados();
-            Optional<ModeloTeste> resultado = stream.findFirst();
-            fail("Excecao esperada");
-        } catch (CSVMapperException ex) {
-            assertEquals("Esperados 4 valores, foram encontrados 5.", ex.getMessage());
+            try {
+                Optional<ModeloTeste> resultado = stream.findFirst();
+                fail("Excecao esperada");
+            }
+            catch (CSVMapperException ex) {
+                assertEquals("Esperados 4 valores, foram encontrados 5.", ex.getMessage());
+            }
         }
     }
 
@@ -288,10 +293,13 @@ public class CSVReaderTest {
         ByteArrayInputStream bis = new ByteArrayInputStream(builder.getBytes());
         try (CSVReader<ModeloTeste> instance = new CSVReader<>(new InputStreamReader(bis), new TestMapper())) {
             Stream<ModeloTeste> stream = instance.leDados();
-            Optional<ModeloTeste> resultado = stream.findFirst();
-            fail("Excecao esperada");
-        } catch (CSVMapperException ex) {
-            assertEquals("Esperados 4 valores, foram encontrados 3.", ex.getMessage());
+            try {
+                Optional<ModeloTeste> resultado = stream.findFirst();
+                fail("Excecao esperada");
+            }
+            catch (CSVMapperException ex) {
+                assertEquals("Esperados 4 valores, foram encontrados 3.", ex.getMessage());
+            }
         }
     }
 

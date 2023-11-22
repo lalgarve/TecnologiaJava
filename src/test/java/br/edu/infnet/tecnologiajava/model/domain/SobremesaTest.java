@@ -12,9 +12,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-public class SobremesaTest {
+class SobremesaTest {
     @TestFactory
-    public Collection<DynamicTest> testEquals() throws ValidadorException {
+    Collection<DynamicTest> testEquals() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f);
         return Arrays.asList(
                 dynamicTest("Código diferente", () ->
@@ -41,7 +41,7 @@ public class SobremesaTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetDetalhes() throws ValidadorException {
+    Collection<DynamicTest> testGetDetalhes() throws ValidadorException {
         Sobremesa sobremesaDoce = new Sobremesa("Pudim", true, "sem glútem", 1.5f, 10.5f);
         Sobremesa sobremesaSalgada = new Sobremesa("Pudim", false, "sem glútem", 1.5f, 10.5f);
         Sobremesa sobremesaTresCasas = new Sobremesa("Pudim", true, "sem glútem", 1.534f, 10.5f);
@@ -56,7 +56,7 @@ public class SobremesaTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters() throws ValidadorException {
+    Collection<DynamicTest> testGetters() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
         return Arrays.asList(
                 dynamicTest("Código", () -> assertEquals(20, sobremesa.getCodigo())),
@@ -69,13 +69,13 @@ public class SobremesaTest {
     }
 
     @Test
-    public void testToString() throws ValidadorException {
+    void testToString() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
         assertEquals("Sobremesa: codigo=20, nome=Pudim, informacao=sem glútem, doce=true, quantidade=1.50, valor=10.50", sobremesa.toString());
     }
 
     @TestFactory
-    public Collection<DynamicTest> testValidacao() {
+    Collection<DynamicTest> testValidacao() {
 
         Executable sobremesaCodigoNegativo = () -> new Sobremesa(-20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
         Executable sobremesaCodigoZero = () -> new Sobremesa(0, "Pudim", true, "sem glútem", 1.5f, 10.5f);

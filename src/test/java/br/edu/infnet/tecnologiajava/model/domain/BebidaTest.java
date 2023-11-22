@@ -13,9 +13,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-public class BebidaTest {
+class BebidaTest {
     @TestFactory
-    public Collection<DynamicTest> testEquals() throws ValidadorException {
+    Collection<DynamicTest> testEquals() throws ValidadorException {
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         return Arrays.asList(
                 dynamicTest("Codigo diferente", () ->
@@ -43,7 +43,7 @@ public class BebidaTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetDetalhes() {
+    Collection<DynamicTest> testGetDetalhes() {
         return Arrays.asList(
                 dynamicTest("Bebida gelada", () ->
                         assertEquals("Bebida Brahma - 1,0 L - gelada",
@@ -59,7 +59,7 @@ public class BebidaTest {
     }
 
     @TestFactory
-    public Collection<DynamicTest> testGetters() throws ValidadorException {
+    Collection<DynamicTest> testGetters() throws ValidadorException {
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         return Arrays.asList(
                 dynamicTest("nome", () -> assertEquals("Cerveja1", bebida.getNome())),
@@ -73,13 +73,13 @@ public class BebidaTest {
     }
 
     @Test
-    public void testToString() throws ValidadorException {
+    void testToString() throws ValidadorException {
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
         assertEquals("Bebida: codigo=20, nome=Cerveja1, marca=Brahma, tamanho=1.0, gelada=true, valor=10.50", bebida.toString());
     }
 
     @TestFactory
-    public Collection<DynamicTest> testValidacao1Erro() {
+    Collection<DynamicTest> testValidacao1Erro() {
         return Arrays.asList(
                 dynamicTest("Codigo negativo",
                         () -> testValidacao1Erro("o código precisa ser maior que zero", -1, "Cerveja", "Brahma", 1.0f, false, 10.5f)),
@@ -102,7 +102,7 @@ public class BebidaTest {
         );
     }
 
-    private void testValidacao1Erro(String mensagem, int codigo, String nome, String marca,
+    void testValidacao1Erro(String mensagem, int codigo, String nome, String marca,
                                     float tamanho, boolean gelada, float valor) {
         ValidadorException excecao = assertThrows(ValidadorException.class, () -> new Bebida(codigo, nome, marca, tamanho, gelada, valor));
         assertEquals("Há campos da bebida inválidos: " + mensagem + ".", excecao.getMessage());
@@ -114,7 +114,7 @@ public class BebidaTest {
 
     @ParameterizedTest
     @ValueSource(floats = {0.1f, 10.0f})
-    public void testeValidacaoTamanhoExtremos(float tamanho) {
+    void testeValidacaoTamanhoExtremos(float tamanho) {
         try {
             new Bebida("Cerveja", "Brahma", tamanho, true, 10.5f);
         } catch (ValidadorException ex) {
@@ -123,7 +123,7 @@ public class BebidaTest {
     }
 
     @Test
-    public void testeValidacao2Erros() {
+    void testeValidacao2Erros() {
         ValidadorException excecao = assertThrows(ValidadorException.class, () -> new Bebida("Cerveja", " ", 0.1f, false, 0.0f));
         List<String> mensagens = excecao.getValidador().getMensagens();
         assertEquals(2, mensagens.size());

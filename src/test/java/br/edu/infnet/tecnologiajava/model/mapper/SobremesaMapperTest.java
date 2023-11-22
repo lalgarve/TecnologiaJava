@@ -6,6 +6,8 @@ import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,33 +88,19 @@ class SobremesaMapperTest {
         assertEquals("O método reset não foi chamado.", excecao.getMessage());
     }
 
-    @Test
-    void testSetValorCampoInexistente() {
+    @ParameterizedTest
+    @CsvSource (value = {"doce:sim:sim não é um valor booleano.",
+                         "valor:aaaa:aaaa não é um número ponto flutuante.",
+                         "Nome:pudim:O campo Nome não existe."}, delimiter = ':')
+    void testValoresECamposInvalido(String campo, String valor, String mensagem) {
         SobremesaMapper mapper = new SobremesaMapper();
         mapper.reset();
         CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.setValor("Nome", "pudim"));
-        assertEquals("O campo Nome não existe.", excecao.getMessage());
-    }
-
-    @Test
-    void testSetValorFloatInvalido() {
-        SobremesaMapper mapper = new SobremesaMapper();
-        mapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.setValor("valor", "aaaa"));
-        assertEquals("aaaa não é um número ponto flutuante.", excecao.getMessage());
+                () -> mapper.setValor(campo, valor));
+        assertEquals(mensagem, excecao.getMessage());
     }
 
 
-    @Test
-    void testSetValorBooleanoInvalido() {
-        SobremesaMapper mapper = new SobremesaMapper();
-        mapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
-                () -> mapper.setValor("doce", "sim"));
-        assertEquals("sim não é um valor booleano.", excecao.getMessage());
-    }
 
     @Test
     void testBuildErroValidacao() {

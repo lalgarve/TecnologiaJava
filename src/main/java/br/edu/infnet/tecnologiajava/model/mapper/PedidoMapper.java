@@ -35,10 +35,11 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
                 try {
                     produtos = constroiListaProdutos(valorComoString);
                 } catch (ValidadorException e) {
-                    throw new CSVMapperException("Código de produto inválido", e);
+                    throw new CSVMapperException("Código de produto inválido.", e);
                 }
             }
             case "cpfSolicitante" -> cpfSolicitante = valorComoString;
+            case "web" -> web = converteBoolean(valorComoString);
             default -> throw new CSVMapperException("O campo " + campo + " não existe.");
         }
     }
@@ -50,7 +51,7 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
             finaliza();
             Solicitante solicitante = cpfSolicitante.isBlank()
                     ? Solicitante.getVazio()
-                    : new Solicitante(cpfSolicitante, "gerado", "gerado@email.com");
+                    : new Solicitante(cpfSolicitante);
             Pedido pedido = new Pedido(descricao, data, web, solicitante);
             pedido.setProdutos(produtos);
             return pedido;
@@ -60,7 +61,7 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
     }
 
     private List<Produto> constroiListaProdutos(String valorComoString) throws ValidadorException {
-        String[] codigosComoString = valorComoString.split(", ");
+        String[] codigosComoString = valorComoString.split("[, ]+");
         Iterator<Integer> iterator = Arrays.stream(codigosComoString)
                 .map(this::converteInt).iterator();
         List<Produto> produtosSoComCodigo = new ArrayList<>();

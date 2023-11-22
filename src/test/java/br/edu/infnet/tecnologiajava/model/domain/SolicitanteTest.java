@@ -6,6 +6,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -162,5 +163,38 @@ class SolicitanteTest {
 
         );
     }
+
+    @ParameterizedTest
+    @ValueSource (ints = {149,150,151,8000})
+    void testLimiteEmail(int tamanhoEmail){
+        String email =  geraEmail(tamanhoEmail);
+        try {
+            new Solicitante("929.204.815-50", "João", email);
+            assertTrue(tamanhoEmail<=150);
+        } catch (ValidadorException ex) {
+            if(tamanhoEmail<=150) {
+               fail("Email tem "+email.length()+" caracteres");
+            }
+            Validador validador = ex.getValidador();
+            assertEquals("O email pode ter no máximo 150 caracteres", validador.getMensagens().get(0));
+        }
+
+    }
+
+    private String geraEmail(int numeroCaracteres){
+        int tamanhoLogin = numeroCaracteres / 2;
+        int tamanhoDominio = numeroCaracteres - tamanhoLogin  - 5;
+        StringBuilder email = new StringBuilder();
+        for(int i=0; i<tamanhoLogin; i++){
+            email.append('a');
+        }
+        email.append('@');
+        for(int i=0; i<tamanhoDominio; i++){
+            email.append('b');
+        }
+        email.append(".com");
+        return email.toString();
+    }
+
 
 }

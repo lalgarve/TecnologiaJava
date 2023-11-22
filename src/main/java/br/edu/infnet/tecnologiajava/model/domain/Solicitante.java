@@ -102,14 +102,17 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
         return resto == 10 ? 0 : resto;
     }
 
-    // https://www.baeldung.com/java-email-validation-regex
-    // Usando validação OWASP
+    /*
+     * https://www.baeldung.com/java-email-validation-regex
+     * Usando validação OWASP
+     * SonarLint java:S59980 Teste: Solicitante.testLimiteEmail
+     * Email não pode ser grande demais
+     */
     private void validaEmail(Validador validador) {
         validador.valida("O email não pode ser nulo", email != null);
         validador.valida("O email não pode estar em branco", email == null || !email.isBlank());
-        boolean emailPreenchido = email != null && !email.isBlank();
-        if (emailPreenchido) {
-            validador.valida("O email pode ter no máximo 150 caracteres", email.length() <= 150);
+        validador.valida("O email pode ter no máximo 150 caracteres", email == null || email.length() <= 150);
+        if (!validador.temErro()) {
             String emailOWASPPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
             validador.valida("O email é inválido", Pattern.matches(emailOWASPPattern, email));
         }

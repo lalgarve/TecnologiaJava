@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RepositorioPedidoTest {
 
     @BeforeEach
-    void iniciatiozaRepositorio() throws IOException, BancoDadosException {
+    void iniciatializaRepositorio() throws IOException, BancoDadosException {
         ControladorRepositorio.inicializa();
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
             //noinspection ConstantConditions
@@ -270,5 +270,7 @@ class RepositorioPedidoTest {
             produtos.add(new Comida(codigo++, nome + " " + i, "marca " + i, i + 10, (i % 2) == 0, 10.0f));
         }
     }
+
+
 
 }
