@@ -100,8 +100,8 @@ public class TabelaDependente<C, V extends ValorBD<C, V>> implements TabelaBD<C,
         }
 
         @Override
-        public DecoradorValor getInstanciaCopiaSegura() {
-            V clone = valor.getInstanciaCopiaSegura();
+        public DecoradorValor criaInstanciaCopiaSegura() {
+            V clone = valor.criaInstanciaCopiaSegura();
             DecoradorValor decorador = new DecoradorValor(clone);
             decorador.contador.putAll(contador);
             return decorador;

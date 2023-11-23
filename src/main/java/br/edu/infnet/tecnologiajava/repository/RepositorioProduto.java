@@ -8,6 +8,7 @@ public class RepositorioProduto extends TabelaDependente<Integer, Produto> {
 
     private static RepositorioProduto instance = new RepositorioProduto();
 
+
     private RepositorioProduto() {
         super("produto");
     }

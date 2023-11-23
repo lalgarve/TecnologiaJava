@@ -81,8 +81,11 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
 
         Pedido pedidoAnterior = tabelaPedido.consultaPorId(pedido.getChave()).orElseThrow(() -> new BancoDadosException("Pedido com chave " + pedido.getChave() + " não foi encontrado."));
 
+        Solicitante solicitante = getSolicitanteDoBanco(pedido);
+
         Pedido pedidoParaBanco = new Pedido(pedido);
         pedidoParaBanco.setProdutos(produtos);
+        pedidoParaBanco.setSolicitante(solicitante);
         tabelaPedido.altera(pedidoParaBanco);
 
         Iterator<Produto> iterator = pedidoAnterior.getProdutos().iterator();
@@ -96,6 +99,10 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             Produto produto = iterator.next();
             repositorioProduto.adicionaUso(produto.getChave(), this);
         }
+
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        repositorioSolicitante.removeUso(pedidoAnterior.getSolicitante().getChave(), this);
+        repositorioSolicitante.adicionaUso(pedidoParaBanco.getSolicitante().getChave(), this);
     }
 
     private List<Produto> getProdutosDoBanco(Pedido pedido) throws BancoDadosException {
@@ -116,7 +123,18 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     }
 
     public void removePorId(Integer chave) throws BancoDadosException {
+        Pedido pedidoBanco = tabelaPedido.consultaPorId(chave).orElseThrow(()->new BancoDadosException("Pedido com id "+chave+" não existe no banco."));
         tabelaPedido.removePorId(chave);
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        repositorioSolicitante.removeUso(pedidoBanco.getSolicitante().getChave(), this);
+
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        Iterator<Produto> produtoIterator = pedidoBanco.getProdutos().iterator();
+
+        while(produtoIterator.hasNext()){
+            Produto produto = produtoIterator.next();
+            repositorioProduto.removeUso(produto.getChave(), this);
+        }
     }
 
     public Optional<Pedido> consultaPorId(Integer chave) throws BancoDadosException {

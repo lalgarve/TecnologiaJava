@@ -14,7 +14,7 @@ public interface ValorBD<C, V> {
      *
      * @return a cópia segura
      */
-    V getInstanciaCopiaSegura();
+    V criaInstanciaCopiaSegura();
 
     boolean podeSerGravadoNoBanco();
 }

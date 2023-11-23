@@ -273,6 +273,107 @@ class RepositorioPedidoTest {
         assertEquals("Paulo Rodrigues", pedidoBanco.getSolicitante().getNome());
     }
 
+    @Test
+    void testAdicionaSolicitanteNaoExiste() throws ValidadorException, BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+
+        Solicitante solicitante = new Solicitante("307.137.992-77");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.adiciona(pedido));
+        assertEquals("O solicitante com CPF 307.137.992-77 não existe no banco.", excecao.getMessage());
+
+    }
+
+    @Test
+    void testAlteraComSolicitante() throws ValidadorException, BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        repositorioPedido.adiciona(pedido);
+
+        Solicitante novoSolicitante = new Solicitante("943.861.323-41");
+        pedido.setSolicitante(novoSolicitante);
+        repositorioPedido.altera(pedido);
+
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+        Solicitante solicitanteBanco = repositorioSolicitante.consultaPorId("943.861.323-41").orElseThrow();
+        pedido.setSolicitante(solicitanteBanco);
+
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
+
+        assertEquals(pedido, pedidoBanco);
+        assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
+
+        try{
+            repositorioSolicitante.removePorId("775.007.216-09");
+        }catch (BancoDadosException ex){
+            fail("Solicitante 775.007.216-09 deveria ter sido liberado para exclusão.");
+        }
+        assertThrows(BancoDadosException.class, () -> repositorioSolicitante.removePorId("943.861.323-41"),
+                "O solicitante está sendo usado, não poderia ter sido removido.");
+        assertEquals("Andréa Ferreira", pedidoBanco.getSolicitante().getNome());
+    }
+
+    @Test
+    void testAlteraComSolicitanteNaoExiste() throws ValidadorException, BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        repositorioPedido.adiciona(pedido);
+
+        Solicitante novoSolicitante = new Solicitante("307.137.992-77");
+        pedido.setSolicitante(novoSolicitante);
+        BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.altera(pedido));
+        assertEquals("O solicitante com CPF 307.137.992-77 não existe no banco.", excecao.getMessage());
+    }
+
+    @Test
+    void testRemoveComSolicitante() throws ValidadorException, BancoDadosException {
+        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+
+        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+        repositorioPedido.adiciona(pedido);
+        repositorioPedido.removePorId(1);
+
+        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
+
+        try{
+            repositorioSolicitante.removePorId("775.007.216-09");
+        }catch(BancoDadosException ex){
+            fail("O solicitante deveria ter sido liberado para exclusão.", ex);
+        }
+
+        try{
+            repositorioProduto.removePorId(1);
+        }catch(BancoDadosException ex){
+            fail("O produto deveria ter sido liberado para exclusão.", ex);
+        }
+
+    }
+
     private List<Produto> getAlgunsProdutos(int modulo) throws BancoDadosException {
         RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         return repositorioProduto.getValores((produto) -> (produto.getCodigo() % modulo) == 0);

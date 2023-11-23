@@ -60,7 +60,7 @@ public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
     }
 
     @Override
-    public Produto getInstanciaCopiaSegura() {
+    public Produto criaInstanciaCopiaSegura() {
         return this;
     }
 

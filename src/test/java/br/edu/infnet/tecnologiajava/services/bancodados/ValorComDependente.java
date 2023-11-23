@@ -18,7 +18,7 @@ public class ValorComDependente implements ValorBD<Integer, ValorComDependente> 
         this.chave = aSerCopiado.chave;
         valoresDependentes = new ArrayList<>();
         aSerCopiado.valoresDependentes.forEach(
-                (original) -> valoresDependentes.add(original.getInstanciaCopiaSegura())
+                (original) -> valoresDependentes.add(original.criaInstanciaCopiaSegura())
         );
     }
 
@@ -36,7 +36,7 @@ public class ValorComDependente implements ValorBD<Integer, ValorComDependente> 
     }
 
     @Override
-    public ValorComDependente getInstanciaCopiaSegura() {
+    public ValorComDependente criaInstanciaCopiaSegura() {
         return new ValorComDependente(this);
     }
 

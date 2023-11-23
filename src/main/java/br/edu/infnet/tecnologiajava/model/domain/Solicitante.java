@@ -129,7 +129,7 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     }
 
     @Override
-    public Solicitante getInstanciaCopiaSegura() {
+    public Solicitante criaInstanciaCopiaSegura() {
         return this;
     }
 

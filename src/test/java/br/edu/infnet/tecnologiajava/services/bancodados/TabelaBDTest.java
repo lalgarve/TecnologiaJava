@@ -157,7 +157,7 @@ public class TabelaBDTest {
         ValorSemDependente valor = valoresTeste.get(0);
         TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
         instance.adiciona(valor);
-        ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0).getInstanciaCopiaSegura();
+        ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0).criaInstanciaCopiaSegura();
         instance.altera(valorAlterado);
         valorAlterado.setDescricao("Outra descricao");
         Optional<ValorSemDependente> resultado = instance.consultaPorId(valor.getChave());
@@ -199,7 +199,7 @@ public class TabelaBDTest {
         ValorSemDependente valor = valoresTeste.get(0);
         TabelaBD<Integer, ValorSemDependente> instance = fabrica.constroiTabela("minhatabela");
         instance.adiciona(valor);
-        ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0).getInstanciaCopiaSegura();
+        ValorSemDependente valorAlterado = valoresTesteMesmaChave.get(0).criaInstanciaCopiaSegura();
         valorAlterado.setDescricao("Outra descricao");
         valorAlterado.setPodeSerGravadoNoBanco(false);
         BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> instance.altera(valorAlterado));

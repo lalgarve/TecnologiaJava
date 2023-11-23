@@ -46,7 +46,7 @@ public class ValorSemDependente implements ValorBD<Integer, ValorSemDependente>,
     }
 
     @Override
-    public ValorSemDependente getInstanciaCopiaSegura() {
+    public ValorSemDependente criaInstanciaCopiaSegura() {
         try {
             return (ValorSemDependente) super.clone();
         } catch (CloneNotSupportedException ex) {

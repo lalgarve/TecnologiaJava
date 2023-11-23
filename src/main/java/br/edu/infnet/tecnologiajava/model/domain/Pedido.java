@@ -117,7 +117,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
     }
 
     @Override
-    public Pedido getInstanciaCopiaSegura() {
+    public Pedido criaInstanciaCopiaSegura() {
         return new Pedido(this);
     }
 
@@ -132,8 +132,8 @@ public class Pedido implements ValorBD<Integer, Pedido> {
             return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, sem solicitante, número produtos=%5$d, valor total=%6$.2f",
                     codigo, data, descricao, web, produtos.size(), getValorTotal());
         } else {
-            return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, solicitante=%5$s, número produtos=%6$d, valor total=%7$.2f",
-                    codigo, data, descricao, web, solicitante.getCPF(), produtos.size(), getValorTotal());
+            return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, solicitante=%5$s%6$s, número produtos=%7$d, valor total=%8$.2f",
+                    codigo, data, descricao, web, solicitante.getCPF(), solicitante.podeSerGravadoNoBanco()?"":" (incompleto)", produtos.size(), getValorTotal());
         }
     }
 

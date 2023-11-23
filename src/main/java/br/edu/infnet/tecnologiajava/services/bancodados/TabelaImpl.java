@@ -33,7 +33,7 @@ public class TabelaImpl<C, V extends ValorBD<C, V>> implements TabelaBD<C, V> {
         if (valorExistente != null) {
             throw new BancoDadosException("A chave " + valor.getChave() + " já existe na tabela " + nome + ".");
         }
-        dadosTabela.put(valor.getChave(), valor.getInstanciaCopiaSegura());
+        dadosTabela.put(valor.getChave(), valor.criaInstanciaCopiaSegura());
     }
 
     @Override
@@ -56,21 +56,21 @@ public class TabelaImpl<C, V extends ValorBD<C, V>> implements TabelaBD<C, V> {
         if (valorOriginal == null) {
             throw new BancoDadosException("Não exite chave " + valor.getChave() + " para ser alterada.");
         }
-        dadosTabela.put(valor.getChave(), valor.getInstanciaCopiaSegura());
+        dadosTabela.put(valor.getChave(), valor.criaInstanciaCopiaSegura());
     }
 
     @Override
     public Optional<V> consultaPorId(C chave) throws BancoDadosException {
         Objects.requireNonNull(chave, A_CHAVE_NAO_PODE_SER_NULA);
         V valor = dadosTabela.get(chave);
-        valor = valor == null ? null : valor.getInstanciaCopiaSegura();
+        valor = valor == null ? null : valor.criaInstanciaCopiaSegura();
         return Optional.ofNullable(valor);
     }
 
     @Override
     public List<V> getValores() throws BancoDadosException {
         return dadosTabela.values().stream()
-                .map(ValorBD::getInstanciaCopiaSegura)
+                .map(ValorBD::criaInstanciaCopiaSegura)
                 .toList();
     }
 
@@ -79,7 +79,7 @@ public class TabelaImpl<C, V extends ValorBD<C, V>> implements TabelaBD<C, V> {
         Objects.requireNonNull(filtro, "O filtro não pode ser nulo.");
         return dadosTabela.values().stream()
                 .filter(filtro)
-                .map(ValorBD::getInstanciaCopiaSegura)
+                .map(ValorBD::criaInstanciaCopiaSegura)
                 .toList();
     }
 
