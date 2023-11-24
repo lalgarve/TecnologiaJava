@@ -18,22 +18,22 @@ class RepositorioPedidoTest {
 
     @BeforeEach
     void iniciatializaRepositorio() throws IOException, BancoDadosException {
-        ControladorRepositorio.inicializa();
+        InicializadorRepositorio.inicializa();
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
             //noinspection ConstantConditions
-            ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
+            InicializadorRepositorio.carregaSobremesa(new InputStreamReader(is));
         }
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/bebida.csv")) {
             //noinspection ConstantConditions
-            ControladorRepositorio.carregaBebida(new InputStreamReader(is));
+            InicializadorRepositorio.carregaBebida(new InputStreamReader(is));
         }
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/comida.csv")) {
             //noinspection ConstantConditions
-            ControladorRepositorio.carregaComida(new InputStreamReader(is));
+            InicializadorRepositorio.carregaComida(new InputStreamReader(is));
         }
         try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/solicitante.csv")) {
             //noinspection ConstantConditions
-            ControladorRepositorio.carregaSolicitante(new InputStreamReader(is));
+            InicializadorRepositorio.carregaSolicitante(new InputStreamReader(is));
         }
     }
 

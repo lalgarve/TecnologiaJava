@@ -1,6 +1,6 @@
 package br.edu.infnet.tecnologiajava;
 
-import br.edu.infnet.tecnologiajava.repository.ControladorRepositorio;
+import br.edu.infnet.tecnologiajava.repository.InicializadorRepositorio;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,28 +17,33 @@ public class TecnologiajavaApplication {
     private static Logger logger = LogManager.getLogger(TecnologiajavaApplication.class);
 
     public static void main(String[] args) throws BancoDadosException, IOException {
-        ControladorRepositorio.inicializa();
+        InicializadorRepositorio.inicializa();
 
 
         try (InputStream is = TecnologiajavaApplication.class.getResourceAsStream("/sobremesa.csv")) {
             //noinspection ConstantConditions
             logger.info("Carregando sobremesas.");
-            ControladorRepositorio.carregaSobremesa(new InputStreamReader(is));
+            InicializadorRepositorio.carregaSobremesa(new InputStreamReader(is));
         }
         try (InputStream is = TecnologiajavaApplication.class.getResourceAsStream("/comida.csv")) {
             //noinspection ConstantConditions
             logger.info("Carregando comidas.");
-            ControladorRepositorio.carregaComida(new InputStreamReader(is));
+            InicializadorRepositorio.carregaComida(new InputStreamReader(is));
         }
         try (InputStream is = TecnologiajavaApplication.class.getResourceAsStream("/bebida.csv")) {
             //noinspection ConstantConditions
             logger.info("Carregando bebidas.");
-            ControladorRepositorio.carregaBebida(new InputStreamReader(is));
+            InicializadorRepositorio.carregaBebida(new InputStreamReader(is));
         }
         try (InputStream is = TecnologiajavaApplication.class.getResourceAsStream("/solicitante.csv")) {
             //noinspection ConstantConditions
             logger.info("Carregando solicitantes.");
-            ControladorRepositorio.carregaSolicitante(new InputStreamReader(is));
+            InicializadorRepositorio.carregaSolicitante(new InputStreamReader(is));
+        }
+        try (InputStream is = TecnologiajavaApplication.class.getResourceAsStream("/pedido.csv")) {
+            //noinspection ConstantConditions
+            logger.info("Carregando pedidos.");
+            InicializadorRepositorio.carregaPedido(new InputStreamReader(is));
         }
         SpringApplication.run(TecnologiajavaApplication.class, args);
     }

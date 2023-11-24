@@ -2,10 +2,7 @@ package br.edu.infnet.tecnologiajava.repository;
 
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.SolicitanteMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.*;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
@@ -18,9 +15,9 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Iterator;
 
-public class ControladorRepositorio {
+public class InicializadorRepositorio {
 
-    private ControladorRepositorio() {
+    private InicializadorRepositorio() {
     }
 
     public static void inicializa() {
@@ -45,6 +42,10 @@ public class ControladorRepositorio {
 
     public static void carregaSolicitante(Reader reader) throws BancoDadosException {
         carrega(reader, new SolicitanteMapper(), RepositorioSolicitante.getInstance());
+    }
+
+    public static void carregaPedido(Reader reader) throws BancoDadosException {
+        carrega(reader, new PedidoMapper(), RepositorioPedido.getInstance());
     }
 
     private static <T extends ValorBD<?, T>> void carrega(Reader reader, CSVMapper<T> mapper, TabelaBD<?, T> repositorio)
