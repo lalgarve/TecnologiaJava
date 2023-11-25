@@ -155,11 +155,11 @@ class SolicitanteTest {
                 dynamicTest("Igual, instancia diferente",
                         () -> assertEquals(solicitante, new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br"))),
                 dynamicTest("Classe diferente",
-                        () -> assertNotEquals(solicitante, Boolean.FALSE)),
+                        () -> assertFalse(solicitante.equals(Boolean.FALSE))),
                 dynamicTest("Instancia Vazia",
                         () -> assertNotEquals(solicitante, Solicitante.getVazio())),
                 dynamicTest("Valor nulo",
-                        () -> assertNotEquals(null, solicitante))
+                        () -> assertFalse(solicitante.equals(null)))
 
         );
     }
@@ -168,6 +168,7 @@ class SolicitanteTest {
     @ValueSource (ints = {149,150,151,8000})
     void testLimiteEmail(int tamanhoEmail){
         String email =  geraEmail(tamanhoEmail);
+        assertEquals(tamanhoEmail, email.length());
         try {
             new Solicitante("929.204.815-50", "João", email);
             assertTrue(tamanhoEmail<=150);
@@ -182,11 +183,13 @@ class SolicitanteTest {
     }
 
     private String geraEmail(int numeroCaracteres){
-        int tamanhoLogin = numeroCaracteres / 2;
+        int tamanhoLogin = ((numeroCaracteres / 3)  - 2) * 3;
         int tamanhoDominio = numeroCaracteres - tamanhoLogin  - 5;
         StringBuilder email = new StringBuilder();
-        for(int i=0; i<tamanhoLogin; i++){
+        for(int i=0; i<tamanhoLogin; i+=3){
             email.append('a');
+            email.append('.');
+            email.append('b');
         }
         email.append('@');
         for(int i=0; i<tamanhoDominio; i++){

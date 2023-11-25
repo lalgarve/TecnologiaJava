@@ -129,3 +129,17 @@ Psrc/main/java/br/edu/infnet/tecnologiajava/controller/SolicitanteController.jav
 Ssrc/main/java/br/edu/infnet/tecnologiajava/repository/InicializadorRepositorio.java,c\1\c12766744a3989a46b4bcdfa8c39f8e4797c67d8
 {
 Ksrc/main/java/br/edu/infnet/tecnologiajava/controller/PedidoController.java,e\a\ea0e417fee2b9363034ac08aebc07ea9629b7006
+M
+src/main/resources/pedido.csv,3\9\392866e890a8a0b2cbd1d1fff3c18f850500a6bd
+M
+src/main/resources/comida.csv,7\1\71bf1ec86e24d054e0bef7fb64984d5c21b475ce
+M
+src/main/resources/bebida.csv,b\4\b4a83580080fd4928b497049b13e84822e65bb8c
+R
+"src/main/resources/solicitante.csv,b\9\b9aed7b76ef8c39dffc5445c4a6175442916ee74
+P
+ src/main/resources/sobremesa.csv,8\0\80cf7b61af987abb690c4bfd6b254e128b0ab30a
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+]
+-.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e

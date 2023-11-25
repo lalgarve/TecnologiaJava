@@ -162,6 +162,11 @@ public final class ListaComCopiaSegura<T extends Imutavel> implements List<T> {
         return lista.toArray(arg0);
     }
 
+    /**
+     * Os elementos da lista precisam implementar hashCode corretamente.
+     * Os 10 primeiros elementos são considerados.
+     * @return o código hash compatível com equals
+     */
     @Override
     public int hashCode() {
         final int prime = 31;

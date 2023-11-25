@@ -36,7 +36,7 @@ public abstract class CSVMapperAbstrato<T> implements CSVMapper<T> {
             String camposFaltantes = Arrays.stream(camposObrigatorios)
                     .filter(campo -> !camposSetados.contains(campo))
                     .collect(Collectors.joining(", "));
-            if (camposFaltantes.indexOf(",") > 0) {
+            if (camposFaltantes.contains(",")) {
                 throw new CSVMapperException("Os seguintes campos não foram setados: " + camposFaltantes + ".");
             } else {
                 throw new CSVMapperException("O campo " + camposFaltantes + " não foi setado.");

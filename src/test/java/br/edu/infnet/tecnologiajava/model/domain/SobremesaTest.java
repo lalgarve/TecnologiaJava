@@ -34,9 +34,32 @@ class SobremesaTest {
                 dynamicTest("Igual, instância diferente", () ->
                         assertEquals(sobremesa, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f))),
                 dynamicTest("Valor nulo", () ->
-                        assertNotEquals(null, sobremesa)),
+                        assertFalse(sobremesa.equals(null))),
                 dynamicTest("Classe diferente", () ->
-                        assertNotEquals(sobremesa, new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f)))
+                        assertFalse(sobremesa.equals(new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f))))
+        );
+    }
+
+    @TestFactory
+    Collection<DynamicTest> testHascode() throws ValidadorException {
+        Sobremesa sobremesa = new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f);
+        int hascode = sobremesa.hashCode();
+        return Arrays.asList(
+                dynamicTest("Código diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(2, "Pudim", true, "sem glútem", 1.0f, 1.0f).hashCode())),
+                dynamicTest("Nome diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(1, "Pudim Leite", true, "sem glútem", 1.0f, 1.0f).hashCode())),
+                dynamicTest("Informação diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(1, "Pudim", true, "com glútem", 1.0f, 1.0f).hashCode())),
+                dynamicTest("Quantidade diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(1, "Pudim", true, "sem glútem", 2.0f, 1.0f).hashCode())),
+                dynamicTest("Valor diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 2.0f).hashCode())),
+                dynamicTest("Doce diferente", () ->
+                        assertNotEquals(hascode, new Sobremesa(1, "Pudim", false, "sem glútem", 1.0f, 1.0f).hashCode())),
+                dynamicTest("Igual, instância diferente", () ->
+                        assertEquals(hascode, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f).hashCode()))
+
         );
     }
 
@@ -58,10 +81,12 @@ class SobremesaTest {
     @TestFactory
     Collection<DynamicTest> testGetters() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
+        Sobremesa sobremesaSalgada = new Sobremesa(20, "Pudim", false, "sem glútem", 1.5f, 10.5f);
         return Arrays.asList(
                 dynamicTest("Código", () -> assertEquals(20, sobremesa.getCodigo())),
                 dynamicTest("Nome", () -> assertEquals("Pudim", sobremesa.getNome())),
                 dynamicTest("Doce", () -> assertTrue(sobremesa.isDoce())),
+                dynamicTest("Salgada", () -> assertFalse(sobremesaSalgada.isDoce())),
                 dynamicTest("Informação", () -> assertEquals("sem glútem", sobremesa.getInformacao())),
                 dynamicTest("Quantidade", () -> assertEquals(1.5f, sobremesa.getQuantidade())),
                 dynamicTest("Valor", () -> assertEquals(10.5f, sobremesa.getValor()))

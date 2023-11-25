@@ -33,11 +33,34 @@ class BebidaTest {
                 dynamicTest("Mesma instancia", () ->
                         assertEquals(bebida, bebida)),
                 dynamicTest("Null", () ->
-                        assertNotEquals(null, bebida)),
+                        assertFalse(bebida.equals(null))),
                 dynamicTest("Igual, instancia diferente", () ->
                         assertEquals(bebida, new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f))),
                 dynamicTest("Classe diferente", () ->
-                        assertNotEquals(bebida, new Sobremesa("pudim", true, "sem gosto", 1.0f, 1.0f)))
+                        assertFalse(bebida.equals(new Sobremesa("pudim", true, "sem gosto", 1.0f, 1.0f))))
+        );
+
+    }
+
+    @TestFactory
+    Collection<DynamicTest> testHashCode() throws ValidadorException {
+        Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
+        int hashCode = bebida.hashCode();
+        return Arrays.asList(
+                dynamicTest("Codigo diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(21, "Cerveja1", "Brahma", 1.0f, true, 10.5f).hashCode())),
+                dynamicTest("Nome diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(20, "Cerveja2", "Brahma", 1.0f, true, 10.5f).hashCode())),
+                dynamicTest("Marca diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(20, "Cerveja1", "Antartica", 1.0f, true, 10.5f).hashCode())),
+                dynamicTest("Tamanho diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(20, "Cerveja1", "Brahma", 0.5f, true, 10.5f).hashCode())),
+                dynamicTest("Gelada diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(20, "Cerveja1", "Brahma", 1.0f, false, 10.5f).hashCode())),
+                dynamicTest("Valor diferente", () ->
+                        assertNotEquals(hashCode, new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 5.5f).hashCode())),
+                dynamicTest("Igual, instancia diferente", () ->
+                        assertEquals(hashCode, new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f).hashCode()))
         );
 
     }
@@ -61,13 +84,15 @@ class BebidaTest {
     @TestFactory
     Collection<DynamicTest> testGetters() throws ValidadorException {
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
+        Bebida bebidaQuente = new Bebida(20, "Cerveja1", "Brahma", 1.0f, false, 10.5f);
         return Arrays.asList(
                 dynamicTest("nome", () -> assertEquals("Cerveja1", bebida.getNome())),
                 dynamicTest("valor", () -> assertEquals(10.5f, bebida.getValor())),
                 dynamicTest("codigo", () -> assertEquals(20, bebida.getCodigo())),
                 dynamicTest("tamanho", () -> assertEquals(1.0f, bebida.getTamanho())),
                 dynamicTest("marca", () -> assertEquals("Brahma", bebida.getMarca())),
-                dynamicTest("gelada", () -> assertTrue(bebida.isGelada()))
+                dynamicTest("gelada", () -> assertTrue(bebida.isGelada())),
+                dynamicTest("gelada", () -> assertFalse(bebidaQuente.isGelada()))
         );
 
     }
@@ -110,6 +135,16 @@ class BebidaTest {
         List<String> mensagens = excecao.getValidador().getMensagens();
         assertEquals(1, mensagens.size());
         assertEquals(mensagem.toLowerCase(), mensagens.get(0).toLowerCase());
+    }
+
+    @ParameterizedTest
+    @ValueSource(floats = {0.1f, 10.f})
+    void testLimiteVolume(float limite){
+        try{
+            new Bebida(20, "Cerveja1", "Brahma", limite, true, 10.5f);
+        }catch(ValidadorException ex){
+            fail(limite+" é válido", ex);
+        }
     }
 
     @ParameterizedTest

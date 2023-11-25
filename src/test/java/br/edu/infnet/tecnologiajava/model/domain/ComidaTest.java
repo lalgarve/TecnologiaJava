@@ -31,9 +31,9 @@ class ComidaTest {
                 dynamicTest("Mesma Instancia", () -> assertEquals(comida, comida)),
                 dynamicTest("Igual, instancia diferente",
                         () -> assertEquals(comida, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f))),
-                dynamicTest("Null", () -> assertNotEquals(null, comida)),
+                dynamicTest("Null", () -> assertFalse(comida.equals(null))),
                 dynamicTest("Classe diferente",
-                        () -> assertNotEquals(comida, new Bebida("Cerveja", "Brahma", 1.0f, false, 10.2f))));
+                        () -> assertFalse(comida.equals(new Bebida("Cerveja", "Brahma", 1.0f, false, 10.2f)))));
     }
 
     @TestFactory

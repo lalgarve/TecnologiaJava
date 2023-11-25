@@ -31,7 +31,7 @@ public final class Bebida extends Produto {
         super.validaCamposProduto(validador);
         validador.valida("A marca não pode ser nula", marca != null);
         validador.valida("A marca não pode estar em branco", marca == null || !marca.isBlank());
-        validador.valida("O tamanho precisa estar entre 0,1 L e 10 L", tamanho >= 0.1 && tamanho <= 10.0f);
+        validador.valida("O tamanho precisa estar entre 0,1 L e 10 L", tamanho >= 0.1f && tamanho <= 10.0f);
         if (validador.temErro()) {
             throw new ValidadorException("Há campos da bebida inválidos", validador);
         }
@@ -69,7 +69,9 @@ public final class Bebida extends Produto {
         result = prime * result + (gelada ? 1231 : 1237);
         result = prime * result + Float.floatToIntBits(tamanho);
         result = prime * result + marca.hashCode();
-        result = prime * result + super.hashCode();
+        result = prime * result + getCodigo();
+        result = prime * result + getNome().hashCode();
+        result = prime * result + Float.floatToIntBits(getValor());
         return result;
     }
 
