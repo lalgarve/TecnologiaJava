@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -57,8 +58,6 @@ class SolicitanteTest {
 
     @TestFactory
     Collection<DynamicTest> testValidacoesSimples() {
-        Executable cpfNulo = () -> new Solicitante(null, "João", "joao@google.com");
-        Executable cpfEmBranco = () -> new Solicitante("   ", "João", "joao@google.com");
         Executable nomeNulo = () -> new Solicitante("062.427.708-90", null, "joao@google.com");
         Executable nomeEmBranco = () -> new Solicitante("062.427.708-90", "  ", "joao@google.com");
         Executable emailNulo = () -> new Solicitante("062.427.708-90", "João", null);
@@ -68,10 +67,6 @@ class SolicitanteTest {
         Executable emailDuasArrobas = () -> new Solicitante("062.427.708-90", "João", "joao@@gmail.com");
         Executable emailDominioInvalido = () -> new Solicitante("062.427.708-90", "João", "joao@gmail");
         return Arrays.asList(
-                dynamicTest("CPF Nulo",
-                        () -> testValidaCampo("O CPF não pode ser nulo", cpfNulo)),
-                dynamicTest("CPF em Branco",
-                        () -> testValidaCampo("O CPF não pode estar em branco", cpfEmBranco)),
                 dynamicTest("Nome Nulo",
                         () -> testValidaCampo("O nome não pode ser nulo", nomeNulo)),
                 dynamicTest("Nome em Branco",
@@ -164,6 +159,24 @@ class SolicitanteTest {
         );
     }
 
+    @TestFactory
+    Collection<DynamicTest> testHashCode() throws ValidadorException {
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        int hashCode = solicitante.hashCode();
+        return Arrays.asList(
+                dynamicTest("CPF diferente",
+                        () -> assertNotEquals(hashCode, new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br").hashCode())),
+                dynamicTest("Nome diferente",
+                        () -> assertNotEquals(hashCode, new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br").hashCode())),
+                dynamicTest("Email diferente",
+                        () -> assertNotEquals(hashCode, new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br").hashCode())),
+                dynamicTest("Igual, instancia diferente",
+                        () -> assertEquals(hashCode, new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br").hashCode())),
+                dynamicTest("Instancia Vazia",
+                        () -> assertNotEquals(hashCode, Solicitante.getVazio()))
+        );
+    }
+
     @ParameterizedTest
     @ValueSource (ints = {149,150,151,8000})
     void testLimiteEmail(int tamanhoEmail){
@@ -197,6 +210,61 @@ class SolicitanteTest {
         }
         email.append(".com");
         return email.toString();
+    }
+
+    @ParameterizedTest
+    @MethodSource ("valoresVaziosValidos")
+    void validaVazioOkConstrutorFull(String cpf, String nome, String email){
+        try{
+            Solicitante solicitante = new Solicitante(cpf, nome, email);
+            assertEquals(Solicitante.getVazio(),solicitante);
+        }catch(ValidadorException ex){
+            fail(ex);
+        }
+    }
+
+    private static Stream<Arguments> valoresVaziosValidos(){
+        return Stream.of(
+                Arguments.of("000.000.000-00", "", ""),
+                Arguments.of("000.000.000-00", null, ""),
+                Arguments.of("000.000.000-00", "", null),
+                Arguments.of("000.000.000-00", "  ", "  "),
+                Arguments.of(null, null, null),
+                Arguments.of("", "", ""),
+                Arguments.of("", null, ""),
+                Arguments.of("", "", null),
+                Arguments.of("  ", "  ", "  "),
+                Arguments.of("  ", "", ""),
+                Arguments.of("  ", null, ""),
+                Arguments.of("  ", "", null),
+                Arguments.of("  ", "  ", "  ")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource ("valoresVaziosInvalidos")
+    void validaVazioNotOkConstrutorFull(String cpf, String nome, String email, String mensagem){
+        ValidadorException excecao =  assertThrows(ValidadorException.class, ()->new Solicitante(cpf, nome, email));
+        Validador validador = excecao.getValidador();
+        assertEquals(mensagem, validador.getMensagens().get(0));
+    }
+    private static Stream<Arguments> valoresVaziosInvalidos(){
+        return Stream.of(
+                Arguments.of("000.000.000-00", "", "joao@gmail.com",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo"),
+                Arguments.of("000.000.000-00", "joão", null,
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo"),
+                Arguments.of("000.000.000-00", "  ", "joao@gmail.com",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo"),
+                Arguments.of("", "joão", "",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo"),
+                Arguments.of("  ", "", "joao@gmail.com",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo"),
+                Arguments.of("  ", null, "joao@gmail.com",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo"),
+                Arguments.of("  ", "maria", "  ",
+                        "Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo")
+        );
     }
 
 

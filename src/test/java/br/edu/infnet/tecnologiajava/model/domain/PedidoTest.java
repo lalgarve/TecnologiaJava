@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class PedidoTest {
     @TestFactory
-    Collection<DynamicTest> testEquals() throws ValidadorException {
+    Collection<DynamicTest> testEqualsHashCode() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();
         List<Produto> sobremesas = new ArrayList<>();
         adicionaSobremesa(sobremesas, 5, "sobremesa");
@@ -30,42 +30,52 @@ class PedidoTest {
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
         Pedido pedido = new Pedido(10, "Pedido 1", data, false, solicitante);
         pedido.setProdutos(bebidas);
+        int hashCode = pedido.hashCode();
 
         Pedido codigoDiferente = new Pedido(20, "Pedido 1", data, false, solicitante);
         codigoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Codigo diferente", () -> assertNotEquals(pedido, codigoDiferente)));
+        testes.add(dynamicTest("Equals Codigo diferente", () -> assertNotEquals(pedido, codigoDiferente)));
+        testes.add(dynamicTest("HashCode Codigo diferente", () -> assertNotEquals(hashCode, codigoDiferente.hashCode())));
 
         Pedido descricaoDiferente = new Pedido(20, "Pedido 2", data, false, solicitante);
         descricaoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Descricao diferente", () -> assertNotEquals(pedido, descricaoDiferente)));
+        testes.add(dynamicTest("Equals Descricao diferente", () -> assertNotEquals(pedido, descricaoDiferente)));
+        testes.add(dynamicTest("HahsCode Descricao diferente", () -> assertNotEquals(hashCode, descricaoDiferente.hashCode())));
 
         Pedido dataDiferente = new Pedido(20, "Pedido 1", LocalDateTime.now(), false, solicitante);
         dataDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Data diferente", () -> assertNotEquals(pedido, dataDiferente)));
+        testes.add(dynamicTest("Equals Data diferente", () -> assertNotEquals(pedido, dataDiferente)));
+        testes.add(dynamicTest("HashCode Data diferente", () -> assertNotEquals(hashCode, dataDiferente.hashCode())));
 
         Pedido webDiferente = new Pedido(10, "Pedido 1", data, true, solicitante);
         webDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Web diferente", () -> assertNotEquals(pedido, webDiferente)));
+        testes.add(dynamicTest("Equals Web diferente", () -> assertNotEquals(pedido, webDiferente)));
+        testes.add(dynamicTest("HashsCode Web diferente", () -> assertNotEquals(hashCode, webDiferente.hashCode())));
 
         Pedido produtosDiferentesMesmaQuantidade = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesMesmaQuantidade.setProdutos(sobremesas);
-        testes.add(dynamicTest("Produtos diferentes, mesma quantidade",
+        testes.add(dynamicTest("Equals Produtos diferentes, mesma quantidade",
                 () -> assertNotEquals(pedido, produtosDiferentesMesmaQuantidade)));
-
+        testes.add(dynamicTest("HashCode Produtos diferentes, mesma quantidade",
+                () -> assertNotEquals(hashCode, produtosDiferentesMesmaQuantidade.hashCode())));
         Pedido produtosDiferentesQuantidadeDiferente = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesQuantidadeDiferente.setProdutos(comidas);
-        testes.add(dynamicTest("Produtos diferentes, quantidade diferente",
+        testes.add(dynamicTest("Equals Produtos diferentes, quantidade diferente",
                 () -> assertNotEquals(pedido, produtosDiferentesQuantidadeDiferente)));
+        testes.add(dynamicTest("HashCode Produtos diferentes, quantidade diferente",
+                () -> assertNotEquals(hashCode, produtosDiferentesQuantidadeDiferente.hashCode())));
 
         Pedido solicitanteDiferente = new Pedido(10, "Pedido 1", data, false, Solicitante.getVazio());
         solicitanteDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Solicitante diferente", () -> assertNotEquals(pedido, solicitanteDiferente)));
+        testes.add(dynamicTest("Equals Solicitante diferente", () -> assertNotEquals(pedido, solicitanteDiferente)));
+        testes.add(dynamicTest("Solicitante Solicitante diferente", () -> assertNotEquals(hashCode, solicitanteDiferente.hashCode())));
 
         Pedido igual = new Pedido(pedido);
-        testes.add(dynamicTest("Mesma Instancia", () -> assertEquals(pedido, pedido)));
-        testes.add(dynamicTest("Instancia diferente, objeto igual", () -> assertEquals(pedido, igual)));
-        testes.add(dynamicTest("Classe diferente", () -> assertNotEquals(pedido, Solicitante.getVazio())));
-        testes.add(dynamicTest("Null", () -> assertNotEquals(null, pedido)));
+        testes.add(dynamicTest("Equals Mesma Instancia", () -> assertEquals(pedido, pedido)));
+        testes.add(dynamicTest("Equals Instancia diferente, objeto igual", () -> assertEquals(pedido, igual)));
+        testes.add(dynamicTest("HashCode Instancia diferente, objeto igual", () -> assertEquals(hashCode, igual.hashCode())));
+        testes.add(dynamicTest("Equals Classe diferente", () -> assertFalse(pedido.equals(Solicitante.getVazio()))));
+        testes.add(dynamicTest("Equals Null", () -> assertFalse(pedido.equals(null))));
 
         return testes;
 

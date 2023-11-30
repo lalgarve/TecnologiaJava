@@ -37,6 +37,28 @@ class ComidaTest {
     }
 
     @TestFactory
+    Collection<DynamicTest> testHashCode() throws ValidadorException {
+        Comida comida = new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f);
+        int hashCode = comida.hashCode();
+        return Arrays.asList(
+                dynamicTest("Código diferente",
+                        () -> assertNotEquals(hashCode, new Comida(2, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f).hashCode())),
+                dynamicTest("Nome diferente",
+                        () -> assertNotEquals(hashCode, new Comida(1, "Escondidinho 2", "batata, carne, azeitonas", 0.5f, false, 20.5f).hashCode())),
+                dynamicTest("Ingredientes diferentes",
+                        () -> assertNotEquals(hashCode, new Comida(1, "Escondidinho", "batata, frango, azeitonas", 0.5f, false, 20.5f).hashCode())),
+                dynamicTest("Peso diferente",
+                        () -> assertNotEquals(hashCode, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 1.5f, false, 20.5f).hashCode())),
+                dynamicTest("Vegano diferente",
+                        () -> assertNotEquals(hashCode, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, true, 20.5f).hashCode())),
+                dynamicTest("Valor diferente",
+                        () -> assertNotEquals(hashCode, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 10.5f).hashCode())),
+                dynamicTest("Igual, instancia diferente",
+                        () -> assertEquals(hashCode, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f).hashCode()))
+        );
+    }
+
+    @TestFactory
     Collection<DynamicTest> testGetDetalhes() throws ValidadorException {
         Comida vegano = new Comida("Hambuger", "pão, carne de soja", 0.5f, true, 20.5f);
         Comida naoVegano = new Comida("Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f);

@@ -15,13 +15,21 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     private static final String CPF_VAZIO = "000.000.000-00";
 
     public Solicitante(String cpf, String nome, String email) throws ValidadorException {
-        this.email = email;
-        this.cpf = cpf;
-        this.nome = nome;
+        boolean eVazio = cpf == null || CPF_VAZIO.equals(cpf) || cpf.isBlank();
         Validador validador = new Validador();
-        validaCPF(validador);
-        validaEmail(validador);
-        validaNome(validador);
+        if(eVazio){
+            this.cpf = CPF_VAZIO;
+            this.nome = "";
+            this.email = "";
+            validaVazio(validador, nome, email);
+        }else {
+            this.email = email;
+            this.cpf = cpf;
+            this.nome = nome;
+            validaCPF(validador);
+            validaEmail(validador);
+            validaNome(validador);
+        }
         if (validador.temErro()) {
             throw new ValidadorException("Há erros nos dados do solicitante", validador);
         }
@@ -42,6 +50,11 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
         this.cpf = CPF_VAZIO;
         nome = "";
         email = "";
+    }
+
+    private void validaVazio(Validador validador, String nome, String email){
+        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo", nome==null || nome.isBlank());
+        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo", email==null || email.isBlank());
     }
 
     public static Solicitante getVazio() {
@@ -69,7 +82,7 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     }
 
     private void validaCPF(Validador validador) {
-        if (validaCPFPreenchido(validador) && validaFormatoCPF(validador)) {
+        if (validaFormatoCPF(validador)) {
             int[] digitos = cpf.chars()
                     .filter(digito -> digito != '.' && digito != '-')
                     .map(digito -> digito - '0')
@@ -78,13 +91,6 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
             int digitoVerificador2 = calculaDigitoVerificador(digitos, 11, 10);
             validador.valida("O CPF é inválido", digitos[9] == digitoVerificador1 && digitos[10] == digitoVerificador2);
         }
-    }
-
-    private boolean validaCPFPreenchido(Validador validador) {
-        boolean resultado = cpf != null && !cpf.isBlank();
-        validador.valida("O CPF não pode ser nulo", cpf != null);
-        validador.valida("O CPF não pode estar em branco", cpf == null || !cpf.isBlank());
-        return resultado;
     }
 
     private boolean validaFormatoCPF(Validador validador) {
