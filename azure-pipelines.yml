@@ -25,4 +25,4 @@ steps:
   inputs:
     codeCoverageTool: 'JaCoCo' 
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/CCReport*/jacoco.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/CCReport*/jacoco/'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/CCReport*/'
