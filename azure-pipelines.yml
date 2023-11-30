@@ -24,5 +24,4 @@ steps:
 - task: PublishCodeCoverageResults@2
   inputs:
     codeCoverageTool: 'JaCoCo' 
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/TecnologiaJava/target/site/jacoco/jacoco.xml'
     reportDirectory: '**/site/jacoco/'
