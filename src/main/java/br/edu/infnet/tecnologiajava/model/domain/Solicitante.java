@@ -36,14 +36,21 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     }
 
     public Solicitante(String cpf) throws ValidadorException{
-        this.cpf = cpf;
         nome = "";
         email = "";
-        Validador validador = new Validador();
-        validaCPF(validador);
-        if (validador.temErro()) {
-            throw new ValidadorException("Há erros nos dados do solicitante", validador);
+        if(cpf==null || cpf.isBlank() || CPF_VAZIO.equals(cpf)) {
+            this.cpf = CPF_VAZIO;
         }
+        else{
+            this.cpf = cpf;
+            Validador validador = new Validador();
+            validaCPF(validador);
+            if (validador.temErro()) {
+                throw new ValidadorException("Há erros nos dados do solicitante", validador);
+            }
+        }
+
+
     }
 
     private Solicitante() {

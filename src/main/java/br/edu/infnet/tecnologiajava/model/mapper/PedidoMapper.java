@@ -49,9 +49,7 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
         verificaTodosCamposSetatos();
         try {
             finaliza();
-            Solicitante solicitante = cpfSolicitante.isBlank()
-                    ? Solicitante.getVazio()
-                    : new Solicitante(cpfSolicitante);
+            Solicitante solicitante = new Solicitante(cpfSolicitante);
             Pedido pedido = new Pedido(descricao, data, web, solicitante);
             pedido.setProdutos(produtos);
             return pedido;

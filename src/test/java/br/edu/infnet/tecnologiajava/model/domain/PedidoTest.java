@@ -139,6 +139,49 @@ class PedidoTest {
                 pedido.toString());
     }
 
+    @Test
+    void testToStringSolicitanteIncompleto() throws ValidadorException {
+        LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
+        Solicitante solicitante = new Solicitante("062.427.708-90");
+        Pedido pedido = new Pedido(10, "Pedido 1", data, false, solicitante);
+        List<Produto> produtos = new ArrayList<>();
+        adicionaSobremesa(produtos, 3, "sobremesa");
+        adicionaComida(produtos, 3, "comida");
+        pedido.setProdutos(produtos);
+        assertEquals(
+                "Pedido: codigo=10, data=13 fev. 2023 12:30, descricao=Pedido 1, web=false, solicitante=062.427.708-90 (incompleto), número produtos=6, valor total=60,00",
+                pedido.toString());
+    }
+
+    @Test
+    void testGetValorTotal() throws ValidadorException {
+        LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        Pedido pedido = new Pedido(10, "Pedido 1", data, false, solicitante);
+        List<Produto> produtos = new ArrayList<>();
+        adicionaSobremesa(produtos, 3, "sobremesa");
+        adicionaComida(produtos, 3, "comida");
+        pedido.setProdutos(produtos);
+        assertEquals(60.0f, pedido.getValorTotal());
+        adicionaComida(produtos, 3, "comida");
+        assertEquals(60.0f, pedido.getValorTotal());
+        pedido.setProdutos(produtos);
+        assertEquals(90.0f, pedido.getValorTotal());
+    }
+
+    @Test
+    void testPodeSerGravadoNoBanco() throws ValidadorException {
+        LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
+        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
+        Pedido pedido = new Pedido(10, "Pedido 1", data, false, solicitante);
+        assertFalse(pedido.podeSerGravadoNoBanco());
+        List<Produto> produtos = new ArrayList<>();
+        adicionaSobremesa(produtos, 3, "sobremesa");
+        adicionaComida(produtos, 3, "comida");
+        pedido.setProdutos(produtos);
+        assertTrue(pedido.podeSerGravadoNoBanco());
+    }
+
     @TestFactory
     Collection<DynamicTest> testValidacaoConstrutor() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();

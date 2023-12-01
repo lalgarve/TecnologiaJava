@@ -43,6 +43,22 @@ class PedidoMapperTest {
     }
 
     @Test
+    void testBuildSolicitanteVazio() throws ValidadorException {
+        PedidoMapper pedidoMapper = new PedidoMapper();
+        pedidoMapper.reset();
+        pedidoMapper.setValor("descricao", "Pedido 1");
+        pedidoMapper.setValor("web", "true");
+        pedidoMapper.setValor("data", "2023-02-10T12:30");
+        pedidoMapper.setValor("cpfSolicitante", null);
+        pedidoMapper.setValor("produtos", "10,3,4");
+        Pedido pedido = pedidoMapper.build();
+        Pedido pedidoEsperado = new Pedido(1, "Pedido 1", LocalDateTime.of(2023, 02,
+                10, 12, 30), true, Solicitante.getVazio());
+        pedidoEsperado.setProdutos(criaProdutos(10,3,4));
+        assertEquals(pedidoEsperado, pedido);
+    }
+
+    @Test
     void testBuildCodigoInvalido() throws ValidadorException {
         PedidoMapper pedidoMapper = new PedidoMapper();
         pedidoMapper.reset();

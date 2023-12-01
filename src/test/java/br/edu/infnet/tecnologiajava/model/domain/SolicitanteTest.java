@@ -267,5 +267,29 @@ class SolicitanteTest {
         );
     }
 
+    @ParameterizedTest
+    @ValueSource (strings = {" ", "", "000.000.000-00"})
+    void testConstrutorApenasCPFBranco(String cpf){
+        try{
+            Solicitante solicitante = new Solicitante(cpf);
+            assertTrue(solicitante.podeSerGravadoNoBanco());
+            assertEquals(Solicitante.getVazio(), solicitante);
+        }
+        catch(ValidadorException ex){
+            fail(ex);
+        }
+    }
+
+    @Test
+    void testConstrutorApenasCPFNulo() {
+        try{
+            Solicitante solicitante = new Solicitante(null);
+            assertEquals(Solicitante.getVazio(), solicitante);
+        }
+        catch(ValidadorException ex){
+            fail(ex);
+        }
+    }
+
 
 }
