@@ -4,6 +4,8 @@ import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,6 +81,18 @@ class PedidoMapperTest {
             CSVMapperException excecao = assertThrows(CSVMapperException.class,
                     pedidoMapper::build);
             assertEquals("Informação mapeada inválida.", excecao.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource (value={"data;11/02/23;11/02/23 não está no formato ano-mês-diaThora:minuto, por exemplo: 2023-01-10T13:30.",
+            "Data;2023-10-10;O campo Data não existe.",
+            "produtos;aaaa;aaaa não é um número inteiro."},
+            delimiter = ';')
+    void testCamposInvalidos(String campo, String valor, String mensagem){
+        PedidoMapper pedidoMapper = new PedidoMapper();
+        pedidoMapper.reset();
+        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> pedidoMapper.setValor(campo, valor));
+        assertEquals(mensagem, excecao.getMessage());
     }
 
 

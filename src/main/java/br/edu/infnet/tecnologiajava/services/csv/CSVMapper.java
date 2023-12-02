@@ -50,7 +50,7 @@ public interface CSVMapper<T> {
         try {
             localDateTime = LocalDateTime.parse(valorComoString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (DateTimeParseException e) {
-            throw new CSVMapperException(valorComoString + " não é uma data.");
+            throw new CSVMapperException(valorComoString + " não está no formato ano-mês-diaThora:minuto, por exemplo: 2023-01-10T13:30.");
         }
 
         return localDateTime;
