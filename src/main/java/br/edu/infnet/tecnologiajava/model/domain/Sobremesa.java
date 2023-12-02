@@ -1,7 +1,10 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import lombok.Getter;
+
 import java.util.Locale;
 
+@Getter
 public final class Sobremesa extends Produto {
 
 
@@ -37,19 +40,6 @@ public final class Sobremesa extends Produto {
         if (validador.temErro()) {
             throw new ValidadorException("Há campos da sobremesa inválidos", validador);
         }
-    }
-
-    public boolean isDoce() {
-        return doce;
-    }
-
-    public String getInformacao() {
-        return informacao;
-    }
-
-
-    public float getQuantidade() {
-        return quantidade;
     }
 
     @Override

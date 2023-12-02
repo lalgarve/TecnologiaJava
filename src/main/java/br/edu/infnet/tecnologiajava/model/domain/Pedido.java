@@ -2,6 +2,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@Getter
 public class Pedido implements ValorBD<Integer, Pedido> {
     private final String descricao;
     private final LocalDateTime data;
@@ -65,28 +67,8 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         return validador;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public boolean isWeb() {
-        return web;
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
     public Stream<Produto> getProdutos() {
         return produtos.stream();
-    }
-
-    public Solicitante getSolicitante() {
-        return solicitante;
     }
 
     public void setSolicitante(Solicitante solicitante) {
@@ -133,7 +115,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
                     codigo, data, descricao, web, produtos.size(), getValorTotal());
         } else {
             return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, solicitante=%5$s%6$s, número produtos=%7$d, valor total=%8$.2f",
-                    codigo, data, descricao, web, solicitante.getCPF(), solicitante.podeSerGravadoNoBanco()?"":" (incompleto)", produtos.size(), getValorTotal());
+                    codigo, data, descricao, web, solicitante.getCpf(), solicitante.podeSerGravadoNoBanco()?"":" (incompleto)", produtos.size(), getValorTotal());
         }
     }
 

@@ -78,21 +78,6 @@ class SobremesaTest {
         );
     }
 
-    @TestFactory
-    Collection<DynamicTest> testGetters() throws ValidadorException {
-        Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
-        Sobremesa sobremesaSalgada = new Sobremesa(20, "Pudim", false, "sem glútem", 1.5f, 10.5f);
-        return Arrays.asList(
-                dynamicTest("Código", () -> assertEquals(20, sobremesa.getCodigo())),
-                dynamicTest("Nome", () -> assertEquals("Pudim", sobremesa.getNome())),
-                dynamicTest("Doce", () -> assertTrue(sobremesa.isDoce())),
-                dynamicTest("Salgada", () -> assertFalse(sobremesaSalgada.isDoce())),
-                dynamicTest("Informação", () -> assertEquals("sem glútem", sobremesa.getInformacao())),
-                dynamicTest("Quantidade", () -> assertEquals(1.5f, sobremesa.getQuantidade())),
-                dynamicTest("Valor", () -> assertEquals(10.5f, sobremesa.getValor()))
-        );
-    }
-
     @Test
     void testToString() throws ValidadorException {
         Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);

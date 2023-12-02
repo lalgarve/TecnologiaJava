@@ -1,7 +1,10 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import lombok.Getter;
+
 import java.util.Locale;
 
+@Getter
 public final class Bebida extends Produto {
 
     private final boolean gelada;
@@ -35,18 +38,6 @@ public final class Bebida extends Produto {
         if (validador.temErro()) {
             throw new ValidadorException("Há campos da bebida inválidos", validador);
         }
-    }
-
-    public boolean isGelada() {
-        return gelada;
-    }
-
-    public float getTamanho() {
-        return tamanho;
-    }
-
-    public String getMarca() {
-        return marca;
     }
 
     @Override

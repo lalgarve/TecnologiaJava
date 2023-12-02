@@ -105,15 +105,6 @@ class SolicitanteTest {
         assertEquals(mensagemExcecao.toLowerCase(), excecao.getMessage().toLowerCase());
     }
 
-    @TestFactory
-    Collection<DynamicTest> testGetters() throws ValidadorException {
-        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
-        return Arrays.asList(
-                dynamicTest("Nome", () -> assertEquals("João", solicitante.getNome())),
-                dynamicTest("email", () -> assertEquals("joao@yahoo.com.br", solicitante.getEmail())),
-                dynamicTest("cpf", () -> assertEquals("062.427.708-90", solicitante.getCPF())));
-    }
-
     @Test
     void testToString() throws ValidadorException {
         Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");

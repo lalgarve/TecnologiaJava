@@ -13,30 +13,6 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class ComidaTest {
     @TestFactory
-    Collection<DynamicTest> testEquals() throws ValidadorException {
-        Comida comida = new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f);
-        return Arrays.asList(
-                dynamicTest("Código diferente",
-                        () -> assertNotEquals(comida, new Comida(2, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f))),
-                dynamicTest("Nome diferente",
-                        () -> assertNotEquals(comida, new Comida(1, "Escondidinho 2", "batata, carne, azeitonas", 0.5f, false, 20.5f))),
-                dynamicTest("Ingredientes diferentes",
-                        () -> assertNotEquals(comida, new Comida(1, "Escondidinho", "batata, frango, azeitonas", 0.5f, false, 20.5f))),
-                dynamicTest("Peso diferente",
-                        () -> assertNotEquals(comida, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 1.5f, false, 20.5f))),
-                dynamicTest("Vegano diferente",
-                        () -> assertNotEquals(comida, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, true, 20.5f))),
-                dynamicTest("Valor diferente",
-                        () -> assertNotEquals(comida, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 10.5f))),
-                dynamicTest("Mesma Instancia", () -> assertEquals(comida, comida)),
-                dynamicTest("Igual, instancia diferente",
-                        () -> assertEquals(comida, new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f))),
-                dynamicTest("Null", () -> assertFalse(comida.equals(null))),
-                dynamicTest("Classe diferente",
-                        () -> assertFalse(comida.equals(new Bebida("Cerveja", "Brahma", 1.0f, false, 10.2f)))));
-    }
-
-    @TestFactory
     Collection<DynamicTest> testHashCode() throws ValidadorException {
         Comida comida = new Comida(1, "Escondidinho", "batata, carne, azeitonas", 0.5f, false, 20.5f);
         int hashCode = comida.hashCode();

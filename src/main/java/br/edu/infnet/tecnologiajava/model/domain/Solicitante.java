@@ -2,9 +2,11 @@ package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import lombok.Getter;
 
 import java.util.regex.Pattern;
 
+@Getter
 public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
 
     private final String email;
@@ -74,18 +76,6 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     @Override
     public boolean podeSerGravadoNoBanco() {
         return cpf.equals(CPF_VAZIO) || !nome.isBlank();
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getCPF() {
-        return cpf;
-    }
-
-    public String getNome() {
-        return nome;
     }
 
     private void validaCPF(Validador validador) {

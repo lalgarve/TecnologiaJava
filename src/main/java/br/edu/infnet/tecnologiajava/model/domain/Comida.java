@@ -1,7 +1,10 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import lombok.Getter;
+
 import java.util.Locale;
 
+@Getter
 public final class Comida extends Produto {
 
     private final float peso;
@@ -24,18 +27,6 @@ public final class Comida extends Produto {
         this.vegano = vegano;
         this.ingredientes = ingredientes;
         valida();
-    }
-
-    public float getPeso() {
-        return peso;
-    }
-
-    public boolean isVegano() {
-        return vegano;
-    }
-
-    public String getIngredientes() {
-        return ingredientes;
     }
 
     private void valida() throws ValidadorException {

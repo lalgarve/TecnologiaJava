@@ -67,7 +67,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     private Solicitante getSolicitanteDoBanco(Pedido pedido) throws BancoDadosException {
         RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         Optional<Solicitante> solicitanteBanco = repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave());
-        return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF "+pedido.getSolicitante().getCPF()+" não existe no banco."));
+        return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF "+pedido.getSolicitante().getCpf()+" não existe no banco."));
     }
 
     public void altera(Pedido pedido) throws BancoDadosException {

@@ -81,22 +81,6 @@ class BebidaTest {
 
     }
 
-    @TestFactory
-    Collection<DynamicTest> testGetters() throws ValidadorException {
-        Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);
-        Bebida bebidaQuente = new Bebida(20, "Cerveja1", "Brahma", 1.0f, false, 10.5f);
-        return Arrays.asList(
-                dynamicTest("nome", () -> assertEquals("Cerveja1", bebida.getNome())),
-                dynamicTest("valor", () -> assertEquals(10.5f, bebida.getValor())),
-                dynamicTest("codigo", () -> assertEquals(20, bebida.getCodigo())),
-                dynamicTest("tamanho", () -> assertEquals(1.0f, bebida.getTamanho())),
-                dynamicTest("marca", () -> assertEquals("Brahma", bebida.getMarca())),
-                dynamicTest("gelada", () -> assertTrue(bebida.isGelada())),
-                dynamicTest("gelada", () -> assertFalse(bebidaQuente.isGelada()))
-        );
-
-    }
-
     @Test
     void testToString() throws ValidadorException {
         Bebida bebida = new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f);

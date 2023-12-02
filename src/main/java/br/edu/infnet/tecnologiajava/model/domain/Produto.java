@@ -2,7 +2,10 @@ package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import lombok.AccessLevel;
+import lombok.Getter;
 
+@Getter
 public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
 
     private static int proximoCodigo = 1;
@@ -10,6 +13,7 @@ public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
     private final String nome;
     private final float valor;
     private final int codigo;
+    @Getter(AccessLevel.NONE)
     private final boolean completo;
 
     protected Produto(final String nome, final float valor, final int codigo) {
@@ -42,17 +46,6 @@ public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
         proximoCodigo = 1;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public float getValor() {
-        return valor;
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
 
     @Override
     public Integer getChave() {

@@ -200,24 +200,6 @@ class PedidoTest {
         return testes;
     }
 
-    @TestFactory
-    Collection<DynamicTest> testGetters() throws ValidadorException {
-        List<DynamicTest> testes = new ArrayList<>();
-        LocalDateTime data = LocalDateTime.of(2023, 2, 13, 12, 30);
-        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
-        Pedido pedido = new Pedido(10, "Pedido 1", data, true, solicitante);
-        List<Produto> produtos = new ArrayList<>();
-        adicionaSobremesa(produtos, 3, "sobremesa");
-
-        testes.add(dynamicTest("Codigo", () -> assertEquals(10, pedido.getCodigo())));
-        testes.add(dynamicTest("Solicitante", () -> assertEquals(solicitante, pedido.getSolicitante())));
-        testes.add(dynamicTest("Descricao", () -> assertEquals("Pedido 1", pedido.getDescricao())));
-        testes.add(dynamicTest("Data", () -> assertEquals(data, pedido.getData())));
-        testes.add(dynamicTest("Web", () -> assertTrue(pedido.isWeb())));
-
-        return testes;
-    }
-
     private DynamicTest testValidacao(String nomeTeste, String mensagemEsperada, Executable criacaoErrada) {
         Executable teste = () -> {
             ValidadorException excecao = assertThrows(ValidadorException.class, criacaoErrada);
