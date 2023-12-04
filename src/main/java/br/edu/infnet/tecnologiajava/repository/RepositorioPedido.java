@@ -6,6 +6,8 @@ import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,19 +27,14 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     private static RepositorioPedido instance;
     private TabelaImpl<Integer, Pedido> tabelaPedido;
 
-    private RepositorioPedido() {
+    private final RepositorioSolicitante repositorioSolicitante;
+
+    private final RepositorioProduto repositorioProduto;
+
+    public RepositorioPedido(RepositorioProduto repositorioProduto, RepositorioSolicitante repositorioSolicitante) {
+        this.repositorioSolicitante = repositorioSolicitante;
+        this.repositorioProduto = repositorioProduto;
         tabelaPedido = new TabelaImpl<>("pedido");
-    }
-
-    public static RepositorioPedido getInstance() throws BancoDadosException {
-        if (instance == null) {
-            throw new BancoDadosException("Repositorio pedido não foi criado");
-        }
-        return instance;
-    }
-
-    static void criaRepositorio() {
-        instance = new RepositorioPedido();
     }
 
     public void adiciona(Pedido pedido) throws BancoDadosException {
@@ -48,7 +45,6 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         List<Produto> produtos = getProdutosDoBanco(pedido);
         Solicitante solicitante = getSolicitanteDoBanco(pedido);
 
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         Pedido pedidoParaBanco = new Pedido(pedido);
         pedidoParaBanco.setProdutos(produtos);
         pedidoParaBanco.setSolicitante(solicitante);
@@ -60,12 +56,10 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             repositorioProduto.adicionaUso(produto.getChave(), this);
         }
 
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         repositorioSolicitante.adicionaUso(solicitante.getChave(), this);
     }
 
     private Solicitante getSolicitanteDoBanco(Pedido pedido) throws BancoDadosException {
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         Optional<Solicitante> solicitanteBanco = repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave());
         return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF "+pedido.getSolicitante().getCpf()+" não existe no banco."));
     }
@@ -76,8 +70,6 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         }
 
         List<Produto> produtos = getProdutosDoBanco(pedido);
-
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
 
         Pedido pedidoAnterior = tabelaPedido.consultaPorId(pedido.getChave()).orElseThrow(() -> new BancoDadosException("Pedido com chave " + pedido.getChave() + " não foi encontrado."));
 
@@ -100,13 +92,11 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             repositorioProduto.adicionaUso(produto.getChave(), this);
         }
 
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         repositorioSolicitante.removeUso(pedidoAnterior.getSolicitante().getChave(), this);
         repositorioSolicitante.adicionaUso(pedidoParaBanco.getSolicitante().getChave(), this);
     }
 
     private List<Produto> getProdutosDoBanco(Pedido pedido) throws BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtosBanco = new ArrayList<>(pedido.getNumeroProdutos());
         Iterator<Integer> chaves = pedido.getProdutos().map(Produto::getChave).iterator();
         while (chaves.hasNext()) {
@@ -125,10 +115,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     public void removePorId(Integer chave) throws BancoDadosException {
         Pedido pedidoBanco = tabelaPedido.consultaPorId(chave).orElseThrow(()->new BancoDadosException("Pedido com id "+chave+" não existe no banco."));
         tabelaPedido.removePorId(chave);
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         repositorioSolicitante.removeUso(pedidoBanco.getSolicitante().getChave(), this);
-
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         Iterator<Produto> produtoIterator = pedidoBanco.getProdutos().iterator();
 
         while(produtoIterator.hasNext()){

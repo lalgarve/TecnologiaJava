@@ -1,9 +1,12 @@
 package br.edu.infnet.tecnologiajava.repository;
 
+import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
 import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,39 +17,46 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ContextConfiguration(classes = {TecnologiajavaApplication.class}, loader = AnnotationConfigContextLoader.class)
 class RepositorioPedidoTest {
 
+    private RepositorioSolicitante repositorioSolicitante;
+    private RepositorioPedido repositorioPedido;
+
+    private RepositorioProduto repositorioProduto;
     @BeforeEach
-    void iniciatializaRepositorio() throws IOException, BancoDadosException {
-        InicializadorRepositorio.inicializa();
-        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/sobremesa.csv")) {
-            //noinspection ConstantConditions
-            InicializadorRepositorio.carregaSobremesa(new InputStreamReader(is));
-        }
-        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/bebida.csv")) {
-            //noinspection ConstantConditions
-            InicializadorRepositorio.carregaBebida(new InputStreamReader(is));
-        }
-        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/comida.csv")) {
-            //noinspection ConstantConditions
-            InicializadorRepositorio.carregaComida(new InputStreamReader(is));
-        }
-        try (InputStream is = RepositorioPedidoTest.class.getResourceAsStream("/solicitante.csv")) {
-            //noinspection ConstantConditions
-            InicializadorRepositorio.carregaSolicitante(new InputStreamReader(is));
-        }
+    void inicializaRepositorio() throws IOException, BancoDadosException {
+        Pedido.inicializaContadorCodigo();
+        Produto.inicializaContadorCodigo();
+
+        String solicitante = RepositorioPedidoTest.class.getResource("/solicitante.csv").getFile();
+        repositorioSolicitante = new RepositorioSolicitante();
+        InicializadorRepositorio.carregaSolicitante(repositorioSolicitante, solicitante);
+        repositorioSolicitante.adiciona(Solicitante.getVazio());
+
+        repositorioProduto = new RepositorioProduto();
+        String arquivo = TecnologiajavaApplication.class.getResource("/sobremesa.csv").getFile();
+        InicializadorRepositorio.carregaSobremesa(repositorioProduto, arquivo);
+        arquivo = TecnologiajavaApplication.class.getResource("/bebida.csv").getFile();
+        InicializadorRepositorio.carregaBebida(repositorioProduto, arquivo);
+        arquivo = TecnologiajavaApplication.class.getResource("/comida.csv").getFile();
+        InicializadorRepositorio.carregaComida(repositorioProduto, arquivo);
+
+        String pedido = RepositorioPedido.class.getResource("/pedido.csv").getFile();
+        repositorioPedido = new RepositorioPedido(repositorioProduto, repositorioSolicitante);
+
+
+
     }
 
     @Test
     void testAdiciona() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
@@ -59,13 +69,11 @@ class RepositorioPedidoTest {
 
     @Test
     void testAdicionaVariosProduto() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
@@ -86,8 +94,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
-
         BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.adiciona(pedido));
         assertEquals("Há produtos que não estão no banco de dados.", excecao.getMessage());
     }
@@ -99,7 +105,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         BancoDadosException excecao = assertThrows(BancoDadosException.class,
                 () -> repositorioPedido.adiciona(pedido));
@@ -118,7 +123,6 @@ class RepositorioPedidoTest {
 
         assertEquals(pedido, pedidoCopia);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
@@ -132,13 +136,11 @@ class RepositorioPedidoTest {
 
     @Test
     void testAltera() throws BancoDadosException, ValidadorException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = getAlgunsProdutos(3);
 
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         List<Produto> novosProdutos = getAlgunsProdutos(2);
@@ -174,7 +176,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testConsultaPorIdNaoExiste() throws BancoDadosException {
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         Optional<Pedido> pedidoOptional = repositorioPedido.consultaPorId(2);
         assertTrue(pedidoOptional.isEmpty());
     }
@@ -186,7 +187,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         List<Produto> produtosDiferenteDoBanco = new ArrayList<>();
@@ -212,7 +212,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         List<Produto> novosProdutos = new ArrayList<>();
@@ -227,7 +226,6 @@ class RepositorioPedidoTest {
     void testAdicionaListProdutoVazia() throws BancoDadosException, ValidadorException {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.adiciona(pedido));
         assertEquals("A lista de produtos não pode ser vazia.", excecao.getMessage());
     }
@@ -239,7 +237,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, Solicitante.getVazio());
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         pedido.setProdutos(new ArrayList<>());
@@ -249,7 +246,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testAdicionaComSolicitante() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
@@ -257,11 +253,9 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         Pedido pedidoBanco = repositorioPedido.consultaPorId(1).orElseThrow();
 
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         Solicitante solicitanteBanco = repositorioSolicitante.consultaPorId("775.007.216-09").orElseThrow();
         pedido.setSolicitante(solicitanteBanco);
 
@@ -275,7 +269,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testAdicionaSolicitanteNaoExiste() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
@@ -283,7 +276,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         BancoDadosException excecao = assertThrows(BancoDadosException.class, () -> repositorioPedido.adiciona(pedido));
         assertEquals("O solicitante com CPF 307.137.992-77 não existe no banco.", excecao.getMessage());
 
@@ -291,7 +283,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testAlteraComSolicitante() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
@@ -299,14 +290,12 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         Solicitante novoSolicitante = new Solicitante("943.861.323-41");
         pedido.setSolicitante(novoSolicitante);
         repositorioPedido.altera(pedido);
 
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
         Solicitante solicitanteBanco = repositorioSolicitante.consultaPorId("943.861.323-41").orElseThrow();
         pedido.setSolicitante(solicitanteBanco);
 
@@ -327,7 +316,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testAlteraComSolicitanteNaoExiste() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
@@ -335,7 +323,6 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
 
         Solicitante novoSolicitante = new Solicitante("307.137.992-77");
@@ -346,7 +333,6 @@ class RepositorioPedidoTest {
 
     @Test
     void testRemoveComSolicitante() throws ValidadorException, BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
 
@@ -354,11 +340,9 @@ class RepositorioPedidoTest {
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);
 
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
         repositorioPedido.adiciona(pedido);
         repositorioPedido.removePorId(1);
 
-        RepositorioSolicitante repositorioSolicitante = RepositorioSolicitante.getInstance();
 
         try{
             repositorioSolicitante.removePorId("775.007.216-09");
@@ -375,7 +359,6 @@ class RepositorioPedidoTest {
     }
 
     private List<Produto> getAlgunsProdutos(int modulo) throws BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         return repositorioProduto.getValores((produto) -> (produto.getCodigo() % modulo) == 0);
     }
 

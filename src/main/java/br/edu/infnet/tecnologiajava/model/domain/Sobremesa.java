@@ -7,11 +7,9 @@ import java.util.Locale;
 @Getter
 public final class Sobremesa extends Produto {
 
-
     private final boolean doce;
     private final String informacao;
     private final float quantidade;
-
 
     public Sobremesa(int codigo, String nome, boolean doce, String informacao, float quantidade,
                      float valor) throws ValidadorException {

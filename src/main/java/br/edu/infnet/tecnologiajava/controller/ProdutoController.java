@@ -17,40 +17,43 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @RestController
-@RequestMapping("/produtos")
+@RequestMapping("/produto")
 public class ProdutoController {
 
+    private RepositorioProduto repositorioProduto;
+
+    public ProdutoController(RepositorioProduto repositorioProduto){
+        this.repositorioProduto = repositorioProduto;
+    }
+
     @GetMapping(value = "/{chave}", produces = "application/json")
-    public ResponseEntity<Produto> getProduto(@PathVariable int chave) throws BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+    public ResponseEntity<Produto> getProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
         Optional<Produto> optionalProduto = repositorioProduto.consultaPorId(chave);
         return ResponseEntity.of(optionalProduto);
     }
 
     @GetMapping(produces = "application/json")
-    public List<Produto> getProdutos() throws BancoDadosException {
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
+    public List<Produto> getAllProduto() throws BancoDadosException {
         return repositorioProduto.getValores();
     }
 
-    @GetMapping(value = "/sobremesas", produces = "application/json")
-    public List<Produto> getSobremesas() throws BancoDadosException {
+    @GetMapping(value = "/sobremesa", produces = "application/json")
+    public List<Produto> getAllSobremesa() throws BancoDadosException {
         return getProdutoPorClasse(Sobremesa.class);
     }
 
-    @GetMapping(value = "/bebidas", produces = "application/json")
-    public List<Produto> getBebidas() throws BancoDadosException {
+    @GetMapping(value = "/bebida", produces = "application/json")
+    public List<Produto> getAllBebida() throws BancoDadosException {
         return getProdutoPorClasse(Bebida.class);
     }
 
-    @GetMapping(value = "/comidas", produces = "application/json")
-    public List<Produto> getComidas() throws BancoDadosException {
+    @GetMapping(value = "/comida", produces = "application/json")
+    public List<Produto> getAllComida() throws BancoDadosException {
         return getProdutoPorClasse(Comida.class);
     }
 
     private List<Produto> getProdutoPorClasse(Class<? extends Produto> classe) throws BancoDadosException {
         Predicate<Produto> condicao = produto -> produto.getClass().equals(classe);
-        RepositorioProduto repositorioProduto = RepositorioProduto.getInstance();
         return repositorioProduto.getValores(condicao);
     }
 }

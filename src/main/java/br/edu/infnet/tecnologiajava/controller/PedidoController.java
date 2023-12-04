@@ -16,16 +16,20 @@ import java.util.Optional;
 @RequestMapping("/pedidos")
 public class PedidoController {
 
+    private RepositorioPedido repositorioPedido;
+
+    public PedidoController(RepositorioPedido repositorioPedido){
+        this.repositorioPedido = repositorioPedido;
+    }
+
     @GetMapping(value = "/{chave}", produces = "application/json")
-    public ResponseEntity<Pedido> getPedido(@PathVariable int chave) throws BancoDadosException {
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+    public ResponseEntity<Pedido> getPedidoPorChave(@PathVariable int chave) throws BancoDadosException {
         Optional<Pedido> optionalPedido = repositorioPedido.consultaPorId(chave);
         return ResponseEntity.of(optionalPedido);
     }
 
     @GetMapping(produces = "application/json")
-    public List<Pedido> getPedidos() throws BancoDadosException {
-        RepositorioPedido repositorioPedido = RepositorioPedido.getInstance();
+    public List<Pedido> getAllPedido() throws BancoDadosException {
         return repositorioPedido.getValores();
     }
 }

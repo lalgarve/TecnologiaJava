@@ -10,9 +10,7 @@ import br.edu.infnet.tecnologiajava.services.csv.CSVMapper;
 import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
 import br.edu.infnet.tecnologiajava.services.csv.CSVReader;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.util.Iterator;
 
 public class InicializadorRepositorio {
@@ -20,32 +18,44 @@ public class InicializadorRepositorio {
     private InicializadorRepositorio() {
     }
 
-    public static void inicializa() {
-        RepositorioPedido.criaRepositorio();
-        RepositorioProduto.criaRepositorio();
-        RepositorioSolicitante.criaRepositorio();
-        Produto.inicializaContadorCodigo();
-        Pedido.inicializaContadorCodigo();
+    public static void carregaSobremesa(RepositorioProduto repositorio, String arquivo) throws BancoDadosException {
+        try (FileReader reader = new FileReader(arquivo)){
+            carrega(reader, new SobremesaMapper(), repositorio);
+        } catch (IOException e) {
+            throw new BancoDadosException(e);
+        }
     }
 
-    public static void carregaSobremesa(Reader reader) throws BancoDadosException {
-        carrega(reader, new SobremesaMapper(), RepositorioProduto.getInstance());
+    public static void carregaBebida(RepositorioProduto repositorio, String arquivo) throws BancoDadosException {
+        try (FileReader reader = new FileReader(arquivo)){
+            carrega(reader, new BebidaMapper(), repositorio);
+        } catch (IOException e) {
+            throw new BancoDadosException(e);
+        }
     }
 
-    public static void carregaBebida(Reader reader) throws BancoDadosException {
-        carrega(reader, new BebidaMapper(), RepositorioProduto.getInstance());
+    public static void carregaComida(RepositorioProduto repositorio, String arquivo) throws BancoDadosException {
+        try (FileReader reader = new FileReader(arquivo)){
+            carrega(reader, new ComidaMapper(), repositorio);
+        } catch (IOException e) {
+            throw new BancoDadosException(e);
+        }
     }
 
-    public static void carregaComida(Reader reader) throws BancoDadosException {
-        carrega(reader, new ComidaMapper(), RepositorioProduto.getInstance());
+    public static void carregaSolicitante(RepositorioSolicitante repositorio, String arquivo) throws BancoDadosException {
+        try (FileReader reader = new FileReader(arquivo)){
+            carrega(reader, new SolicitanteMapper(), repositorio);
+        } catch (IOException e) {
+            throw new BancoDadosException(e);
+        }
     }
 
-    public static void carregaSolicitante(Reader reader) throws BancoDadosException {
-        carrega(reader, new SolicitanteMapper(), RepositorioSolicitante.getInstance());
-    }
-
-    public static void carregaPedido(Reader reader) throws BancoDadosException {
-        carrega(reader, new PedidoMapper(), RepositorioPedido.getInstance());
+    public static void carregaPedido(RepositorioPedido repositorio, String arquivo) throws BancoDadosException {
+        try (FileReader reader = new FileReader(arquivo)){
+            carrega(reader, new PedidoMapper(), repositorio);
+        } catch (IOException e) {
+            throw new BancoDadosException(e);
+        }
     }
 
     private static <T extends ValorBD<?, T>> void carrega(Reader reader, CSVMapper<T> mapper, TabelaBD<?, T> repositorio)
