@@ -2,6 +2,10 @@ package br.edu.infnet.tecnologiajava.repository;
 
 import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
 import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.SolicitanteMapper;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static br.edu.infnet.tecnologiajava.repository.ConfiguracaoRepositorios.carrega;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = {TecnologiajavaApplication.class}, loader = AnnotationConfigContextLoader.class)
@@ -29,24 +34,17 @@ class RepositorioPedidoTest {
         Pedido.inicializaContadorCodigo();
         Produto.inicializaContadorCodigo();
 
-        String solicitante = RepositorioPedidoTest.class.getResource("/solicitante.csv").getFile();
         repositorioSolicitante = new RepositorioSolicitante();
-        InicializadorRepositorio.carregaSolicitante(repositorioSolicitante, solicitante);
+        carrega("/solicitante.csv", new SolicitanteMapper(), repositorioSolicitante);
         repositorioSolicitante.adiciona(Solicitante.getVazio());
 
         repositorioProduto = new RepositorioProduto();
-        String arquivo = TecnologiajavaApplication.class.getResource("/sobremesa.csv").getFile();
-        InicializadorRepositorio.carregaSobremesa(repositorioProduto, arquivo);
-        arquivo = TecnologiajavaApplication.class.getResource("/bebida.csv").getFile();
-        InicializadorRepositorio.carregaBebida(repositorioProduto, arquivo);
-        arquivo = TecnologiajavaApplication.class.getResource("/comida.csv").getFile();
-        InicializadorRepositorio.carregaComida(repositorioProduto, arquivo);
+        carrega("/sobremesa.csv", new SobremesaMapper(), repositorioProduto);
+        carrega("/bebida.csv", new BebidaMapper(), repositorioProduto);
+        carrega("/comida.csv", new ComidaMapper(), repositorioProduto);
 
         String pedido = RepositorioPedido.class.getResource("/pedido.csv").getFile();
         repositorioPedido = new RepositorioPedido(repositorioProduto, repositorioSolicitante);
-
-
-
     }
 
     @Test
