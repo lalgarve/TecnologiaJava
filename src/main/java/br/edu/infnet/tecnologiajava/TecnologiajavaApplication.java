@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class TecnologiajavaApplication {
-    public static void main(String[] args) throws BancoDadosException, IOException {
+    public static void main(String[] args) {
         SpringApplication.run(TecnologiajavaApplication.class, args);
     }
 
