@@ -56,4 +56,10 @@ public class ProdutoController {
         Predicate<Produto> condicao = produto -> produto.getClass().equals(classe);
         return repositorioProduto.getValores(condicao);
     }
+
+    @GetMapping(value = "/busca/{palavrasJuntas}", produces = "application/json")
+    public List<Produto> buscaProduto(@PathVariable String palavrasJuntas) throws BancoDadosException {
+        String[] palavras = palavrasJuntas.split("[ _]");
+        return repositorioProduto.buscaPorTexto(palavras);
+    }
 }
