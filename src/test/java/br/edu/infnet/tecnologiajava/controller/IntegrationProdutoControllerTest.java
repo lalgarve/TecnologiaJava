@@ -23,7 +23,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RestClientTest(ProdutoController.class)
 @ContextConfiguration(classes = {ConfiguracaoRepositorios.class, ProdutoController.class}, loader = AnnotationConfigContextLoader.class)
-class ProdutoControllerTest {
+class ProdutoControllerIT {
     @Autowired
     private ProdutoController produtoController;
 
