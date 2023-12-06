@@ -34,7 +34,7 @@ public class ProdutoControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(novaSobremesa))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.codigo").value(codigoEsperado));
+                .andExpect(jsonPath("$.chave").value(codigoEsperado));
     }
 
     @Test
@@ -45,4 +45,6 @@ public class ProdutoControllerIT {
                 .andExpect(jsonPath("$.nome").value("Coca-Cola"))
                 .andExpect(jsonPath("$.gelada").value(false));
     }
+
+
 }

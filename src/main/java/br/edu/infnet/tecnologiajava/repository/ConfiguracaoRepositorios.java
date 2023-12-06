@@ -4,12 +4,12 @@ import br.edu.infnet.tecnologiajava.ExcecaoInesperada;
 import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.*;
+import br.edu.infnet.tecnologiajava.model.mapper.*;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapper;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.Mapper;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +48,7 @@ public class ConfiguracaoRepositorios {
         return repositorioPedido;
     }
 
-    public static <T extends ValorBD<?, T>>  void carrega(String recurso, CSVMapper<T> mapper, TabelaBD<?, T> repositorio) throws BancoDadosException {
+    public static <T extends ValorBD<?, T>>  void carrega(String recurso, Mapper<T> mapper, TabelaBD<?, T> repositorio) throws BancoDadosException {
         URL recursoUrl = TecnologiajavaApplication.class.getResource(recurso);
         if(recursoUrl==null){
             throw new ExcecaoInesperada("Recurso "+recurso+" não foi encontrado.");
@@ -60,7 +60,7 @@ public class ConfiguracaoRepositorios {
         }
     }
 
-    private static <T extends ValorBD<?, T>> void carrega(Reader reader, CSVMapper<T> mapper, TabelaBD<?, T> repositorio)
+    private static <T extends ValorBD<?, T>> void carrega(Reader reader, Mapper<T> mapper, TabelaBD<?, T> repositorio)
             throws BancoDadosException {
         try (CSVReader<T> csvReader = new CSVReader<>(reader, mapper)) {
             Iterator<T> iterator = csvReader.leDados().iterator();
@@ -69,7 +69,7 @@ public class ConfiguracaoRepositorios {
             }
         } catch (IOException | UncheckedIOException ex) {
             throw new BancoDadosException("Erro lendo dados da " + repositorio.getNome() + ".", ex);
-        } catch (CSVMapperException ex) {
+        } catch (MapperException ex) {
             throw new BancoDadosException("Erro nos campos da " + repositorio.getNome() + ".", ex);
         }
     }

@@ -1,9 +1,7 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.*;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.PedidoMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.ProdutoDesconhecido;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +23,7 @@ class PedidoMapperTest {
     @Test
     void testResetObrigatoriedade() {
         PedidoMapper pedidoMapper = new PedidoMapper();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> pedidoMapper.setValor("descricao", "Pedido"));
         assertEquals("O método reset não foi chamado.", excecao.getMessage());
     }
@@ -66,7 +64,7 @@ class PedidoMapperTest {
     void testBuildCodigoInvalido() throws ValidadorException {
         PedidoMapper pedidoMapper = new PedidoMapper();
         pedidoMapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> pedidoMapper.setValor("produtos", "10, -3, 4"));
         assertEquals("Código de produto inválido.", excecao.getMessage());
     }
@@ -80,7 +78,7 @@ class PedidoMapperTest {
             pedidoMapper.setValor("data", "2023-02-10T12:30");
             pedidoMapper.setValor("cpfSolicitante", "318.308.309-44");
             pedidoMapper.setValor("produtos", "10,3,4");
-            CSVMapperException excecao = assertThrows(CSVMapperException.class,
+            MapperException excecao = assertThrows(MapperException.class,
                     pedidoMapper::build);
             assertEquals("Informação mapeada inválida.", excecao.getMessage());
     }
@@ -93,7 +91,7 @@ class PedidoMapperTest {
     void testCamposInvalidos(String campo, String valor, String mensagem){
         PedidoMapper pedidoMapper = new PedidoMapper();
         pedidoMapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> pedidoMapper.setValor(campo, valor));
+        MapperException excecao = assertThrows(MapperException.class, () -> pedidoMapper.setValor(campo, valor));
         assertEquals(mensagem, excecao.getMessage());
     }
 

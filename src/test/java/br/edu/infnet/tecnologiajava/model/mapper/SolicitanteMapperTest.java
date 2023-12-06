@@ -1,9 +1,8 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.SolicitanteMapper;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,7 +15,7 @@ class SolicitanteMapperTest {
     void setValorInvalido() {
         SolicitanteMapper mapper = new SolicitanteMapper();
         mapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> mapper.setValor("Nome", "nome"));
+        MapperException excecao = assertThrows(MapperException.class, () -> mapper.setValor("Nome", "nome"));
         assertEquals("O campo Nome não existe.", excecao.getMessage());
     }
 
@@ -41,7 +40,7 @@ class SolicitanteMapperTest {
         mapper.setValor("cpf", cpf);
         mapper.setValor("nome", nome);
         mapper.setValor("email", email);
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> mapper.build());
+        MapperException excecao = assertThrows(MapperException.class, () -> mapper.build());
         assertEquals("Informação mapeada inválida.", excecao.getMessage());
         assertEquals(ValidadorException.class, excecao.getCause().getClass());
     }
@@ -52,7 +51,7 @@ class SolicitanteMapperTest {
         mapper.reset();
         mapper.setValor("cpf", "775.007.216-09");
         mapper.setValor("email", "joao@gmail.com");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> mapper.build());
+        MapperException excecao = assertThrows(MapperException.class, () -> mapper.build());
         assertEquals("O campo nome não foi setado.", excecao.getMessage());
     }
 
@@ -68,7 +67,7 @@ class SolicitanteMapperTest {
         mapper.setValor("nome", "João");
         mapper.setValor("email", "joao@gmail.com");
         Solicitante solicitante = mapper.build();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, () -> mapper.setValor("cpf", "929.204.815-50"));
+        MapperException excecao = assertThrows(MapperException.class, () -> mapper.setValor("cpf", "929.204.815-50"));
         assertEquals("O método reset não foi chamado.", excecao.getMessage());
     }
 }

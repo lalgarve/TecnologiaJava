@@ -1,6 +1,7 @@
 package br.edu.infnet.tecnologiajava.controller;
 
 import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
 import br.edu.infnet.tecnologiajava.repository.RepositorioProduto;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
@@ -63,9 +64,13 @@ public class ProdutoController {
     @PostMapping(path = "sobremesa",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public RespostaInclusao<Integer> addSobremesa(@RequestBody JsonNode requestBody) throws BancoDadosException, ValidadorException {
-
-        return new RespostaInclusao<>(0);
+    public RespostaInclusao<Integer> addSobremesa(@RequestBody JsonNode requestBody) throws BancoDadosException{
+        SobremesaMapper sobremesaMapper = new SobremesaMapper();
+        sobremesaMapper.reset();
+        sobremesaMapper.setValores(requestBody);
+        Produto sobremesa = sobremesaMapper.build();
+        repositorioProduto.adiciona(sobremesa);
+        return new RespostaInclusao<>(sobremesa.getChave());
     }
 
 }

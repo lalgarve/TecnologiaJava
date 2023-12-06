@@ -1,11 +1,11 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperAbstrato;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
+public class PedidoMapper extends MapperAbstrato<Pedido> {
 
     private String descricao;
     private LocalDateTime data;
@@ -26,7 +26,7 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
     }
 
     @Override
-    public void setValor(String campo, String valorComoString) throws CSVMapperException {
+    public void setValor(String campo, String valorComoString) throws MapperException {
         super.adicionaCampoSetado(campo);
         switch (campo) {
             case "descricao" -> descricao = valorComoString;
@@ -35,17 +35,17 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
                 try {
                     produtos = constroiListaProdutos(valorComoString);
                 } catch (ValidadorException e) {
-                    throw new CSVMapperException("Código de produto inválido.", e);
+                    throw new MapperException("Código de produto inválido.", e);
                 }
             }
             case "cpfSolicitante" -> cpfSolicitante = valorComoString;
             case "web" -> web = converteBoolean(valorComoString);
-            default -> throw new CSVMapperException("O campo " + campo + " não existe.");
+            default -> throw new MapperException("O campo " + campo + " não existe.");
         }
     }
 
     @Override
-    public Pedido build() throws CSVMapperException {
+    public Pedido build() throws MapperException {
         verificaTodosCamposSetatos();
         try {
             finaliza();
@@ -54,7 +54,7 @@ public class PedidoMapper extends CSVMapperAbstrato<Pedido> {
             pedido.setProdutos(produtos);
             return pedido;
         } catch (ValidadorException ex) {
-            throw new CSVMapperException("Informação mapeada inválida.", ex);
+            throw new MapperException("Informação mapeada inválida.", ex);
         }
     }
 

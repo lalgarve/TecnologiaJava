@@ -1,12 +1,12 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Comida;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperAbstrato;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 
-public class ComidaMapper extends CSVMapperAbstrato<Produto> {
+public class ComidaMapper extends MapperAbstrato<Produto> {
 
     private String nome;
     private String ingredientes;
@@ -19,7 +19,7 @@ public class ComidaMapper extends CSVMapperAbstrato<Produto> {
     }
 
     @Override
-    public void setValor(String campo, String valorComoString) throws CSVMapperException {
+    public void setValor(String campo, String valorComoString) throws MapperException {
         adicionaCampoSetado(campo);
         switch (campo) {
             case "nome" -> nome = valorComoString;
@@ -27,18 +27,18 @@ public class ComidaMapper extends CSVMapperAbstrato<Produto> {
             case "valor" -> valor = converteFloat(valorComoString);
             case "peso" -> peso = converteFloat(valorComoString);
             case "vegano" -> vegano = converteBoolean(valorComoString);
-            default -> throw new CSVMapperException("O campo " + campo + " não existe.");
+            default -> throw new MapperException("O campo " + campo + " não existe.");
         }
     }
 
     @Override
-    public Produto build() throws CSVMapperException {
+    public Produto build() throws MapperException {
         verificaTodosCamposSetatos();
         try {
             finaliza();
             return new Comida(nome, ingredientes, peso, vegano, valor);
         } catch (ValidadorException ex) {
-            throw new CSVMapperException("Informação mapeada inválida.", ex);
+            throw new MapperException("Informação mapeada inválida.", ex);
         }
     }
 

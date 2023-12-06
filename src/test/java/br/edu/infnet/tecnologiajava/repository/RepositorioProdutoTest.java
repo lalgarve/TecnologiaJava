@@ -1,9 +1,9 @@
 package br.edu.infnet.tecnologiajava.repository;
 
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.BebidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.ComidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.SobremesaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

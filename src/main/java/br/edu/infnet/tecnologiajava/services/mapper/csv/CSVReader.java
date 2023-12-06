@@ -1,5 +1,8 @@
 package br.edu.infnet.tecnologiajava.services.mapper.csv;
 
+import br.edu.infnet.tecnologiajava.services.mapper.Mapper;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -25,10 +28,10 @@ import java.util.stream.Stream;
 public class CSVReader<T> implements AutoCloseable {
 
     private final BufferedReader reader;
-    private final CSVMapper<T> mapper;
+    private final Mapper<T> mapper;
     private Pattern patternCSV;
 
-    public CSVReader(Reader reader, CSVMapper<T> mapper) {
+    public CSVReader(Reader reader, Mapper<T> mapper) {
         this.reader = new BufferedReader(reader);
         this.mapper = mapper;
     }
@@ -40,9 +43,9 @@ public class CSVReader<T> implements AutoCloseable {
      * não possui elementos;
      * @throws UncheckedIOException Se houve uma {@link java.io.IOException IOException}
      *                              lendo os dados.
-     * @throws CSVMapperException   Se houve um problema durante o mapeamento
+     * @throws MapperException   Se houve um problema durante o mapeamento
      */
-    public Stream<T> leDados() throws UncheckedIOException, CSVMapperException {
+    public Stream<T> leDados() throws UncheckedIOException, MapperException {
         Stream<String> lines = reader.lines();
         List<String> cabecalho = leCabecalho(lines
                 .filter(linha -> !linha.isBlank())
@@ -69,7 +72,7 @@ public class CSVReader<T> implements AutoCloseable {
     private T leCampos(List<String> cabecalho, String linha) {
         List<String> valores = extraiValores(linha);
         if (cabecalho.size() != valores.size()) {
-            throw new CSVMapperException(String.format(
+            throw new MapperException(String.format(
                     "Esperados %d valores, foram encontrados %d.",
                     cabecalho.size(), valores.size()
             ));

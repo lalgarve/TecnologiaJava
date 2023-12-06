@@ -1,10 +1,9 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Bebida;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.mapper.csv.BebidaMapper;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +35,7 @@ class BebidaMapperTest {
         BebidaMapper mapper = new BebidaMapper();
         mapper.reset();
         mapper.setValor("nome", "Cerveja");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> mapper.setValor("nome", "Cerveja"));
         assertEquals("O campo nome já foi setado.", excecao.getMessage());
     }
@@ -49,7 +48,7 @@ class BebidaMapperTest {
         mapper.setValor("marca", "Ambev");
         mapper.setValor("valor", "10.5");
         mapper.setValor("tamanho", "0.5");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
+        MapperException excecao = assertThrows(MapperException.class, mapper::build);
         assertEquals("O campo gelada não foi setado.", excecao.getMessage());
     }
 
@@ -59,14 +58,14 @@ class BebidaMapperTest {
         mapper.reset();
         mapper.setValor("nome", "Cerveja");
         mapper.setValor("marca", "Ambev");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
+        MapperException excecao = assertThrows(MapperException.class, mapper::build);
         assertEquals("Os seguintes campos não foram setados: valor, tamanho, gelada.", excecao.getMessage());
     }
 
     @Test
     void testResetNaoAcionado() {
         BebidaMapper mapper = new BebidaMapper();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> mapper.setValor("nome", "Cerveja"));
         assertEquals("O método reset não foi chamado.", excecao.getMessage());
     }
@@ -81,7 +80,7 @@ class BebidaMapperTest {
         mapper.setValor("tamanho", "0.5");
         mapper.setValor("gelada", "false");
         mapper.build();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> mapper.setValor("nome", "Coca"));
         assertEquals("O método reset não foi chamado.", excecao.getMessage());
     }
@@ -90,7 +89,7 @@ class BebidaMapperTest {
     void testSetValorCampoInexistente() {
         BebidaMapper mapper = new BebidaMapper();
         mapper.reset();
-        CSVMapperException excecao = assertThrows(CSVMapperException.class,
+        MapperException excecao = assertThrows(MapperException.class,
                 () -> mapper.setValor("Nome", "pudim"));
         assertEquals("O campo Nome não existe.", excecao.getMessage());
     }
@@ -104,7 +103,7 @@ class BebidaMapperTest {
         mapper.setValor("valor", "10.5");
         mapper.setValor("tamanho", "-0.5");
         mapper.setValor("gelada", "false");
-        CSVMapperException excecao = assertThrows(CSVMapperException.class, mapper::build);
+        MapperException excecao = assertThrows(MapperException.class, mapper::build);
         assertEquals("Informação mapeada inválida.", excecao.getMessage());
         assertEquals(ValidadorException.class, excecao.getCause().getClass());
     }

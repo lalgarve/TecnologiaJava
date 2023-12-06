@@ -1,12 +1,13 @@
-package br.edu.infnet.tecnologiajava.model.mapper.csv;
+package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperAbstrato;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.json.JsonMapper;
 
-public class SobremesaMapper extends CSVMapperAbstrato<Produto> {
+public class SobremesaMapper extends MapperAbstrato<Produto> implements JsonMapper<Produto> {
 
     private String nome;
     private String informacao;
@@ -20,7 +21,7 @@ public class SobremesaMapper extends CSVMapperAbstrato<Produto> {
 
 
     @Override
-    public void setValor(String campo, String valorComoString) throws CSVMapperException {
+    public void setValor(String campo, String valorComoString) throws MapperException {
         super.adicionaCampoSetado(campo);
         switch (campo) {
             case "nome" -> nome = valorComoString;
@@ -28,19 +29,20 @@ public class SobremesaMapper extends CSVMapperAbstrato<Produto> {
             case "valor" -> valor = converteFloat(valorComoString);
             case "quantidade" -> quantidade = converteFloat(valorComoString);
             case "doce" -> doce = converteBoolean(valorComoString);
-            default -> throw new CSVMapperException("O campo " + campo + " não existe.");
+            default -> throw new MapperException("O campo " + campo + " não existe.");
         }
     }
 
     @Override
-    public Produto build() throws CSVMapperException {
+    public Produto build() throws MapperException {
         super.verificaTodosCamposSetatos();
         try {
             super.finaliza();
             return new Sobremesa(nome, doce, informacao, quantidade, valor);
         } catch (ValidadorException ex) {
-            throw new CSVMapperException("Informação mapeada inválida.", ex);
+            throw new MapperException("Informação mapeada inválida.", ex);
         }
     }
+
 
 }

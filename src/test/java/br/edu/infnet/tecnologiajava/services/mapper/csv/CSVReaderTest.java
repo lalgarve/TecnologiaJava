@@ -1,8 +1,7 @@
 package br.edu.infnet.tecnologiajava.services.mapper.csv;
 
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapper;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
-import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVReader;
+import br.edu.infnet.tecnologiajava.services.mapper.Mapper;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -140,7 +139,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDados() throws CSVMapperException, IOException {
+    void testLeDados() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_SIMPLES1 + '\n';
         ByteArrayInputStream bis = new ByteArrayInputStream(builder.getBytes());
@@ -161,7 +160,7 @@ public class CSVReaderTest {
             try {
                 Optional<ModeloTeste> resultado = stream.findFirst();
                 fail("Excecao esperada");
-            } catch (CSVMapperException ex) {
+            } catch (MapperException ex) {
                 assertEquals("codigo1 não existe.", ex.getMessage());
             }
         }
@@ -186,7 +185,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDados3Linhas() throws CSVMapperException, IOException {
+    void testLeDados3Linhas() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_SIMPLES1 + '\n' +
                 LINHA_SIMPLES2 + '\n' +
@@ -205,7 +204,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDados3LinhasComLinhasEmBranco() throws CSVMapperException, IOException {
+    void testLeDados3LinhasComLinhasEmBranco() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_SIMPLES1 + '\n' + '\n' +
                 LINHA_SIMPLES2 + '\n' +
@@ -226,7 +225,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDadosDescricaoComVirgula() throws CSVMapperException, IOException {
+    void testLeDadosDescricaoComVirgula() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_DESCRICAO_COM_VIRGULA_FIM + '\n' +
                 LINHA_SIMPLES2 + '\n' +
@@ -245,7 +244,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    void testLeDados3Descricoes() throws CSVMapperException, IOException {
+    void testLeDados3Descricoes() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO_3_DESCRICOES + '\n' +
                 LINHA_3_DESCRICOES_1 + '\n' +
                 LINHA_3_DESCRICOES_2 + '\n' +
@@ -283,14 +282,14 @@ public class CSVReaderTest {
                 Optional<ModeloTeste> resultado = stream.findFirst();
                 fail("Excecao esperada");
             }
-            catch (CSVMapperException ex) {
+            catch (MapperException ex) {
                 assertEquals("Esperados 4 valores, foram encontrados 5.", ex.getMessage());
             }
         }
     }
 
     @Test
-    void testLeDadosValoresAMenos() throws CSVMapperException, IOException {
+    void testLeDadosValoresAMenos() throws MapperException, IOException {
         String builder = CABECALHO_CORRETO + '\n' +
                 LINHA_VALORES_A_MENOS + '\n';
         ByteArrayInputStream bis = new ByteArrayInputStream(builder.getBytes());
@@ -300,7 +299,7 @@ public class CSVReaderTest {
                 Optional<ModeloTeste> resultado = stream.findFirst();
                 fail("Excecao esperada");
             }
-            catch (CSVMapperException ex) {
+            catch (MapperException ex) {
                 assertEquals("Esperados 4 valores, foram encontrados 3.", ex.getMessage());
             }
         }
@@ -357,12 +356,12 @@ public class CSVReaderTest {
 
     }
 
-    private static class TestMapper implements CSVMapper<ModeloTeste> {
+    private static class TestMapper implements Mapper<ModeloTeste> {
 
         private ModeloTeste testModel;
 
         @Override
-        public void setValor(String campo, String valorComoString) throws CSVMapperException {
+        public void setValor(String campo, String valorComoString) throws MapperException {
             switch (campo) {
                 case "codigo" -> testModel.codigo = converteInt(valorComoString);
                 case "existe" -> testModel.existe = Boolean.parseBoolean(valorComoString);
@@ -370,12 +369,12 @@ public class CSVReaderTest {
                 case "descricao1" -> testModel.descricao1 = valorComoString;
                 case "descricao2" -> testModel.descricao2 = valorComoString;
                 case "descricao3" -> testModel.descricao3 = valorComoString;
-                default -> throw new CSVMapperException(campo + " não existe.");
+                default -> throw new MapperException(campo + " não existe.");
             }
         }
 
         @Override
-        public ModeloTeste build() throws CSVMapperException {
+        public ModeloTeste build() throws MapperException {
             return testModel;
         }
 
