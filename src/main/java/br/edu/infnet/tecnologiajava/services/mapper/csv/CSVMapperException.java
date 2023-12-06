@@ -1,4 +1,4 @@
-package br.edu.infnet.tecnologiajava.services.csv;
+package br.edu.infnet.tecnologiajava.services.mapper.csv;
 
 /**
  * Identifica um erro durante o mapeamento dos dados.

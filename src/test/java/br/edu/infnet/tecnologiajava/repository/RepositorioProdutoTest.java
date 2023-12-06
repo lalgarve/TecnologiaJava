@@ -1,23 +1,13 @@
 package br.edu.infnet.tecnologiajava.repository;
 
-import br.edu.infnet.tecnologiajava.controller.ProdutoController;
-import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
-import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
-import br.edu.infnet.tecnologiajava.model.mapper.SolicitanteMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.BebidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.ComidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.util.List;
 

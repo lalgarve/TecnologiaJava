@@ -1,4 +1,4 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.mapper.csv;
 
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;

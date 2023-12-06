@@ -4,13 +4,13 @@ import br.edu.infnet.tecnologiajava.ExcecaoInesperada;
 import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
-import br.edu.infnet.tecnologiajava.model.mapper.*;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.*;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapper;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
-import br.edu.infnet.tecnologiajava.services.csv.CSVReader;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapper;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

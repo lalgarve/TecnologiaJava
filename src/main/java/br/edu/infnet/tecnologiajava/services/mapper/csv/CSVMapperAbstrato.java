@@ -1,4 +1,4 @@
-package br.edu.infnet.tecnologiajava.services.csv;
+package br.edu.infnet.tecnologiajava.services.mapper.csv;
 
 import java.util.Arrays;
 import java.util.HashSet;

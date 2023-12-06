@@ -1,32 +1,33 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.mapper.csv;
 
-import br.edu.infnet.tecnologiajava.model.domain.Comida;
+import br.edu.infnet.tecnologiajava.model.domain.Bebida;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperAbstrato;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperAbstrato;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
 
-public class ComidaMapper extends CSVMapperAbstrato<Produto> {
+public class BebidaMapper extends CSVMapperAbstrato<Produto> {
 
     private String nome;
-    private String ingredientes;
-    private float peso;
+    private String marca;
+    private float tamanho;
     private float valor;
-    private boolean vegano;
+    private boolean gelada;
 
-    public ComidaMapper() {
-        super(new String[]{"nome", "ingredientes", "peso", "valor", "vegano"});
+    public BebidaMapper() {
+        super(new String[]{"nome", "marca", "valor", "tamanho", "gelada"});
     }
+
 
     @Override
     public void setValor(String campo, String valorComoString) throws CSVMapperException {
         adicionaCampoSetado(campo);
         switch (campo) {
             case "nome" -> nome = valorComoString;
-            case "ingredientes" -> ingredientes = valorComoString;
+            case "marca" -> marca = valorComoString;
             case "valor" -> valor = converteFloat(valorComoString);
-            case "peso" -> peso = converteFloat(valorComoString);
-            case "vegano" -> vegano = converteBoolean(valorComoString);
+            case "tamanho" -> tamanho = converteFloat(valorComoString);
+            case "gelada" -> gelada = converteBoolean(valorComoString);
             default -> throw new CSVMapperException("O campo " + campo + " não existe.");
         }
     }
@@ -36,7 +37,7 @@ public class ComidaMapper extends CSVMapperAbstrato<Produto> {
         verificaTodosCamposSetatos();
         try {
             finaliza();
-            return new Comida(nome, ingredientes, peso, vegano, valor);
+            return new Bebida(nome, marca, tamanho, gelada, valor);
         } catch (ValidadorException ex) {
             throw new CSVMapperException("Informação mapeada inválida.", ex);
         }

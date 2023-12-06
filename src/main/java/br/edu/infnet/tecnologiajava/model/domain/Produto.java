@@ -3,9 +3,10 @@ package br.edu.infnet.tecnologiajava.model.domain;
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter
+@Getter @EqualsAndHashCode
 public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
 
     private static int proximoCodigo = 1;

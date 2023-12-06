@@ -1,16 +1,13 @@
 package br.edu.infnet.tecnologiajava.controller;
 
-import br.edu.infnet.tecnologiajava.model.domain.Bebida;
-import br.edu.infnet.tecnologiajava.model.domain.Comida;
-import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
+import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
 import br.edu.infnet.tecnologiajava.repository.RepositorioProduto;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,28 +23,28 @@ public class ProdutoController {
         this.repositorioProduto = repositorioProduto;
     }
 
-    @GetMapping(value = "/{chave}", produces = "application/json")
+    @GetMapping(value = "/{chave}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Produto> getProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
         Optional<Produto> optionalProduto = repositorioProduto.consultaPorId(chave);
         return ResponseEntity.of(optionalProduto);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Produto> getAllProduto() throws BancoDadosException {
         return repositorioProduto.getValores();
     }
 
-    @GetMapping(value = "/sobremesa", produces = "application/json")
+    @GetMapping(value = "/sobremesa", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Produto> getAllSobremesa() throws BancoDadosException {
         return getProdutoPorClasse(Sobremesa.class);
     }
 
-    @GetMapping(value = "/bebida", produces = "application/json")
+    @GetMapping(value = "/bebida", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Produto> getAllBebida() throws BancoDadosException {
         return getProdutoPorClasse(Bebida.class);
     }
 
-    @GetMapping(value = "/comida", produces = "application/json")
+    @GetMapping(value = "/comida", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Produto> getAllComida() throws BancoDadosException {
         return getProdutoPorClasse(Comida.class);
     }
@@ -57,9 +54,18 @@ public class ProdutoController {
         return repositorioProduto.getValores(condicao);
     }
 
-    @GetMapping(value = "/busca/{palavrasJuntas}", produces = "application/json")
+    @GetMapping(value = "/busca/{palavrasJuntas}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Produto> buscaProduto(@PathVariable String palavrasJuntas) throws BancoDadosException {
         String[] palavras = palavrasJuntas.split("[ _]");
         return repositorioProduto.buscaPorTexto(palavras);
     }
+
+    @PostMapping(path = "sobremesa",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaInclusao<Integer> addSobremesa(@RequestBody JsonNode requestBody) throws BancoDadosException, ValidadorException {
+
+        return new RespostaInclusao<>(0);
+    }
+
 }

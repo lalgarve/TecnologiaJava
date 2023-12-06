@@ -1,5 +1,8 @@
-package br.edu.infnet.tecnologiajava.services.csv;
+package br.edu.infnet.tecnologiajava.services.mapper.csv;
 
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapper;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

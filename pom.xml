@@ -13,7 +13,7 @@
     <artifactId>tecnologiajava</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>tecnologiajava</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Projeto da Disciplina Tecnologia Java</description>
     <properties>
         <java.version>17</java.version>
     </properties>

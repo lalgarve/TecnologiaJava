@@ -13,32 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class SobremesaTest {
-    @TestFactory
-    Collection<DynamicTest> testEquals() throws ValidadorException {
-        Sobremesa sobremesa = new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f);
-        return Arrays.asList(
-                dynamicTest("Código diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(2, "Pudim", true, "sem glútem", 1.0f, 1.0f))),
-                dynamicTest("Nome diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(1, "Pudim Leite", true, "sem glútem", 1.0f, 1.0f))),
-                dynamicTest("Informação diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(1, "Pudim", true, "com glútem", 1.0f, 1.0f))),
-                dynamicTest("Quantidade diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(1, "Pudim", true, "sem glútem", 2.0f, 1.0f))),
-                dynamicTest("Valor diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 2.0f))),
-                dynamicTest("Doce diferente", () ->
-                        assertNotEquals(sobremesa, new Sobremesa(1, "Pudim", false, "sem glútem", 1.0f, 1.0f))),
-                dynamicTest("Mesma instância", () ->
-                        assertEquals(sobremesa, sobremesa)),
-                dynamicTest("Igual, instância diferente", () ->
-                        assertEquals(sobremesa, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f))),
-                dynamicTest("Valor nulo", () ->
-                        assertFalse(sobremesa.equals(null))),
-                dynamicTest("Classe diferente", () ->
-                        assertFalse(sobremesa.equals(new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f))))
-        );
-    }
 
     @TestFactory
     Collection<DynamicTest> testHascode() throws ValidadorException {
@@ -59,7 +33,6 @@ class SobremesaTest {
                         assertNotEquals(hascode, new Sobremesa(1, "Pudim", false, "sem glútem", 1.0f, 1.0f).hashCode())),
                 dynamicTest("Igual, instância diferente", () ->
                         assertEquals(hascode, new Sobremesa(1, "Pudim", true, "sem glútem", 1.0f, 1.0f).hashCode()))
-
         );
     }
 

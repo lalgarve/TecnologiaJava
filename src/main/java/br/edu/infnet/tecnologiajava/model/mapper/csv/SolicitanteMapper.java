@@ -1,9 +1,9 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.mapper.csv;
 
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperAbstrato;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperAbstrato;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
 
 public class SolicitanteMapper extends CSVMapperAbstrato<Solicitante> {
 

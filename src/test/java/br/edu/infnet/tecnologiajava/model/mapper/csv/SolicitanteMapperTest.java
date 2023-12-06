@@ -1,8 +1,9 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.mapper.csv;
 
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.SolicitanteMapper;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

@@ -1,7 +1,9 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.mapper.csv;
 
 import br.edu.infnet.tecnologiajava.model.domain.*;
-import br.edu.infnet.tecnologiajava.services.csv.CSVMapperException;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.PedidoMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.csv.ProdutoDesconhecido;
+import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVMapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
