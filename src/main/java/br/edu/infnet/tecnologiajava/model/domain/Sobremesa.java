@@ -1,23 +1,23 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Locale;
 
 @Getter @EqualsAndHashCode(callSuper = true)
+@JsonDeserialize(builder = Sobremesa.Builder.class)
 public final class Sobremesa extends Produto {
 
     private final boolean doce;
     private final String informacao;
     private final float quantidade;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Sobremesa(@JsonProperty("codigo") int codigo, @JsonProperty("nome") String nome,
-                     @JsonProperty("doce") boolean doce, @JsonProperty("informacao") String informacao, float quantidade,
-                     @JsonProperty("valor") float valor) throws ValidadorException {
+    public Sobremesa(int codigo, String nome,
+                     boolean doce, String informacao, float quantidade,
+                     float valor) throws ValidadorException {
         super(nome, valor, codigo);
         this.doce = doce;
         this.informacao = informacao;
@@ -56,6 +56,50 @@ public final class Sobremesa extends Produto {
         return String.format(Locale.US,
                 "Sobremesa: codigo=%d, nome=%s, informacao=%s, doce=%b, quantidade=%.2f, valor=%.2f",
                 getCodigo(), getNome(), informacao, doce, quantidade, getValor());
+    }
+
+    @JsonPOJOBuilder
+    static class Builder{
+        private int codigo;
+        private String nome;
+        private boolean doce;
+        private String informacao;
+        private float quantidade;
+        private float valor;
+
+        Builder withCodigo(int codigo){
+            this.codigo=codigo;
+            return this;
+        }
+
+        Builder withNome(String nome){
+            this.nome=nome;
+            return this;
+        }
+
+        Builder withDoce(boolean doce){
+            this.doce=doce;
+            return this;
+        }
+
+        Builder withInformacao(String informacao){
+            this.informacao=informacao;
+            return this;
+        }
+
+        Builder withQuantidade(float quantidade){
+            this.quantidade=quantidade;
+            return this;
+        }
+
+        Builder withValor(float valor){
+            this.valor=valor;
+            return this;
+        }
+
+        public Sobremesa build() throws ValidadorException{
+            return new Sobremesa(codigo, nome, doce, informacao, quantidade, valor);
+        }
     }
 
 }

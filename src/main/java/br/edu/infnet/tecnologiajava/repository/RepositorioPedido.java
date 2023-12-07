@@ -22,8 +22,7 @@ import java.util.function.Predicate;
  */
 public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
 
-    private static RepositorioPedido instance;
-    private TabelaImpl<Integer, Pedido> tabelaPedido;
+    private final TabelaImpl<Integer, Pedido> tabelaPedido;
 
     private final RepositorioSolicitante repositorioSolicitante;
 

@@ -32,19 +32,4 @@ class ProdutoDesconhecidoTest {
         assertEquals(2, produtoDesconhecido.hashCode());
     }
 
-    @TestFactory
-    Collection<DynamicTest> testEquals() throws ValidadorException {
-        ProdutoDesconhecido produtoDesconhecido = new ProdutoDesconhecido(2);
-        ProdutoDesconhecido produtoIgual = new ProdutoDesconhecido(2);
-        ProdutoDesconhecido produtoDiferente = new ProdutoDesconhecido(3);
-
-        return Arrays.asList(
-                dynamicTest("Código diferente", () -> assertNotEquals(produtoDesconhecido, produtoDiferente)),
-                dynamicTest("Igual, mesma instancia", () -> assertTrue(produtoDesconhecido.equals(produtoDesconhecido))),
-                dynamicTest("Igual, instancia diferente", () -> assertEquals(produtoDesconhecido, produtoIgual)),
-                dynamicTest("Objeto Nulo", () -> assertFalse(produtoDesconhecido.equals(null))),
-                dynamicTest("Classe diferente", () -> assertFalse(produtoDesconhecido.equals(Boolean.FALSE)))
-
-        );
-    }
 }

@@ -33,11 +33,11 @@ class BebidaTest {
                 dynamicTest("Mesma instancia", () ->
                         assertEquals(bebida, bebida)),
                 dynamicTest("Null", () ->
-                        assertFalse(bebida.equals(null))),
+                        assertNotEquals(null, bebida)),
                 dynamicTest("Igual, instancia diferente", () ->
                         assertEquals(bebida, new Bebida(20, "Cerveja1", "Brahma", 1.0f, true, 10.5f))),
                 dynamicTest("Classe diferente", () ->
-                        assertFalse(bebida.equals(new Sobremesa("pudim", true, "sem gosto", 1.0f, 1.0f))))
+                        assertNotEquals(bebida, new Sobremesa("pudim", true, "sem gosto", 1.0f, 1.0f)))
         );
 
     }

@@ -6,7 +6,6 @@ import br.edu.infnet.tecnologiajava.services.bancodados.TabelaDependente;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class RepositorioProduto  extends TabelaDependente<Integer, Produto>  implements BuscaTexto<Produto> {
 

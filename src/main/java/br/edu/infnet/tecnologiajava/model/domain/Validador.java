@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Validador implements Serializable {
-    private List<String> mensagens = new ArrayList<>();
+    private final List<String> mensagens = new ArrayList<>();
 
     public void valida(String mensagem, boolean valido) {
         if (!valido) {
@@ -30,7 +30,7 @@ public class Validador implements Serializable {
 
     private String primeiraLetraMinuscula(String mensagemOriginal) {
         String primeiraLetra = mensagemOriginal.substring(0, 1).toLowerCase();
-        return primeiraLetra + mensagemOriginal.substring(1, mensagemOriginal.length());
+        return primeiraLetra + mensagemOriginal.substring(1);
     }
 
     @Override

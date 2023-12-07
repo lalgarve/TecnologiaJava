@@ -8,10 +8,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 public interface JsonMapper <T> extends Mapper<T> {
-    static Set<JsonNodeType> TIPOS_CAMPO_VALIDOS = Set.of(JsonNodeType.BOOLEAN, JsonNodeType.NUMBER, JsonNodeType.STRING);
+    Set<JsonNodeType> TIPOS_CAMPO_VALIDOS = Set.of(JsonNodeType.BOOLEAN, JsonNodeType.NUMBER, JsonNodeType.STRING);
 
     default void setValores(JsonNode jsonNode) throws MapperException{
         Iterator<Map.Entry<String, JsonNode>> campos = jsonNode.fields();

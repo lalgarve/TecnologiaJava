@@ -3,6 +3,7 @@ package br.edu.infnet.tecnologiajava.controller;
 import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
+import br.edu.infnet.tecnologiajava.model.view.RespostaSucesso;
 import br.edu.infnet.tecnologiajava.repository.RepositorioProduto;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,7 +19,7 @@ import java.util.function.Predicate;
 @RequestMapping("/produto")
 public class ProdutoController {
 
-    private RepositorioProduto repositorioProduto;
+    private final RepositorioProduto repositorioProduto;
 
     public ProdutoController(RepositorioProduto repositorioProduto){
         this.repositorioProduto = repositorioProduto;
@@ -28,6 +29,12 @@ public class ProdutoController {
     public ResponseEntity<Produto> getProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
         Optional<Produto> optionalProduto = repositorioProduto.consultaPorId(chave);
         return ResponseEntity.of(optionalProduto);
+    }
+
+    @DeleteMapping(value = "/{chave}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaSucesso deleteProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
+        repositorioProduto.removePorId(chave);
+        return new RespostaSucesso("O produto com chave "+chave+" foi exxluído com sucesso.");
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +68,7 @@ public class ProdutoController {
         return repositorioProduto.buscaPorTexto(palavras);
     }
 
-    @PostMapping(path = "sobremesa",
+    @PostMapping(path = "/sobremesa",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaInclusao<Integer> addSobremesa(@RequestBody JsonNode requestBody) throws BancoDadosException{
@@ -72,5 +79,15 @@ public class ProdutoController {
         repositorioProduto.adiciona(sobremesa);
         return new RespostaInclusao<>(sobremesa.getChave());
     }
+
+    @PutMapping(path = "/sobremesa",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaSucesso updateSobremesa(@RequestBody Sobremesa sobremesa) throws BancoDadosException{
+        repositorioProduto.altera(sobremesa);
+        return new RespostaSucesso("A sobremesa com chave " + sobremesa.getChave()+" foi alterada com sucesso.");
+    }
+
+
 
 }

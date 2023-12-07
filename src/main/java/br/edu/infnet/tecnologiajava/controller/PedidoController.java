@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/pedido")
 public class PedidoController {
 
-    private RepositorioPedido repositorioPedido;
+    private final RepositorioPedido repositorioPedido;
 
     public PedidoController(RepositorioPedido repositorioPedido){
         this.repositorioPedido = repositorioPedido;

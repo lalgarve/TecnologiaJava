@@ -88,7 +88,7 @@ public class TabelaDependente<C, V extends ValorBD<C, V>> implements TabelaBD<C,
 
     private class DecoradorValor implements ValorBD<C, DecoradorValor> {
         private final V valor;
-        private Map<TabelaBD<?, ?>, Integer> contador = new HashMap<>();
+        private final Map<TabelaBD<?, ?>, Integer> contador = new HashMap<>();
 
         DecoradorValor(V valor) {
             this.valor = valor;

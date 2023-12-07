@@ -2,6 +2,7 @@ package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.services.bancodados.Imutavel;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,6 +50,7 @@ public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
 
 
     @Override
+    @JsonIgnore
     public Integer getChave() {
         return codigo;
     }
@@ -58,6 +60,7 @@ public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
         return this;
     }
 
+    @JsonIgnore
     public abstract String getDetalhe();
 
     protected boolean comparaCamposProduto(Produto other) {

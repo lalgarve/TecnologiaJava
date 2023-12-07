@@ -1,10 +1,17 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeBindings;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -100,6 +107,16 @@ class SobremesaTest {
         List<String> mensagens = excecao.getValidador().getMensagens();
         assertEquals(1, mensagens.size());
         assertEquals(mensagemEsperada, mensagens.get(0));
+    }
+
+    @Test
+    void testJson() throws ValidadorException, IOException {
+        Sobremesa sobremesa = new Sobremesa(20, "Pudim", true, "sem glútem", 1.5f, 10.5f);
+        ObjectMapper objectMapper = new ObjectMapper();
+        assertTrue(objectMapper.canSerialize(Sobremesa.class));
+        String sobremesaString = objectMapper.writeValueAsString(sobremesa);
+        Sobremesa copiaSobremesa = objectMapper.readValue(sobremesaString, Sobremesa.class);
+        assertEquals(sobremesa, copiaSobremesa);
     }
 
 

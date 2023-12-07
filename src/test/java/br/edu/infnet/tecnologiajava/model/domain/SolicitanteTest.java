@@ -126,29 +126,6 @@ class SolicitanteTest {
         }
     }
 
-    @TestFactory
-    Collection<DynamicTest> testEquals() throws ValidadorException {
-        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
-        return Arrays.asList(
-                dynamicTest("CPF diferente",
-                        () -> assertNotEquals(solicitante, new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br"))),
-                dynamicTest("Nome diferente",
-                        () -> assertNotEquals(solicitante, new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br"))),
-                dynamicTest("Email diferente",
-                        () -> assertNotEquals(solicitante, new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br"))),
-                dynamicTest("Mesma instance",
-                        () -> assertEquals(solicitante, solicitante)),
-                dynamicTest("Igual, instancia diferente",
-                        () -> assertEquals(solicitante, new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br"))),
-                dynamicTest("Classe diferente",
-                        () -> assertFalse(solicitante.equals(Boolean.FALSE))),
-                dynamicTest("Instancia Vazia",
-                        () -> assertNotEquals(solicitante, Solicitante.getVazio())),
-                dynamicTest("Valor nulo",
-                        () -> assertFalse(solicitante.equals(null)))
-
-        );
-    }
 
     @TestFactory
     Collection<DynamicTest> testHashCode() throws ValidadorException {

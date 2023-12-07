@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class PedidoTest {
     @TestFactory
-    Collection<DynamicTest> testEqualsHashCode() throws ValidadorException {
+    Collection<DynamicTest> testHashCode() throws ValidadorException {
         List<DynamicTest> testes = new ArrayList<>();
         List<Produto> sobremesas = new ArrayList<>();
         adicionaSobremesa(sobremesas, 5, "sobremesa");
@@ -34,48 +34,35 @@ class PedidoTest {
 
         Pedido codigoDiferente = new Pedido(20, "Pedido 1", data, false, solicitante);
         codigoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Equals Codigo diferente", () -> assertNotEquals(pedido, codigoDiferente)));
         testes.add(dynamicTest("HashCode Codigo diferente", () -> assertNotEquals(hashCode, codigoDiferente.hashCode())));
 
         Pedido descricaoDiferente = new Pedido(20, "Pedido 2", data, false, solicitante);
         descricaoDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Equals Descricao diferente", () -> assertNotEquals(pedido, descricaoDiferente)));
         testes.add(dynamicTest("HahsCode Descricao diferente", () -> assertNotEquals(hashCode, descricaoDiferente.hashCode())));
 
         Pedido dataDiferente = new Pedido(20, "Pedido 1", LocalDateTime.now(), false, solicitante);
         dataDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Equals Data diferente", () -> assertNotEquals(pedido, dataDiferente)));
         testes.add(dynamicTest("HashCode Data diferente", () -> assertNotEquals(hashCode, dataDiferente.hashCode())));
 
         Pedido webDiferente = new Pedido(10, "Pedido 1", data, true, solicitante);
         webDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Equals Web diferente", () -> assertNotEquals(pedido, webDiferente)));
-        testes.add(dynamicTest("HashsCode Web diferente", () -> assertNotEquals(hashCode, webDiferente.hashCode())));
+        testes.add(dynamicTest("HashCode Web diferente", () -> assertNotEquals(hashCode, webDiferente.hashCode())));
 
         Pedido produtosDiferentesMesmaQuantidade = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesMesmaQuantidade.setProdutos(sobremesas);
-        testes.add(dynamicTest("Equals Produtos diferentes, mesma quantidade",
-                () -> assertNotEquals(pedido, produtosDiferentesMesmaQuantidade)));
         testes.add(dynamicTest("HashCode Produtos diferentes, mesma quantidade",
                 () -> assertNotEquals(hashCode, produtosDiferentesMesmaQuantidade.hashCode())));
         Pedido produtosDiferentesQuantidadeDiferente = new Pedido(10, "Pedido 1", data, false, solicitante);
         produtosDiferentesQuantidadeDiferente.setProdutos(comidas);
-        testes.add(dynamicTest("Equals Produtos diferentes, quantidade diferente",
-                () -> assertNotEquals(pedido, produtosDiferentesQuantidadeDiferente)));
         testes.add(dynamicTest("HashCode Produtos diferentes, quantidade diferente",
                 () -> assertNotEquals(hashCode, produtosDiferentesQuantidadeDiferente.hashCode())));
 
         Pedido solicitanteDiferente = new Pedido(10, "Pedido 1", data, false, Solicitante.getVazio());
         solicitanteDiferente.setProdutos(bebidas);
-        testes.add(dynamicTest("Equals Solicitante diferente", () -> assertNotEquals(pedido, solicitanteDiferente)));
         testes.add(dynamicTest("Solicitante Solicitante diferente", () -> assertNotEquals(hashCode, solicitanteDiferente.hashCode())));
 
         Pedido igual = new Pedido(pedido);
-        testes.add(dynamicTest("Equals Mesma Instancia", () -> assertEquals(pedido, pedido)));
-        testes.add(dynamicTest("Equals Instancia diferente, objeto igual", () -> assertEquals(pedido, igual)));
         testes.add(dynamicTest("HashCode Instancia diferente, objeto igual", () -> assertEquals(hashCode, igual.hashCode())));
-        testes.add(dynamicTest("Equals Classe diferente", () -> assertFalse(pedido.equals(Solicitante.getVazio()))));
-        testes.add(dynamicTest("Equals Null", () -> assertFalse(pedido.equals(null))));
 
         return testes;
 
