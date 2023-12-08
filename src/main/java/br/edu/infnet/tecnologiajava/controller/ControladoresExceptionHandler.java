@@ -2,6 +2,7 @@ package br.edu.infnet.tecnologiajava.controller;
 
 import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.view.RespostaErro;
+import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,16 @@ public class ControladoresExceptionHandler extends ResponseEntityExceptionHandle
         return super.handleHttpMessageNotReadable(ex, headers, status, request);
     }
 
+    @ExceptionHandler(value = {BancoDadosException.class})
+    protected ResponseEntity<Object> erroBancoDeDados(BancoDadosException ex, WebRequest request){
+        RespostaErro respostaErro = new RespostaErro();
+        respostaErro.setTitle("Erro acessando banco de dados.");
+        respostaErro.setDetail(ex.getMessage());
+        respostaErro.setInstance(((ServletWebRequest)request).getRequest().getRequestURI());
+        respostaErro.setStatus(HttpStatus.CONFLICT.value());
+        return handleExceptionInternal(ex, respostaErro, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
 
-}
+
+
+    }

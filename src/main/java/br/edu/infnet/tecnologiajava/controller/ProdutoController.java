@@ -34,7 +34,7 @@ public class ProdutoController {
     @DeleteMapping(value = "/{chave}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso deleteProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
         repositorioProduto.removePorId(chave);
-        return new RespostaSucesso("O produto com chave "+chave+" foi exxluído com sucesso.");
+        return new RespostaSucesso("O produto com chave "+chave+" foi apagado com sucesso.");
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

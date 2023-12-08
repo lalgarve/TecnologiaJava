@@ -1,15 +1,19 @@
 package br.edu.infnet.tecnologiajava.controller;
 
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,6 +59,7 @@ class ProdutoControllerIT {
                 .content(novaSobremesa))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Erro processando JSON."))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.detail").value("O campo Nome não existe."))
                 .andExpect(jsonPath("$.instance").value("/produto/sobremesa"));
     }
@@ -68,6 +73,7 @@ class ProdutoControllerIT {
                         .content(novaSobremesa))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Erro validação."))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.detail").value("o nome não pode estar em branco, a quantidade precisa ser maior que zero"))
                 .andExpect(jsonPath("$.instance").value("/produto/sobremesa"));
     }
@@ -104,6 +110,7 @@ class ProdutoControllerIT {
                         .content(novaSobremesa))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Erro validação."))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.detail").value("a quantidade precisa ser maior que zero"))
                 .andExpect(jsonPath("$.instance").value("/produto/sobremesa"));
     }
@@ -115,4 +122,26 @@ class ProdutoControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mensagem").value("O produto com chave 40 foi apagado com sucesso."));
     }
+    @Test
+    void buscaPorProduto() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/produto/busca/doce_tradicional"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String resultado = mvcResult.getResponse().getContentAsString();
+        Sobremesa[] produtos = objectMapper.readValue(resultado, Sobremesa[].class);
+        assertEquals(2, produtos.length);
+        assertEquals(4, produtos[0].getChave());
+        assertEquals(6, produtos[1].getChave());
+    }
+
+    @Test
+    void deletaProdutoSendoUsado() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("http://localhost:8080/produto/6"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Erro acessando banco de dados."))
+                .andExpect(jsonPath("$.detail").value("O valor está sendo usado. Chave: 6"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
+                .andExpect(jsonPath("$.instance").value("/produto/6"));
+    }
+
 }
