@@ -1,10 +1,14 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Locale;
 
-@Getter
+@Getter @EqualsAndHashCode(callSuper = true)
+@JsonDeserialize(builder = Bebida.Builder.class)
 public final class Bebida extends Produto {
 
     private final boolean gelada;
@@ -84,5 +88,48 @@ public final class Bebida extends Produto {
         return super.comparaCamposProduto(other);
     }
 
+    @JsonPOJOBuilder
+    static class Builder{
+        private int codigo;
+        private String nome;
+        private String marca;
+        private float tamanho;
+        private boolean gelada;
+        private float valor;
+
+        Builder withCodigo(int codigo){
+            this.codigo = codigo;
+            return this;
+        }
+
+        Builder withNome(String nome){
+            this.nome = nome;
+            return this;
+        }
+
+        Builder withMarca(String marca){
+            this.marca = marca;
+            return this;
+        }
+
+        Builder withTamanho(float tamanho){
+            this.tamanho = tamanho;
+            return this;
+        }
+
+        Builder withGelada(boolean gelada){
+            this.gelada = gelada;
+            return this;
+        }
+
+        Builder withValor(float valor){
+            this.valor = valor;
+            return this;
+        }
+
+        public Bebida build() throws ValidadorException {
+            return new Bebida(codigo, nome, marca, tamanho, gelada, valor);
+        }
+    }
 
 }

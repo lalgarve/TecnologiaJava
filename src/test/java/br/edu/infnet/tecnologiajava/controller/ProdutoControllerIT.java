@@ -92,7 +92,7 @@ class ProdutoControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(sobremesa))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensagem").value("A sobremesa com chave 4 foi alterada com sucesso."));
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 4 foi alterado para sobremesa com sucesso."));
     }
 
     @Test
@@ -144,4 +144,39 @@ class ProdutoControllerIT {
                 .andExpect(jsonPath("$.instance").value("/produto/6"));
     }
 
+    @Test
+    void adicionaBebida() throws Exception {
+        Sobremesa sobremesa = new Sobremesa("Sobremesa", true, "sobremesa",
+                1.0f, 10.0f);
+        int codigoEsperado = sobremesa.getCodigo()+1;
+        String novaBebida = "      {\n" +
+                "      \"nome\": \"Café com Leite\",\n" +
+                "      \"valor\": 5.99,\n" +
+                "      \"gelada\": false,\n" +
+                "      \"tamanho\": 2,\n" +
+                "      \"marca\": \"Nestlè\"\n" +
+                "   }";
+        mvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/produto/bebida")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(novaBebida))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.chave").value(codigoEsperado));
+    }
+
+    @Test
+    void alteraBebida() throws Exception {
+        String novaBebida = "{\n" +
+                "      \"nome\": \"Fanta Uva\",\n" +
+                "      \"valor\": 6.99,\n" +
+                "      \"codigo\": 28,\n" +
+                "      \"gelada\": true,\n" +
+                "      \"tamanho\": 2,\n" +
+                "      \"marca\": \"Coca-Cola Company\"\n" +
+                "   }";
+        mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/produto/bebida")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(novaBebida))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 28 foi alterado para bebida com sucesso."));
+    }
 }

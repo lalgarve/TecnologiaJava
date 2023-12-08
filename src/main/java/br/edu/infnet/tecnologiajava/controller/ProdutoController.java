@@ -1,6 +1,7 @@
 package br.edu.infnet.tecnologiajava.controller;
 
 import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
 import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
 import br.edu.infnet.tecnologiajava.model.view.RespostaSucesso;
@@ -85,9 +86,27 @@ public class ProdutoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso updateSobremesa(@RequestBody Sobremesa sobremesa) throws BancoDadosException{
         repositorioProduto.altera(sobremesa);
-        return new RespostaSucesso("A sobremesa com chave " + sobremesa.getChave()+" foi alterada com sucesso.");
+        return new RespostaSucesso("O produto com chave " + sobremesa.getChave()+" foi alterado para sobremesa com sucesso.");
     }
 
+    @PostMapping(path = "/bebida",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaInclusao<Integer> addBebida(@RequestBody JsonNode requestBody) throws BancoDadosException{
+        BebidaMapper bebidaMapper = new BebidaMapper();
+        bebidaMapper.reset();
+        bebidaMapper.setValores(requestBody);
+        Produto bebida = bebidaMapper.build();
+        repositorioProduto.adiciona(bebida);
+        return new RespostaInclusao<>(bebida.getChave());
+    }
 
+    @PutMapping(path = "/bebida",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaSucesso updateBebida(@RequestBody Bebida bebida) throws BancoDadosException{
+        repositorioProduto.altera(bebida);
+        return new RespostaSucesso("O produto com chave " + bebida.getChave()+" foi alterado para bebida com sucesso.");
+    }
 
 }
