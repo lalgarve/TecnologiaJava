@@ -1,5 +1,7 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.Validador;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.EqualsAndHashCode;
@@ -55,37 +57,6 @@ public final class Bebida extends Produto {
         return String.format(Locale.US,
                 "Bebida: codigo=%d, nome=%s, marca=%s, tamanho=%.1f, gelada=%s, valor=%.2f",
                 getCodigo(), getNome(), getMarca(), getTamanho(), isGelada(), getValor());
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (gelada ? 1231 : 1237);
-        result = prime * result + Float.floatToIntBits(tamanho);
-        result = prime * result + marca.hashCode();
-        result = prime * result + getCodigo();
-        result = prime * result + getNome().hashCode();
-        result = prime * result + Float.floatToIntBits(getValor());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Bebida other = (Bebida) obj;
-        if (gelada != other.gelada)
-            return false;
-        if (Float.floatToIntBits(tamanho) != Float.floatToIntBits(other.tamanho))
-            return false;
-        if (!marca.equals(other.marca))
-            return false;
-        return super.comparaCamposProduto(other);
     }
 
     @JsonPOJOBuilder

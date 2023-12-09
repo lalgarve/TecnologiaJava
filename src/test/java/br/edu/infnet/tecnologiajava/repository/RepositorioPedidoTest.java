@@ -1,6 +1,7 @@
 package br.edu.infnet.tecnologiajava.repository;
 
 import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
 import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;

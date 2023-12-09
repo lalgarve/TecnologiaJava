@@ -2,6 +2,7 @@ package br.edu.infnet.tecnologiajava.controller;
 
 import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
+import br.edu.infnet.tecnologiajava.model.mapper.ComidaMapper;
 import br.edu.infnet.tecnologiajava.model.mapper.SobremesaMapper;
 import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
 import br.edu.infnet.tecnologiajava.model.view.RespostaSucesso;
@@ -86,7 +87,7 @@ public class ProdutoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso updateSobremesa(@RequestBody Sobremesa sobremesa) throws BancoDadosException{
         repositorioProduto.altera(sobremesa);
-        return new RespostaSucesso("O produto com chave " + sobremesa.getChave()+" foi alterado para sobremesa com sucesso.");
+        return new RespostaSucesso(getMensagemSucessoAlteracao(sobremesa));
     }
 
     @PostMapping(path = "/bebida",
@@ -106,7 +107,32 @@ public class ProdutoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso updateBebida(@RequestBody Bebida bebida) throws BancoDadosException{
         repositorioProduto.altera(bebida);
-        return new RespostaSucesso("O produto com chave " + bebida.getChave()+" foi alterado para bebida com sucesso.");
+        return new RespostaSucesso(getMensagemSucessoAlteracao(bebida));
+    }
+
+
+    @PostMapping(path = "/comida",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaInclusao<Integer> addComida(@RequestBody JsonNode requestBody) throws BancoDadosException{
+        ComidaMapper comidaMapper = new ComidaMapper();
+        comidaMapper.reset();
+        comidaMapper.setValores(requestBody);
+        Produto comida = comidaMapper.build();
+        repositorioProduto.adiciona(comida);
+        return new RespostaInclusao<>(comida.getChave());
+    }
+
+    @PutMapping(path = "/comida",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespostaSucesso updateComida(@RequestBody Comida comida) throws BancoDadosException{
+        repositorioProduto.altera(comida);
+        return new RespostaSucesso(getMensagemSucessoAlteracao(comida));
+    }
+
+    private static String getMensagemSucessoAlteracao(Produto produto) {
+        return "O produto com chave " + produto.getChave() + " foi alterado com sucesso.";
     }
 
 }

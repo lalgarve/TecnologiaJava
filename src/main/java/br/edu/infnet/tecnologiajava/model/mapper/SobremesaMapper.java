@@ -2,7 +2,7 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import br.edu.infnet.tecnologiajava.services.mapper.json.JsonMapper;

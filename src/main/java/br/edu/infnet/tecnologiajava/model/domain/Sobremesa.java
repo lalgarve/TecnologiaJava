@@ -1,5 +1,7 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.Validador;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.EqualsAndHashCode;

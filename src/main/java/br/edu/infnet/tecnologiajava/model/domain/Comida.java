@@ -1,10 +1,16 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.Validador;
+import br.edu.infnet.tecnologiajava.ValidadorException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Locale;
 
-@Getter
+@Getter @EqualsAndHashCode(callSuper = true)
+@JsonDeserialize(builder = Comida.Builder.class)
 public final class Comida extends Produto {
 
     private final float peso;
@@ -53,35 +59,47 @@ public final class Comida extends Produto {
                 getCodigo(), getNome(), ingredientes, vegano, peso, getValor());
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Float.floatToIntBits(peso);
-        result = prime * result + (vegano ? 1231 : 1237);
-        result = prime * result + ingredientes.hashCode();
-        result = prime * result + getCodigo();
-        result = prime * result + Float.floatToIntBits(getValor());
-        result = prime * result + getNome().hashCode();
-        return result;
-    }
+    @JsonPOJOBuilder
+    static class Builder {
+        private int codigo;
+        private String nome;
+        private String ingredientes;
+        private float peso;
+        private boolean vegano;
+        private float valor;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Comida other = (Comida) obj;
-        if (!super.comparaCamposProduto(other)) {
-            return false;
+        Builder withCodigo(int codigo){
+            this.codigo = codigo;
+            return this;
         }
-        if (Float.floatToIntBits(peso) != Float.floatToIntBits(other.peso))
-            return false;
-        if (vegano != other.vegano)
-            return false;
-        return ingredientes.equals(other.ingredientes);
+
+        Builder withNome(String nome){
+            this.nome = nome;
+            return this;
+        }
+
+        Builder withIngredientes(String ingredientes){
+            this.ingredientes = ingredientes;
+            return this;
+        }
+
+        Builder withPeso(float peso){
+            this.peso = peso;
+            return this;
+        }
+
+        Builder withVegano(boolean vegano){
+            this.vegano = vegano;
+            return this;
+        }
+
+        Builder withValor(float valor){
+            this.valor = valor;
+            return this;
+        }
+
+        public Comida build() throws ValidadorException {
+            return new Comida(codigo, nome, ingredientes, peso, vegano, valor);
+        }
     }
 }

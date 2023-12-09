@@ -1,10 +1,13 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.ValidadorException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -92,4 +95,13 @@ class ComidaTest {
         assertEquals(mensagemEsperada, excecao.getValidador().getMensagens().get(0));
     }
 
+    @Test
+    void testJson() throws ValidadorException, IOException {
+        Comida comida = new Comida(20, "Arroz", "arroz, sal", 1.5f, true, 10.5f);
+        ObjectMapper objectMapper = new ObjectMapper();
+        assertTrue(objectMapper.canSerialize(Comida.class));
+        String comidaString = objectMapper.writeValueAsString(comida);
+        Comida copiaComida = objectMapper.readValue(comidaString, Comida.class);
+        assertEquals(comida, copiaComida);
+    }
 }

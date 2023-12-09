@@ -1,5 +1,7 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.Validador;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import lombok.Getter;

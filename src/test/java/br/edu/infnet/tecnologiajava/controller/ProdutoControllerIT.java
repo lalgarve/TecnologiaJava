@@ -1,6 +1,5 @@
 package br.edu.infnet.tecnologiajava.controller;
 
-import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.model.domain.Sobremesa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -92,7 +91,7 @@ class ProdutoControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(sobremesa))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensagem").value("O produto com chave 4 foi alterado para sobremesa com sucesso."));
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 4 foi alterado com sucesso."));
     }
 
     @Test
@@ -177,6 +176,42 @@ class ProdutoControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(novaBebida))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensagem").value("O produto com chave 28 foi alterado para bebida com sucesso."));
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 28 foi alterado com sucesso."));
+    }
+
+    @Test
+    void adicionaComida() throws Exception {
+        Sobremesa sobremesa = new Sobremesa("Sobremesa", true, "sobremesa",
+                1.0f, 10.0f);
+        int codigoEsperado = sobremesa.getCodigo()+1;
+        String novaComida = "{\n" +
+                "      \"nome\": \"Lasanha de carne\",\n" +
+                "      \"valor\": 20.99,\n" +
+                "      \"peso\": 1,\n" +
+                "      \"vegano\": false,\n" +
+                "      \"ingredientes\": \"Massa de lasanha, Carne, Molho branco, Molho de tomate\"\n" +
+                "   }";
+        mvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/produto/comida")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(novaComida))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.chave").value(codigoEsperado));
+    }
+
+    @Test
+    void alteraComida() throws Exception {
+        String novaComida = "{\n" +
+                "      \"nome\": \"Coxinha de frango\",\n" +
+                "      \"valor\": 9.99,\n" +
+                "      \"codigo\": 42,\n" +
+                "      \"peso\": 0.5,\n" +
+                "      \"vegano\": false,\n" +
+                "      \"ingredientes\": \"Frango, Massa de coxinha, Farinha de rosca, Ovo\"\n" +
+                "   }";
+        mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/produto/comida")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(novaComida))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 42 foi alterado com sucesso."));
     }
 }

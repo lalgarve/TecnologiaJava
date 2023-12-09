@@ -1,4 +1,4 @@
-package br.edu.infnet.tecnologiajava.model.domain;
+package br.edu.infnet.tecnologiajava;
 
 public class ValidadorException extends Exception {
 

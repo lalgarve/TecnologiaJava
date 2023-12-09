@@ -1,6 +1,6 @@
 package br.edu.infnet.tecnologiajava.controller;
 
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.view.RespostaErro;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;

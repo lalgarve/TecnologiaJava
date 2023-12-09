@@ -2,7 +2,7 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Bebida;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

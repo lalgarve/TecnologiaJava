@@ -1,5 +1,8 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
+import br.edu.infnet.tecnologiajava.Validador;
+import br.edu.infnet.tecnologiajava.ValidadorException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -9,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -126,25 +130,6 @@ class SolicitanteTest {
         }
     }
 
-
-    @TestFactory
-    Collection<DynamicTest> testHashCode() throws ValidadorException {
-        Solicitante solicitante = new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br");
-        int hashCode = solicitante.hashCode();
-        return Arrays.asList(
-                dynamicTest("CPF diferente",
-                        () -> assertNotEquals(hashCode, new Solicitante("775.007.216-09", "João", "joao@yahoo.com.br").hashCode())),
-                dynamicTest("Nome diferente",
-                        () -> assertNotEquals(hashCode, new Solicitante("062.427.708-90", "João Maria", "joao@yahoo.com.br").hashCode())),
-                dynamicTest("Email diferente",
-                        () -> assertNotEquals(hashCode, new Solicitante("062.427.708-90", "João", "joao@yahoo2.com.br").hashCode())),
-                dynamicTest("Igual, instancia diferente",
-                        () -> assertEquals(hashCode, new Solicitante("062.427.708-90", "João", "joao@yahoo.com.br").hashCode())),
-                dynamicTest("Instancia Vazia",
-                        () -> assertNotEquals(hashCode, Solicitante.getVazio()))
-        );
-    }
-
     @ParameterizedTest
     @ValueSource (ints = {149,150,151,8000})
     void testLimiteEmail(int tamanhoEmail){
@@ -259,5 +244,14 @@ class SolicitanteTest {
         }
     }
 
+    @Test
+    void testJson() throws ValidadorException, IOException {
+        Solicitante solicitante = new Solicitante("929.204.815-50", "Maria Fátima", "fatima@gmail.com");
+        ObjectMapper objectMapper = new ObjectMapper();
+        assertTrue(objectMapper.canSerialize(Solicitante.class));
+        String solicitanteString = objectMapper.writeValueAsString(solicitante);
+        Solicitante copiaSolicitante = objectMapper.readValue(solicitanteString, Solicitante.class);
+        assertEquals(solicitante, copiaSolicitante);
+    }
 
 }

@@ -2,11 +2,12 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.model.domain.Comida;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.json.JsonMapper;
 
-public class ComidaMapper extends MapperAbstrato<Produto> {
+public class ComidaMapper extends MapperAbstrato<Produto> implements JsonMapper<Produto> {
 
     private String nome;
     private String ingredientes;

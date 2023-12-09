@@ -1,13 +1,7 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
-import br.edu.infnet.tecnologiajava.model.domain.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.mapper.ProdutoDesconhecido;
-import org.junit.jupiter.api.DynamicTest;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
