@@ -17,16 +17,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-import static br.edu.infnet.tecnologiajava.repository.ConfiguracaoRepositorios.carrega;
+import static br.edu.infnet.tecnologiajava.repository.CriacaoRepositorios.carrega;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = {TecnologiajavaApplication.class}, loader = AnnotationConfigContextLoader.class)
 class RepositorioPedidoTest {
 
     private RepositorioSolicitante repositorioSolicitante;
     private RepositorioPedido repositorioPedido;
-
     private RepositorioProduto repositorioProduto;
 
     @BeforeEach
@@ -379,5 +378,51 @@ class RepositorioPedidoTest {
         }
     }
 
+    @Test
+    void testAlteraDadosSolicitanteDoPedido() throws BancoDadosException, ValidadorException {
+        List<Produto> produtos = new ArrayList<>();
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+       //775.007.216-09,Paulo Rodrigues,paulo.rodrigues@gmail.com
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+        repositorioPedido.adiciona(pedido);
+
+        solicitante = new Solicitante("775.007.216-09", "Paulo Rodrigues", "paulo.rodrigues@yahoo.com");
+        repositorioSolicitante.altera(solicitante);
+
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(pedido.getChave()).orElseThrow();
+        assertEquals(solicitante, pedidoBanco.getSolicitante());
+
+        List<Pedido> pedidosBanco = repositorioPedido.getValores();
+        assertEquals(solicitante, pedidosBanco.get(0).getSolicitante());
+
+        pedidosBanco = repositorioPedido.getValores(p -> true);
+        assertEquals(solicitante, pedidosBanco.get(0).getSolicitante());
+    }
+
+    @Test
+    void testAlteraDadosProdutoDoPedido() throws BancoDadosException, ValidadorException {
+        List<Produto> produtos = new ArrayList<>();
+        //Pudim de Leite Condensado,true,"Uma sobremesa clássica e fácil de fazer. Você só precisa de leite condensado, leite, ovos e açúcar para a calda.",1.0,10.0
+        produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
+        Solicitante solicitante = new Solicitante("775.007.216-09");
+        Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
+        pedido.setProdutos(produtos);
+        repositorioPedido.adiciona(pedido);
+
+        Sobremesa sobremesa = new Sobremesa(1, "Pudim de Leite Condensado", true, "uma sobremesa clássica maravilhosa",
+                1.0f, 10.0f);
+        repositorioProduto.altera(sobremesa);
+
+        Pedido pedidoBanco = repositorioPedido.consultaPorId(pedido.getChave()).orElseThrow();
+        assertEquals(sobremesa, pedidoBanco.getProdutos().findFirst().orElseThrow());
+
+        List<Pedido> pedidosBanco = repositorioPedido.getValores();
+        assertEquals(sobremesa, pedidosBanco.get(0).getProdutos().findFirst().orElseThrow());
+
+        pedidosBanco = repositorioPedido.getValores(p -> true);
+        assertEquals(sobremesa, pedidosBanco.get(0).getProdutos().findFirst().orElseThrow());
+    }
 
 }

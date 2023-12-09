@@ -1,29 +1,30 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.ValidadorException;
+import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class ProdutoDesconhecidoTest {
+class ProdutoCodigoTest {
 
     @Test
     void podeSerGravadoNoBanco() throws ValidadorException {
-        ProdutoDesconhecido produtoDesconhecido = new ProdutoDesconhecido(2);
+        ProdutoCodigo produtoDesconhecido = new ProdutoCodigo(2);
         assertFalse(produtoDesconhecido.podeSerGravadoNoBanco());
     }
 
     @Test
     void getDetalhe() throws ValidadorException {
-        ProdutoDesconhecido produtoDesconhecido = new ProdutoDesconhecido(2);
-        assertEquals("Desconhecido", produtoDesconhecido.getDetalhe());
+        ProdutoCodigo produtoCodigo = new ProdutoCodigo(2);
+        assertEquals("Desconhecido", produtoCodigo.getDetalhe());
     }
 
     @Test
     void testHashCode() throws ValidadorException {
-        ProdutoDesconhecido produtoDesconhecido = new ProdutoDesconhecido(2);
-        assertEquals(2, produtoDesconhecido.hashCode());
+        ProdutoCodigo produtoCodigo = new ProdutoCodigo(2);
+        assertEquals(2, produtoCodigo.hashCode());
     }
 
 }

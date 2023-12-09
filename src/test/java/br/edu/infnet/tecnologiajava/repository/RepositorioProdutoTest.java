@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
-import static br.edu.infnet.tecnologiajava.repository.ConfiguracaoRepositorios.carrega;
+import static br.edu.infnet.tecnologiajava.repository.CriacaoRepositorios.carrega;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RepositorioProdutoTest {

@@ -4,6 +4,7 @@ import br.edu.infnet.tecnologiajava.Validador;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,6 @@ public class Pedido implements ValorBD<Integer, Pedido> {
     private static int proximoCodigo = 1;
     private final int codigo;
     private Solicitante solicitante;
-
 
     public Pedido(String descricao, boolean web, Solicitante solicitante) throws ValidadorException {
         this(proximoCodigo++, descricao, LocalDateTime.now(), web, solicitante);
@@ -91,11 +91,13 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         return valorTotal;
     }
 
+   @JsonIgnore
     public int getNumeroProdutos() {
         return produtos.size();
     }
 
     @Override
+    @JsonIgnore
     public Integer getChave() {
         return codigo;
     }

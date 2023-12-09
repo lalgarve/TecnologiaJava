@@ -1,7 +1,10 @@
 package br.edu.infnet.tecnologiajava.repository;
 
+import br.edu.infnet.tecnologiajava.ExcecaoInesperada;
+import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import br.edu.infnet.tecnologiajava.services.bancodados.TabelaBD;
@@ -39,8 +42,8 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             throw new BancoDadosException("A lista de produtos não pode ser vazia.");
         }
 
-        List<Produto> produtos = getProdutosDoBanco(pedido);
-        Solicitante solicitante = getSolicitanteDoBanco(pedido);
+        List<Produto> produtos = getProdutosParaBanco(pedido);
+        Solicitante solicitante = getSolicitanteParaBanco(pedido);
 
         Pedido pedidoParaBanco = new Pedido(pedido);
         pedidoParaBanco.setProdutos(produtos);
@@ -56,8 +59,15 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         repositorioSolicitante.adicionaUso(solicitante.getChave(), this);
     }
 
-    private Solicitante getSolicitanteDoBanco(Pedido pedido) throws BancoDadosException {
+    private Solicitante getSolicitanteParaBanco(Pedido pedido) throws BancoDadosException {
         Optional<Solicitante> solicitanteBanco = repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave());
+        solicitanteBanco = solicitanteBanco.map(solicitante -> {
+            try {
+                return new Solicitante(solicitante.getCpf());
+            } catch (ValidadorException e) {
+                throw new ExcecaoInesperada("O CPF deveria ser válido", e);
+            }
+        });
         return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF " + pedido.getSolicitante().getCpf() + " não existe no banco."));
     }
 
@@ -66,11 +76,11 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             throw new BancoDadosException("A lista de produtos não pode ser vazia.");
         }
 
-        List<Produto> produtos = getProdutosDoBanco(pedido);
+        List<Produto> produtos = getProdutosParaBanco(pedido);
 
         Pedido pedidoAnterior = tabelaPedido.consultaPorId(pedido.getChave()).orElseThrow(() -> new BancoDadosException("Pedido com chave " + pedido.getChave() + " não foi encontrado."));
 
-        Solicitante solicitante = getSolicitanteDoBanco(pedido);
+        Solicitante solicitante = getSolicitanteParaBanco(pedido);
 
         Pedido pedidoParaBanco = new Pedido(pedido);
         pedidoParaBanco.setProdutos(produtos);
@@ -93,7 +103,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         repositorioSolicitante.adicionaUso(pedidoParaBanco.getSolicitante().getChave(), this);
     }
 
-    private List<Produto> getProdutosDoBanco(Pedido pedido) throws BancoDadosException {
+    private List<Produto> getProdutosParaBanco(Pedido pedido) throws BancoDadosException {
         List<Produto> produtosBanco = new ArrayList<>(pedido.getNumeroProdutos());
         Iterator<Integer> chaves = pedido.getProdutos().map(Produto::getChave).iterator();
         while (chaves.hasNext()) {
@@ -102,7 +112,11 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
             if (produtoOpcional.isEmpty()) {
                 throw new BancoDadosException("Há produtos que não estão no banco de dados.");
             } else {
-                produtosBanco.add(produtoOpcional.get());
+                try {
+                    produtosBanco.add(new ProdutoCodigo(produtoOpcional.get().getCodigo()));
+                } catch (ValidadorException e) {
+                    throw new ExcecaoInesperada("O código deveria ser válido.", e);
+                }
             }
         }
 
@@ -122,15 +136,43 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     }
 
     public Optional<Pedido> consultaPorId(Integer chave) throws BancoDadosException {
-        return tabelaPedido.consultaPorId(chave);
+        Optional<Pedido> optionalPedido = tabelaPedido.consultaPorId(chave);
+        optionalPedido.ifPresent(this::substituiSolicitante);
+        optionalPedido.ifPresent(this::substituiProdutos);
+        return  optionalPedido;
     }
 
     public List<Pedido> getValores() throws BancoDadosException {
-        return tabelaPedido.getValores();
+        List<Pedido> pedidos = tabelaPedido.getValores();
+        pedidos.forEach(this::substituiSolicitante);
+        pedidos.forEach(this::substituiProdutos);
+        return pedidos;
     }
 
     public List<Pedido> getValores(Predicate<Pedido> filtro) throws BancoDadosException {
-        return tabelaPedido.getValores(filtro);
+        List<Pedido> pedidos = tabelaPedido.getValores(filtro);
+        pedidos.forEach(this::substituiSolicitante);
+        pedidos.forEach(this::substituiProdutos);
+        return pedidos;
+    }
+
+    private void substituiSolicitante(Pedido pedido){
+        try {
+            pedido.setSolicitante(repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave()).orElseThrow());
+        } catch (BancoDadosException e) {
+            throw new ExcecaoInesperada("Não deveria ter erro na busca.", e);
+        }
+    }
+
+    private void substituiProdutos(Pedido pedido){
+        List<Produto> listaProdutos = pedido.getProdutos().map(produto -> {
+            try {
+                return repositorioProduto.consultaPorId(produto.getChave()).orElseThrow();
+            } catch (BancoDadosException e) {
+                throw new ExcecaoInesperada("Não deveria dar erro procurando produto.", e);
+            }
+        }).toList();
+        pedido.setProdutos(listaProdutos);
     }
 
     public String getNome() {

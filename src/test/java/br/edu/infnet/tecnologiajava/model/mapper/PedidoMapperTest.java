@@ -3,6 +3,7 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,7 +104,7 @@ class PedidoMapperTest {
     List<Produto> criaProdutos(int... codigos) throws ValidadorException {
         List<Produto> produtos = new ArrayList<>();
         for (int codigo : codigos) {
-            produtos.add(new ProdutoDesconhecido(codigo));
+            produtos.add(new ProdutoCodigo(codigo));
         }
         return produtos;
     }

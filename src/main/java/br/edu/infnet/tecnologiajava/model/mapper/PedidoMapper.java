@@ -3,6 +3,7 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.domain.Pedido;
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
@@ -64,7 +65,7 @@ public class PedidoMapper extends MapperAbstrato<Pedido> {
                 .map(this::converteInt).iterator();
         List<Produto> produtosSoComCodigo = new ArrayList<>();
         while (iterator.hasNext()) {
-            Produto produto = new ProdutoDesconhecido(iterator.next());
+            Produto produto = new ProdutoCodigo(iterator.next());
             produtosSoComCodigo.add(produto);
         }
         return produtosSoComCodigo;

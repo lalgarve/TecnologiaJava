@@ -1,10 +1,13 @@
-package br.edu.infnet.tecnologiajava.model.mapper;
+package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.domain.Produto;
 
-class ProdutoDesconhecido extends Produto {
-    ProdutoDesconhecido(int codigo) throws ValidadorException {
+/**
+ * Classe usada quando se conhece apenas o código do produto ou
+ * se que armazenar uma referência ao produto armazenado.
+ */
+public final class ProdutoCodigo extends Produto {
+    public ProdutoCodigo(int codigo) throws ValidadorException {
         super(codigo);
     }
 
@@ -26,7 +29,7 @@ class ProdutoDesconhecido extends Produto {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ProdutoDesconhecido produto = (ProdutoDesconhecido) obj;
+        ProdutoCodigo produto = (ProdutoCodigo) obj;
         return produto.getCodigo() == getCodigo();
     }
 }

@@ -1,2 +1,8 @@
 controller:
-  relatoriosPath: relatorios
+  relatorios-path: relatorios
+repositorios:
+  arquivo-bebida: /bebida.csv
+  arquivo-comida: /comida.csv
+  arquivo-pedidos: /pedido.csv
+  arquivo-sobremesa: /sobremesa.csv
+  arquivo-solicitante: /solicitante.csv
