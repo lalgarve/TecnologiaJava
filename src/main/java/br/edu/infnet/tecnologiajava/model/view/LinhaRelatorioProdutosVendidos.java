@@ -1,16 +1,16 @@
 package br.edu.infnet.tecnologiajava.model.view;
 
 import br.edu.infnet.tecnologiajava.model.domain.Produto;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class LinhaRelatorioProdutosVendidos {
-    private final int codigo;
-    private final String tipo;
-    private final int quantidade;
-    private final float valor;
-    private final float valorTotal;
-    private final String nome;
+    private int codigo;
+    private String tipo;
+    private int quantidade;
+    private float valor;
+    private float valorTotal;
+    private String nome;
 
     public LinhaRelatorioProdutosVendidos(Produto produto, int quantidade) {
         this.codigo = produto.getCodigo();
@@ -19,6 +19,10 @@ public class LinhaRelatorioProdutosVendidos {
         this.valor = produto.getValor();
         this.valorTotal = produto.getValor() * quantidade;
         this.nome = produto.getNome();
+    }
+
+    public LinhaRelatorioProdutosVendidos(){
+
     }
 
 }

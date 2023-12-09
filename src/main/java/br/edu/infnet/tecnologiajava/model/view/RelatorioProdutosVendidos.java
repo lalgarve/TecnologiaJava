@@ -9,4 +9,5 @@ public class RelatorioProdutosVendidos {
     private int mes;
     private int ano;
     private List<LinhaRelatorioProdutosVendidos> dadosVenda;
+    private String mensagem;
 }

@@ -43,7 +43,7 @@ public class ProdutoController {
     @DeleteMapping(value = "/{chave}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso deleteProdutoPorChave(@PathVariable int chave) throws BancoDadosException {
         repositorioProduto.removePorId(chave);
-        logger.info("Apagado produto {chave} com sucesso.");
+        logger.info("Apagado produto {} com sucesso.", chave);
         return new RespostaSucesso("O produto com chave " + chave + " foi apagado com sucesso.");
     }
 

@@ -35,7 +35,7 @@ public class RelatorioController {
 
     @GetMapping(value = "/vendas/{ano}/{mes}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RelatorioProdutosVendidos relatorioProdutosVendidos(@PathVariable int ano, @PathVariable int mes) throws BancoDadosException, ValidadorException {
-        logger.info("Gerando relatório de vendas para o ano {ano} e mês {mes}");
+        logger.info("Gerando relatório de vendas para o ano {} e mês {}", ano, mes);
         GeradorRelatorioProdutosVendidos geradorRelatorioProdutosVendidos = new GeradorRelatorioProdutosVendidos(ano, mes);
         return geradorRelatorioProdutosVendidos.geraRelatorioProdutosVendidos(repositorioPedido);
     }
@@ -46,12 +46,13 @@ public class RelatorioController {
         String nomeArquivo = "RelatorioVendas-" + ano + "-" + mes + ".md";
         File arquivo = new File(configuracaoController.getRelatoriosPath(), nomeArquivo);
         try (FileWriter fw = new FileWriter(arquivo)) {
-            logger.info("Gerando e gravando relatório de vendas para o ano {ano} e mês {mes}");
+            logger.info("Gerando relatório de vendas para o ano {} e mês {}", ano, mes);
             GeradorRelatorioProdutosVendidos geradorRelatorioProdutosVendidos = new GeradorRelatorioProdutosVendidos(ano, mes);
             String relatorio = geradorRelatorioProdutosVendidos.geraRelatorioProdutosVendidosMd(repositorioPedido);
             fw.write(relatorio);
         }
-        return new RespostaSucesso("Arquivo " + arquivo + "gerado com sucesso.");
+        logger.info("Arquivo do relatório {} gerado com sucesso.", arquivo);
+        return new RespostaSucesso("Arquivo " + arquivo + " gerado com sucesso.");
     }
 
     private void verificaPathRelatorio() throws RelatorioPathException {

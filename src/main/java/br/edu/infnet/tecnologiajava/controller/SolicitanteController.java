@@ -34,7 +34,7 @@ public class SolicitanteController {
     @DeleteMapping(value = "/{chave}", produces = "application/json")
     public RespostaSucesso deleteSolicitantePorChave(@PathVariable String chave) throws BancoDadosException {
         this.repositorioSolicitante.removePorId(chave);
-        logger.info("Solicitante com cpf {chave} removido com sucesso.");
+        logger.info("Solicitante com cpf {} removido com sucesso.", chave);
         return new RespostaSucesso("O solicitante com o cpf " + chave + " foi apagado com sucesso.");
     }
 
