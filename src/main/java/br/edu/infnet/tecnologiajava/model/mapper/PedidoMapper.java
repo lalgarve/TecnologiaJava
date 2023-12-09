@@ -7,6 +7,7 @@ import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperAbstrato;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
+import br.edu.infnet.tecnologiajava.services.mapper.json.JsonMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class PedidoMapper extends MapperAbstrato<Pedido> {
+public class PedidoMapper extends MapperAbstrato<Pedido> implements JsonMapper<Pedido> {
 
     private String descricao;
     private LocalDateTime data;
@@ -70,6 +71,4 @@ public class PedidoMapper extends MapperAbstrato<Pedido> {
         }
         return produtosSoComCodigo;
     }
-
-
 }

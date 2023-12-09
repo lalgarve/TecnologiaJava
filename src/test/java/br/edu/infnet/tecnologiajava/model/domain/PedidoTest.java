@@ -1,6 +1,10 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.ValidadorException;
+import br.edu.infnet.tecnologiajava.model.mapper.PedidoMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -214,4 +218,28 @@ class PedidoTest {
             produtos.add(new Comida(nome + " " + i, "marca " + i, i + 10, (i % 2) == 0, 10.0f));
         }
     }
+    @Test
+    void jsonDeserializer() throws JsonProcessingException {
+        String pedidoJson = """
+            {  
+                  "descricao": "Pedido 1",
+                  "data": "2023-09-05T10:30:00",
+                  "web": true,
+                  "produtos": [3, 6, 10, 33, 40],
+                  "cpfSolicitante":"666.395.597-73"
+           }
+            """;
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(pedidoJson);
+        PedidoMapper pedidoMapper = new PedidoMapper();
+        pedidoMapper.reset();
+        pedidoMapper.setValores(jsonNode);
+        Pedido pedido = pedidoMapper.build();
+        Object[] codigos = pedido.getProdutos().map(Produto::getCodigo).toArray();
+        Object[] codigosEsperados = new Object[]{3,6,10,33,40};
+        assertArrayEquals(codigosEsperados, codigos);
+        assertEquals("666.395.597-73", pedido.getSolicitante().getCpf());
+        assertTrue(pedido.isWeb());
+    }
+
 }

@@ -116,10 +116,10 @@ class ProdutoControllerIT {
 
     @Test
     void apagaProduto() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete("http://localhost:8080/produto/40")
+        mvc.perform(MockMvcRequestBuilders.delete("http://localhost:8080/produto/19")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensagem").value("O produto com chave 40 foi apagado com sucesso."));
+                .andExpect(jsonPath("$.mensagem").value("O produto com chave 19 foi apagado com sucesso."));
     }
 
     @Test

@@ -4,16 +4,23 @@ import br.edu.infnet.tecnologiajava.Validador;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.services.bancodados.ListaComCopiaSegura;
 import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
+import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
+@JsonDeserialize(builder = Pedido.Builder.class)
 public class Pedido implements ValorBD<Integer, Pedido> {
     private final String descricao;
     private final LocalDateTime data;
@@ -83,7 +90,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         this.produtos.addAll(produtos);
         valorTotal = -1;
     }
-
+    @JsonIgnore
     public float getValorTotal() {
         if (valorTotal < 0) {
             valorTotal = produtos.stream().map(Produto::getValor).reduce(0.0f, Float::sum);
@@ -158,5 +165,56 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         return solicitante.equals(other.solicitante);
     }
 
+    @JsonPOJOBuilder
+    static class Builder {
+        private int codigo;
+        private String descricao;
+        private LocalDateTime data;
+        private List<Produto> produtos;
+        private Solicitante solicitante;
+        private boolean web;
 
+        Builder withCodigo(int codigo){
+            this.codigo = codigo;
+            return this;
+        }
+
+        Builder withDescricao(String descricao){
+            this.descricao = descricao;
+            return this;
+        }
+
+        Builder withData(String data) {
+            try {
+                this.data = LocalDateTime.parse(data, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            } catch (DateTimeParseException e) {
+                throw new MapperException(data + " não está no formato ano-mês-diaThora:minuto, por exemplo: 2023-01-10T13:30.");
+            }
+            return this;
+        }
+        Builder withProdutos(List<Integer> produtos) throws ValidadorException {
+           this.produtos = new ArrayList<>(produtos.size());
+            for(Integer codigoProduto:produtos){
+                this.produtos.add(new ProdutoCodigo(codigoProduto));
+            }
+            return this;
+        }
+
+        Builder withCpfSolicitante(String cpfSolicitante) throws ValidadorException {
+            this.solicitante = new Solicitante(cpfSolicitante);
+            return this;
+        }
+
+        Builder withWeb(boolean web){
+            this.web = web;
+            return this;
+        }
+
+        public Pedido build() throws ValidadorException {
+            Pedido pedido = new Pedido(codigo, descricao, data, web, solicitante);
+            pedido.setProdutos(produtos);
+            return pedido;
+        }
+
+    }
 }
