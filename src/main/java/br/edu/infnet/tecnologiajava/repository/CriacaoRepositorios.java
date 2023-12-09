@@ -24,7 +24,8 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Iterator;
 
-@Configuration @AllArgsConstructor
+@Configuration
+@AllArgsConstructor
 public class CriacaoRepositorios {
 
     private final Logger logger = LoggerFactory.getLogger(CriacaoRepositorios.class);

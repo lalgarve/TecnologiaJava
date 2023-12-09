@@ -139,7 +139,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         Optional<Pedido> optionalPedido = tabelaPedido.consultaPorId(chave);
         optionalPedido.ifPresent(this::substituiSolicitante);
         optionalPedido.ifPresent(this::substituiProdutos);
-        return  optionalPedido;
+        return optionalPedido;
     }
 
     public List<Pedido> getValores() throws BancoDadosException {
@@ -156,7 +156,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         return pedidos;
     }
 
-    private void substituiSolicitante(Pedido pedido){
+    private void substituiSolicitante(Pedido pedido) {
         try {
             pedido.setSolicitante(repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave()).orElseThrow());
         } catch (BancoDadosException e) {
@@ -164,7 +164,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
         }
     }
 
-    private void substituiProdutos(Pedido pedido){
+    private void substituiProdutos(Pedido pedido) {
         List<Produto> listaProdutos = pedido.getProdutos().map(produto -> {
             try {
                 return repositorioProduto.consultaPorId(produto.getChave()).orElseThrow();

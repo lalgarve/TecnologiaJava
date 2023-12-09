@@ -1,6 +1,5 @@
 package br.edu.infnet.tecnologiajava.repository;
 
-import br.edu.infnet.tecnologiajava.TecnologiajavaApplication;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import br.edu.infnet.tecnologiajava.model.domain.*;
 import br.edu.infnet.tecnologiajava.model.mapper.BebidaMapper;
@@ -10,14 +9,11 @@ import br.edu.infnet.tecnologiajava.model.mapper.SolicitanteMapper;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static br.edu.infnet.tecnologiajava.repository.CriacaoRepositorios.carrega;
 import static org.junit.jupiter.api.Assertions.*;
@@ -382,7 +378,7 @@ class RepositorioPedidoTest {
     void testAlteraDadosSolicitanteDoPedido() throws BancoDadosException, ValidadorException {
         List<Produto> produtos = new ArrayList<>();
         produtos.add(repositorioProduto.consultaPorId(1).orElseThrow());
-       //775.007.216-09,Paulo Rodrigues,paulo.rodrigues@gmail.com
+        //775.007.216-09,Paulo Rodrigues,paulo.rodrigues@gmail.com
         Solicitante solicitante = new Solicitante("775.007.216-09");
         Pedido pedido = new Pedido("Pedido sobremesa", false, solicitante);
         pedido.setProdutos(produtos);

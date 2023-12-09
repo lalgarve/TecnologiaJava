@@ -1,7 +1,6 @@
 package br.edu.infnet.tecnologiajava.model.domain;
 
 import br.edu.infnet.tecnologiajava.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.domain.ProdutoCodigo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

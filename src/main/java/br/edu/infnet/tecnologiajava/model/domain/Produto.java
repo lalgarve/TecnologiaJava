@@ -11,8 +11,8 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public sealed abstract class Produto implements ValorBD<Integer, Produto>, Imutavel
-                                     permits Comida, Bebida, Sobremesa, ProdutoCodigo {
+public abstract sealed class Produto implements ValorBD<Integer, Produto>, Imutavel
+        permits Comida, Bebida, Sobremesa, ProdutoCodigo {
 
     private static int proximoCodigo = 1;
 

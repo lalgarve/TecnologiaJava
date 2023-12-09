@@ -1,21 +1,14 @@
 package br.edu.infnet.tecnologiajava.controller;
 
-import br.edu.infnet.tecnologiajava.ExcecaoInesperada;
 import br.edu.infnet.tecnologiajava.model.view.RelatorioProdutosVendidos;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.io.File;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -46,7 +39,7 @@ class RelatoriosControllerIT {
 
     @Test
     void relatorioSemResultado() throws Exception {
-         mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080//relatorio/vendas/2023/05"))
+        mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080//relatorio/vendas/2023/05"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ano").value(2023))
                 .andExpect(jsonPath("$.mes").value(05))

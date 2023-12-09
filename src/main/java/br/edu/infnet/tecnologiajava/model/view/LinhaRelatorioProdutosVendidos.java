@@ -21,7 +21,7 @@ public class LinhaRelatorioProdutosVendidos {
         this.nome = produto.getNome();
     }
 
-    public LinhaRelatorioProdutosVendidos(){
+    public LinhaRelatorioProdutosVendidos() {
 
     }
 

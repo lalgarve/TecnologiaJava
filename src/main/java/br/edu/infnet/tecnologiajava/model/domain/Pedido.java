@@ -91,7 +91,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
         return valorTotal;
     }
 
-   @JsonIgnore
+    @JsonIgnore
     public int getNumeroProdutos() {
         return produtos.size();
     }

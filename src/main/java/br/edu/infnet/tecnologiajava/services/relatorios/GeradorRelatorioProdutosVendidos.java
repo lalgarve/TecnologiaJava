@@ -35,10 +35,10 @@ public class GeradorRelatorioProdutosVendidos {
         };
         List<Pedido> pedidos = repositorioPedido.getValores(filtro);
 
-        return pedidos.isEmpty()?getRelatorioVendasSemDados(pedidos):getRelatorioVendasComDados(pedidos);
+        return pedidos.isEmpty() ? getRelatorioVendasSemDados() : getRelatorioVendasComDados(pedidos);
     }
 
-    private RelatorioProdutosVendidos getRelatorioVendasSemDados(List<Pedido> pedidos) {
+    private RelatorioProdutosVendidos getRelatorioVendasSemDados() {
         RelatorioProdutosVendidos produtosVendidos = new RelatorioProdutosVendidos();
         produtosVendidos.setAno(ano);
         produtosVendidos.setMes(mes);
@@ -52,10 +52,10 @@ public class GeradorRelatorioProdutosVendidos {
                 (produto1, produto2) -> produto1.getCodigo() - produto2.getCodigo()
         );
         pedidos.forEach(pedido ->
-            pedido.getProdutos().forEach(produto -> {
-                int quantidade = quantidadeProdutos.getOrDefault(produto, 0);
-                quantidadeProdutos.put(produto, quantidade + 1);
-            })
+                pedido.getProdutos().forEach(produto -> {
+                    int quantidade = quantidadeProdutos.getOrDefault(produto, 0);
+                    quantidadeProdutos.put(produto, quantidade + 1);
+                })
         );
 
         List<LinhaRelatorioProdutosVendidos> dadosVenda = quantidadeProdutos.entrySet().stream()
@@ -70,7 +70,7 @@ public class GeradorRelatorioProdutosVendidos {
         float valorVendas = dadosVenda.stream()
                 .map(linha -> linha.getValorTotal())
                 .reduce(0.0f, Float::sum);
-        ;
+
         produtosVendidos.setMensagem(String.format(Locale.forLanguageTag("PT"), "O valor total vendido é de R$ %.2f reais.", valorVendas));
         return produtosVendidos;
     }
@@ -83,7 +83,7 @@ public class GeradorRelatorioProdutosVendidos {
         builder.append("*Mês:* ").append(mes).append('\n');
         builder.append('\n');
 
-        if(!relatorioProdutosVendidos.getDadosVenda().isEmpty()) {
+        if (!relatorioProdutosVendidos.getDadosVenda().isEmpty()) {
             adicionaTabelaDados(builder, relatorioProdutosVendidos.getDadosVenda());
         }
 
