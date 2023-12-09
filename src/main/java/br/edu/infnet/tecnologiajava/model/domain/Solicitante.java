@@ -11,7 +11,8 @@ import lombok.Getter;
 
 import java.util.regex.Pattern;
 
-@Getter @EqualsAndHashCode
+@Getter
+@EqualsAndHashCode
 public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
 
     private final String email;
@@ -20,15 +21,16 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
     private static Solicitante vazio;
 
     private static final String CPF_VAZIO = "000.000.000-00";
-    public Solicitante(@JsonProperty("cpf") String cpf, @JsonProperty("nome")String nome, @JsonProperty("email")String email) throws ValidadorException {
+
+    public Solicitante(@JsonProperty("cpf") String cpf, @JsonProperty("nome") String nome, @JsonProperty("email") String email) throws ValidadorException {
         boolean eVazio = cpf == null || CPF_VAZIO.equals(cpf) || cpf.isBlank();
         Validador validador = new Validador();
-        if(eVazio){
+        if (eVazio) {
             this.cpf = CPF_VAZIO;
             this.nome = "";
             this.email = "";
             validaVazio(validador, nome, email);
-        }else {
+        } else {
             this.email = email;
             this.cpf = cpf;
             this.nome = nome;
@@ -41,13 +43,12 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
         }
     }
 
-    public Solicitante(String cpf) throws ValidadorException{
+    public Solicitante(String cpf) throws ValidadorException {
         nome = "";
         email = "";
-        if(cpf==null || cpf.isBlank() || CPF_VAZIO.equals(cpf)) {
+        if (cpf == null || cpf.isBlank() || CPF_VAZIO.equals(cpf)) {
             this.cpf = CPF_VAZIO;
-        }
-        else{
+        } else {
             this.cpf = cpf;
             Validador validador = new Validador();
             validaCPF(validador);
@@ -65,9 +66,9 @@ public class Solicitante implements ValorBD<String, Solicitante>, Imutavel {
         email = "";
     }
 
-    private void validaVazio(Validador validador, String nome, String email){
-        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo", nome==null || nome.isBlank());
-        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo", email==null || email.isBlank());
+    private void validaVazio(Validador validador, String nome, String email) {
+        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o nome precisa ser em branco ou nulo", nome == null || nome.isBlank());
+        validador.valida("Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo", email == null || email.isBlank());
     }
 
     public static Solicitante getVazio() {

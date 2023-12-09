@@ -43,7 +43,7 @@ public class CSVReader<T> implements AutoCloseable {
      * não possui elementos;
      * @throws UncheckedIOException Se houve uma {@link java.io.IOException IOException}
      *                              lendo os dados.
-     * @throws MapperException   Se houve um problema durante o mapeamento
+     * @throws MapperException      Se houve um problema durante o mapeamento
      */
     public Stream<T> leDados() throws UncheckedIOException, MapperException {
         Stream<String> lines = reader.lines();

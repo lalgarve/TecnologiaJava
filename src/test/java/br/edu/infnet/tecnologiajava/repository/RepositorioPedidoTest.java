@@ -28,6 +28,7 @@ class RepositorioPedidoTest {
     private RepositorioPedido repositorioPedido;
 
     private RepositorioProduto repositorioProduto;
+
     @BeforeEach
     void inicializaRepositorio() throws IOException, BancoDadosException {
         Pedido.inicializaContadorCodigo();
@@ -301,9 +302,9 @@ class RepositorioPedidoTest {
         assertEquals(pedido, pedidoBanco);
         assertNotSame(pedido, pedidoBanco, "Pedido não é imutável, clone deveria ter sido retornado");
 
-        try{
+        try {
             repositorioSolicitante.removePorId("775.007.216-09");
-        }catch (BancoDadosException ex){
+        } catch (BancoDadosException ex) {
             fail("Solicitante 775.007.216-09 deveria ter sido liberado para exclusão.");
         }
         assertThrows(BancoDadosException.class, () -> repositorioSolicitante.removePorId("943.861.323-41"),
@@ -341,15 +342,15 @@ class RepositorioPedidoTest {
         repositorioPedido.removePorId(1);
 
 
-        try{
+        try {
             repositorioSolicitante.removePorId("775.007.216-09");
-        }catch(BancoDadosException ex){
+        } catch (BancoDadosException ex) {
             fail("O solicitante deveria ter sido liberado para exclusão.", ex);
         }
 
-        try{
+        try {
             repositorioProduto.removePorId(1);
-        }catch(BancoDadosException ex){
+        } catch (BancoDadosException ex) {
             fail("O produto deveria ter sido liberado para exclusão.", ex);
         }
 
@@ -377,7 +378,6 @@ class RepositorioPedidoTest {
             produtos.add(new Comida(codigo++, nome + " " + i, "marca " + i, i + 10, (i % 2) == 0, 10.0f));
         }
     }
-
 
 
 }

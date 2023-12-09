@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.List;
 
 import static br.edu.infnet.tecnologiajava.repository.ConfiguracaoRepositorios.carrega;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RepositorioProdutoTest {
 
@@ -29,10 +29,10 @@ class RepositorioProdutoTest {
     }
 
     @ParameterizedTest
-    @CsvSource (value={"moca;1", "limao_ocasiao;1", "COCA-COLA;12", "COca-cola_quente;6"}, delimiter = ';')
+    @CsvSource(value = {"moca;1", "limao_ocasiao;1", "COCA-COLA;12", "COca-cola_quente;6"}, delimiter = ';')
     void buscaPorTexto(String palavrasJuntas, String quantidade) throws BancoDadosException {
         String[] palavras = palavrasJuntas.split("[ _]");
         List<Produto> produtos = repositorioProduto.buscaPorTexto(palavras);
-        assertEquals(quantidade, produtos.size()+"");
+        assertEquals(quantidade, produtos.size() + "");
     }
 }

@@ -58,7 +58,7 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
 
     private Solicitante getSolicitanteDoBanco(Pedido pedido) throws BancoDadosException {
         Optional<Solicitante> solicitanteBanco = repositorioSolicitante.consultaPorId(pedido.getSolicitante().getChave());
-        return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF "+pedido.getSolicitante().getCpf()+" não existe no banco."));
+        return solicitanteBanco.orElseThrow(() -> new BancoDadosException("O solicitante com CPF " + pedido.getSolicitante().getCpf() + " não existe no banco."));
     }
 
     public void altera(Pedido pedido) throws BancoDadosException {
@@ -110,12 +110,12 @@ public class RepositorioPedido implements TabelaBD<Integer, Pedido> {
     }
 
     public void removePorId(Integer chave) throws BancoDadosException {
-        Pedido pedidoBanco = tabelaPedido.consultaPorId(chave).orElseThrow(()->new BancoDadosException("Pedido com id "+chave+" não existe no banco."));
+        Pedido pedidoBanco = tabelaPedido.consultaPorId(chave).orElseThrow(() -> new BancoDadosException("Pedido com id " + chave + " não existe no banco."));
         tabelaPedido.removePorId(chave);
         repositorioSolicitante.removeUso(pedidoBanco.getSolicitante().getChave(), this);
         Iterator<Produto> produtoIterator = pedidoBanco.getProdutos().iterator();
 
-        while(produtoIterator.hasNext()){
+        while (produtoIterator.hasNext()) {
             Produto produto = produtoIterator.next();
             repositorioProduto.removeUso(produto.getChave(), this);
         }

@@ -281,8 +281,7 @@ public class CSVReaderTest {
             try {
                 Optional<ModeloTeste> resultado = stream.findFirst();
                 fail("Excecao esperada");
-            }
-            catch (MapperException ex) {
+            } catch (MapperException ex) {
                 assertEquals("Esperados 4 valores, foram encontrados 5.", ex.getMessage());
             }
         }
@@ -298,8 +297,7 @@ public class CSVReaderTest {
             try {
                 Optional<ModeloTeste> resultado = stream.findFirst();
                 fail("Excecao esperada");
-            }
-            catch (MapperException ex) {
+            } catch (MapperException ex) {
                 assertEquals("Esperados 4 valores, foram encontrados 3.", ex.getMessage());
             }
         }

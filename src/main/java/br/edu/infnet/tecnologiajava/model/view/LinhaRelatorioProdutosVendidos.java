@@ -12,7 +12,7 @@ public class LinhaRelatorioProdutosVendidos {
     private final float valorTotal;
     private final String nome;
 
-    public LinhaRelatorioProdutosVendidos(Produto produto, int quantidade){
+    public LinhaRelatorioProdutosVendidos(Produto produto, int quantidade) {
         this.codigo = produto.getCodigo();
         this.quantidade = quantidade;
         this.tipo = produto.getClass().getSimpleName();

@@ -5,7 +5,8 @@ import br.edu.infnet.tecnologiajava.model.view.RespostaInclusao;
 import br.edu.infnet.tecnologiajava.model.view.RespostaSucesso;
 import br.edu.infnet.tecnologiajava.repository.RepositorioSolicitante;
 import br.edu.infnet.tecnologiajava.services.bancodados.BancoDadosException;
-import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,9 @@ import java.util.Optional;
 public class SolicitanteController {
     private final RepositorioSolicitante repositorioSolicitante;
 
-    public SolicitanteController(RepositorioSolicitante repositorioSolicitante){
+    private final Logger logger = LoggerFactory.getLogger(SolicitanteController.class);
+
+    public SolicitanteController(RepositorioSolicitante repositorioSolicitante) {
         this.repositorioSolicitante = repositorioSolicitante;
     }
 
@@ -31,7 +34,8 @@ public class SolicitanteController {
     @DeleteMapping(value = "/{chave}", produces = "application/json")
     public RespostaSucesso deleteSolicitantePorChave(@PathVariable String chave) throws BancoDadosException {
         this.repositorioSolicitante.removePorId(chave);
-        return new RespostaSucesso("O solicitante com o cpf "+chave+" foi apagado com sucesso.");
+        logger.info("Solicitante com cpf {chave} removido com sucesso.");
+        return new RespostaSucesso("O solicitante com o cpf " + chave + " foi apagado com sucesso.");
     }
 
     @GetMapping(produces = "application/json")
@@ -43,13 +47,15 @@ public class SolicitanteController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaInclusao<String> addSolicitante(@RequestBody Solicitante solicitante) throws BancoDadosException {
         repositorioSolicitante.adiciona(solicitante);
+        logger.info("Solicitante incluído: {}.", solicitante);
         return new RespostaInclusao<>(solicitante.getChave());
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RespostaSucesso updateSolicitante(@RequestBody Solicitante solicitante) throws BancoDadosException {
-        repositorioSolicitante.altera( solicitante);
-        return new RespostaSucesso("Solicitante com cpf "+solicitante.getChave() + " alterado com sucesso.");
+        repositorioSolicitante.altera(solicitante);
+        logger.info("Solicitante alterado: {}.", solicitante);
+        return new RespostaSucesso("Solicitante com cpf " + solicitante.getChave() + " alterado com sucesso.");
     }
 }

@@ -9,7 +9,8 @@ import lombok.Getter;
 
 import java.util.Locale;
 
-@Getter @EqualsAndHashCode(callSuper = true)
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @JsonDeserialize(builder = Sobremesa.Builder.class)
 public final class Sobremesa extends Produto {
 
@@ -61,7 +62,7 @@ public final class Sobremesa extends Produto {
     }
 
     @JsonPOJOBuilder
-    static class Builder{
+    static class Builder {
         private int codigo;
         private String nome;
         private boolean doce;
@@ -69,37 +70,37 @@ public final class Sobremesa extends Produto {
         private float quantidade;
         private float valor;
 
-        Builder withCodigo(int codigo){
-            this.codigo=codigo;
+        Builder withCodigo(int codigo) {
+            this.codigo = codigo;
             return this;
         }
 
-        Builder withNome(String nome){
-            this.nome=nome;
+        Builder withNome(String nome) {
+            this.nome = nome;
             return this;
         }
 
-        Builder withDoce(boolean doce){
-            this.doce=doce;
+        Builder withDoce(boolean doce) {
+            this.doce = doce;
             return this;
         }
 
-        Builder withInformacao(String informacao){
-            this.informacao=informacao;
+        Builder withInformacao(String informacao) {
+            this.informacao = informacao;
             return this;
         }
 
-        Builder withQuantidade(float quantidade){
-            this.quantidade=quantidade;
+        Builder withQuantidade(float quantidade) {
+            this.quantidade = quantidade;
             return this;
         }
 
-        Builder withValor(float valor){
-            this.valor=valor;
+        Builder withValor(float valor) {
+            this.valor = valor;
             return this;
         }
 
-        public Sobremesa build() throws ValidadorException{
+        public Sobremesa build() throws ValidadorException {
             return new Sobremesa(codigo, nome, doce, informacao, quantidade, valor);
         }
     }

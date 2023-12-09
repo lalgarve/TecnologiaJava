@@ -1,7 +1,7 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
-import br.edu.infnet.tecnologiajava.model.domain.Produto;
 import br.edu.infnet.tecnologiajava.ValidadorException;
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
 
 class ProdutoDesconhecido extends Produto {
     ProdutoDesconhecido(int codigo) throws ValidadorException {

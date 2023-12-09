@@ -1,7 +1,9 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
 import br.edu.infnet.tecnologiajava.ValidadorException;
-import br.edu.infnet.tecnologiajava.model.domain.*;
+import br.edu.infnet.tecnologiajava.model.domain.Pedido;
+import br.edu.infnet.tecnologiajava.model.domain.Produto;
+import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PedidoMapperTest {
 
@@ -41,7 +44,7 @@ class PedidoMapperTest {
         Pedido pedido = pedidoMapper.build();
         Pedido pedidoEsperado = new Pedido(1, "Pedido 1", LocalDateTime.of(2023, 02,
                 10, 12, 30), true, new Solicitante("318.308.309-45"));
-        pedidoEsperado.setProdutos(criaProdutos(10,3,4));
+        pedidoEsperado.setProdutos(criaProdutos(10, 3, 4));
         assertEquals(pedidoEsperado, pedido);
     }
 
@@ -57,7 +60,7 @@ class PedidoMapperTest {
         Pedido pedido = pedidoMapper.build();
         Pedido pedidoEsperado = new Pedido(1, "Pedido 1", LocalDateTime.of(2023, 02,
                 10, 12, 30), true, Solicitante.getVazio());
-        pedidoEsperado.setProdutos(criaProdutos(10,3,4));
+        pedidoEsperado.setProdutos(criaProdutos(10, 3, 4));
         assertEquals(pedidoEsperado, pedido);
     }
 
@@ -72,24 +75,24 @@ class PedidoMapperTest {
 
     @Test
     void testBuildCPFInvalido() throws ValidadorException {
-            PedidoMapper pedidoMapper = new PedidoMapper();
-            pedidoMapper.reset();
-            pedidoMapper.setValor("descricao", "Pedido 1");
-            pedidoMapper.setValor("web", "true");
-            pedidoMapper.setValor("data", "2023-02-10T12:30");
-            pedidoMapper.setValor("cpfSolicitante", "318.308.309-44");
-            pedidoMapper.setValor("produtos", "10,3,4");
-            MapperException excecao = assertThrows(MapperException.class,
-                    pedidoMapper::build);
-            assertEquals("Informação mapeada inválida.", excecao.getMessage());
+        PedidoMapper pedidoMapper = new PedidoMapper();
+        pedidoMapper.reset();
+        pedidoMapper.setValor("descricao", "Pedido 1");
+        pedidoMapper.setValor("web", "true");
+        pedidoMapper.setValor("data", "2023-02-10T12:30");
+        pedidoMapper.setValor("cpfSolicitante", "318.308.309-44");
+        pedidoMapper.setValor("produtos", "10,3,4");
+        MapperException excecao = assertThrows(MapperException.class,
+                pedidoMapper::build);
+        assertEquals("Informação mapeada inválida.", excecao.getMessage());
     }
 
     @ParameterizedTest
-    @CsvSource (value={"data;11/02/23;11/02/23 não está no formato ano-mês-diaThora:minuto, por exemplo: 2023-01-10T13:30.",
+    @CsvSource(value = {"data;11/02/23;11/02/23 não está no formato ano-mês-diaThora:minuto, por exemplo: 2023-01-10T13:30.",
             "Data;2023-10-10;O campo Data não existe.",
             "produtos;aaaa;aaaa não é um número inteiro."},
             delimiter = ';')
-    void testCamposInvalidos(String campo, String valor, String mensagem){
+    void testCamposInvalidos(String campo, String valor, String mensagem) {
         PedidoMapper pedidoMapper = new PedidoMapper();
         pedidoMapper.reset();
         MapperException excecao = assertThrows(MapperException.class, () -> pedidoMapper.setValor(campo, valor));
@@ -98,10 +101,10 @@ class PedidoMapperTest {
 
 
     List<Produto> criaProdutos(int... codigos) throws ValidadorException {
-       List<Produto> produtos = new ArrayList<>();
-       for(int codigo:codigos){
-           produtos.add(new ProdutoDesconhecido(codigo));
-       }
-       return produtos;
+        List<Produto> produtos = new ArrayList<>();
+        for (int codigo : codigos) {
+            produtos.add(new ProdutoDesconhecido(codigo));
+        }
+        return produtos;
     }
 }

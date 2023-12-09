@@ -11,6 +11,8 @@ import br.edu.infnet.tecnologiajava.services.bancodados.ValorBD;
 import br.edu.infnet.tecnologiajava.services.mapper.Mapper;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import br.edu.infnet.tecnologiajava.services.mapper.csv.CSVReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,9 +25,13 @@ import java.util.Iterator;
 
 @Configuration
 public class ConfiguracaoRepositorios {
+
+    private final Logger logger = LoggerFactory.getLogger(ConfiguracaoRepositorios.class);
+
     @Bean
     public RepositorioSolicitante repositorioSolicitante() throws BancoDadosException {
         RepositorioSolicitante repositorioSolicitante = new RepositorioSolicitante();
+        logger.info("Carregando solicitantes.");
         carrega("/solicitante.csv", new SolicitanteMapper(), repositorioSolicitante);
         repositorioSolicitante.adiciona(Solicitante.getVazio());
         return repositorioSolicitante;
@@ -34,8 +40,11 @@ public class ConfiguracaoRepositorios {
     @Bean
     public RepositorioProduto repositorioProduto() throws BancoDadosException {
         RepositorioProduto repositorioProduto = new RepositorioProduto();
+        logger.info("Carregando sobremesas.");
         carrega("/sobremesa.csv", new SobremesaMapper(), repositorioProduto);
+        logger.info("Carregando bebidas.");
         carrega("/bebida.csv", new BebidaMapper(), repositorioProduto);
+        logger.info("Carregando comidas.");
         carrega("/comida.csv", new ComidaMapper(), repositorioProduto);
         return repositorioProduto;
     }
@@ -44,19 +53,20 @@ public class ConfiguracaoRepositorios {
     public RepositorioPedido repositorioPedido() throws BancoDadosException {
         Pedido.inicializaContadorCodigo();
         RepositorioPedido repositorioPedido = new RepositorioPedido(repositorioProduto(), repositorioSolicitante());
+        logger.info("Carregando pedidos.");
         carrega("/pedido.csv", new PedidoMapper(), repositorioPedido);
         return repositorioPedido;
     }
 
-    public static <T extends ValorBD<?, T>>  void carrega(String recurso, Mapper<T> mapper, TabelaBD<?, T> repositorio) throws BancoDadosException {
+    public static <T extends ValorBD<?, T>> void carrega(String recurso, Mapper<T> mapper, TabelaBD<?, T> repositorio) throws BancoDadosException {
         URL recursoUrl = TecnologiajavaApplication.class.getResource(recurso);
-        if(recursoUrl==null){
-            throw new ExcecaoInesperada("Recurso "+recurso+" não foi encontrado.");
+        if (recursoUrl == null) {
+            throw new ExcecaoInesperada("Recurso " + recurso + " não foi encontrado.");
         }
-        try(FileReader fr = new FileReader(recursoUrl.getFile())){
+        try (FileReader fr = new FileReader(recursoUrl.getFile())) {
             carrega(fr, mapper, repositorio);
-        }catch (IOException ex){
-            throw new BancoDadosException("Recurso "+recurso+" não pode ser lido.");
+        } catch (IOException ex) {
+            throw new BancoDadosException("Recurso " + recurso + " não pode ser lido.");
         }
     }
 

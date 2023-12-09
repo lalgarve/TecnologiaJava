@@ -125,22 +125,22 @@ class SolicitanteTest {
         try {
             Solicitante solicitante = new Solicitante("062.427.708-90");
             assertFalse(solicitante.podeSerGravadoNoBanco());
-        }catch (ValidadorException ex){
+        } catch (ValidadorException ex) {
             fail(ex);
         }
     }
 
     @ParameterizedTest
-    @ValueSource (ints = {149,150,151,8000})
-    void testLimiteEmail(int tamanhoEmail){
-        String email =  geraEmail(tamanhoEmail);
+    @ValueSource(ints = {149, 150, 151, 8000})
+    void testLimiteEmail(int tamanhoEmail) {
+        String email = geraEmail(tamanhoEmail);
         assertEquals(tamanhoEmail, email.length());
         try {
             new Solicitante("929.204.815-50", "João", email);
-            assertTrue(tamanhoEmail<=150);
+            assertTrue(tamanhoEmail <= 150);
         } catch (ValidadorException ex) {
-            if(tamanhoEmail<=150) {
-               fail("Email tem "+email.length()+" caracteres");
+            if (tamanhoEmail <= 150) {
+                fail("Email tem " + email.length() + " caracteres");
             }
             Validador validador = ex.getValidador();
             assertEquals("O email pode ter no máximo 150 caracteres", validador.getMensagens().get(0));
@@ -148,17 +148,17 @@ class SolicitanteTest {
 
     }
 
-    private String geraEmail(int numeroCaracteres){
-        int tamanhoLogin = ((numeroCaracteres / 3)  - 2) * 3;
-        int tamanhoDominio = numeroCaracteres - tamanhoLogin  - 5;
+    private String geraEmail(int numeroCaracteres) {
+        int tamanhoLogin = ((numeroCaracteres / 3) - 2) * 3;
+        int tamanhoDominio = numeroCaracteres - tamanhoLogin - 5;
         StringBuilder email = new StringBuilder();
-        for(int i=0; i<tamanhoLogin; i+=3){
+        for (int i = 0; i < tamanhoLogin; i += 3) {
             email.append('a');
             email.append('.');
             email.append('b');
         }
         email.append('@');
-        for(int i=0; i<tamanhoDominio; i++){
+        for (int i = 0; i < tamanhoDominio; i++) {
             email.append('b');
         }
         email.append(".com");
@@ -166,17 +166,17 @@ class SolicitanteTest {
     }
 
     @ParameterizedTest
-    @MethodSource ("valoresVaziosValidos")
-    void validaVazioOkConstrutorFull(String cpf, String nome, String email){
-        try{
+    @MethodSource("valoresVaziosValidos")
+    void validaVazioOkConstrutorFull(String cpf, String nome, String email) {
+        try {
             Solicitante solicitante = new Solicitante(cpf, nome, email);
-            assertEquals(Solicitante.getVazio(),solicitante);
-        }catch(ValidadorException ex){
+            assertEquals(Solicitante.getVazio(), solicitante);
+        } catch (ValidadorException ex) {
             fail(ex);
         }
     }
 
-    private static Stream<Arguments> valoresVaziosValidos(){
+    private static Stream<Arguments> valoresVaziosValidos() {
         return Stream.of(
                 Arguments.of("000.000.000-00", "", ""),
                 Arguments.of("000.000.000-00", null, ""),
@@ -195,13 +195,14 @@ class SolicitanteTest {
     }
 
     @ParameterizedTest
-    @MethodSource ("valoresVaziosInvalidos")
-    void validaVazioNotOkConstrutorFull(String cpf, String nome, String email, String mensagem){
-        ValidadorException excecao =  assertThrows(ValidadorException.class, ()->new Solicitante(cpf, nome, email));
+    @MethodSource("valoresVaziosInvalidos")
+    void validaVazioNotOkConstrutorFull(String cpf, String nome, String email, String mensagem) {
+        ValidadorException excecao = assertThrows(ValidadorException.class, () -> new Solicitante(cpf, nome, email));
         Validador validador = excecao.getValidador();
         assertEquals(mensagem, validador.getMensagens().get(0));
     }
-    private static Stream<Arguments> valoresVaziosInvalidos(){
+
+    private static Stream<Arguments> valoresVaziosInvalidos() {
         return Stream.of(
                 Arguments.of("000.000.000-00", "", "joao@gmail.com",
                         "Se CPF é 000.000.000-00, em branco ou nulo, o email precisa ser em branco ou nulo"),
@@ -221,25 +222,23 @@ class SolicitanteTest {
     }
 
     @ParameterizedTest
-    @ValueSource (strings = {" ", "", "000.000.000-00"})
-    void testConstrutorApenasCPFBranco(String cpf){
-        try{
+    @ValueSource(strings = {" ", "", "000.000.000-00"})
+    void testConstrutorApenasCPFBranco(String cpf) {
+        try {
             Solicitante solicitante = new Solicitante(cpf);
             assertTrue(solicitante.podeSerGravadoNoBanco());
             assertEquals(Solicitante.getVazio(), solicitante);
-        }
-        catch(ValidadorException ex){
+        } catch (ValidadorException ex) {
             fail(ex);
         }
     }
 
     @Test
     void testConstrutorApenasCPFNulo() {
-        try{
+        try {
             Solicitante solicitante = new Solicitante(null);
             assertEquals(Solicitante.getVazio(), solicitante);
-        }
-        catch(ValidadorException ex){
+        } catch (ValidadorException ex) {
             fail(ex);
         }
     }

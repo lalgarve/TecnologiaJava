@@ -17,28 +17,31 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControladoresExceptionHandler extends ResponseEntityExceptionHandler {
+
+
     @ExceptionHandler(value = {MapperException.class})
-    protected ResponseEntity<Object> erroMapeamentoEValidacao(MapperException ex, WebRequest request){
-        if(ex.getCause() != null && (ex.getCause() instanceof ValidadorException excecaoValidacao)){
+    protected ResponseEntity<Object> erroMapeamentoEValidacao(MapperException ex, WebRequest request) {
+        if (ex.getCause() != null && (ex.getCause() instanceof ValidadorException excecaoValidacao)) {
             return erroValidacao(excecaoValidacao, request);
         }
         RespostaErro respostaErro = new RespostaErro();
         respostaErro.setTitle("Erro processando JSON.");
         respostaErro.setDetail(ex.getMessage());
-        respostaErro.setInstance(((ServletWebRequest)request).getRequest().getRequestURI());
+        respostaErro.setInstance(((ServletWebRequest) request).getRequest().getRequestURI());
         respostaErro.setStatus(HttpStatus.BAD_REQUEST.value());
+        logger.info(respostaErro);
         return handleExceptionInternal(ex, respostaErro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 
-
     @ExceptionHandler(value = {ValidadorException.class})
-    protected ResponseEntity<Object> erroValidacao(ValidadorException ex, WebRequest request){
+    protected ResponseEntity<Object> erroValidacao(ValidadorException ex, WebRequest request) {
         RespostaErro respostaErro = new RespostaErro();
         respostaErro.setTitle("Erro validação.");
         respostaErro.setDetail(ex.getValidador().getMensagensConcatenadas());
-        respostaErro.setInstance(((ServletWebRequest)request).getRequest().getRequestURI());
+        respostaErro.setInstance(((ServletWebRequest) request).getRequest().getRequestURI());
         respostaErro.setStatus(HttpStatus.BAD_REQUEST.value());
+        logger.info(respostaErro);
         return handleExceptionInternal(ex, respostaErro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
@@ -47,22 +50,33 @@ public class ControladoresExceptionHandler extends ResponseEntityExceptionHandle
                                                                   HttpHeaders headers,
                                                                   HttpStatusCode status,
                                                                   WebRequest request) {
-        if(ex.getRootCause()!=null && ex.getRootCause() instanceof ValidadorException validadorException){
+        if (ex.getRootCause() != null && ex.getRootCause() instanceof ValidadorException validadorException) {
             return erroValidacao(validadorException, request);
         }
         return super.handleHttpMessageNotReadable(ex, headers, status, request);
     }
 
     @ExceptionHandler(value = {BancoDadosException.class})
-    protected ResponseEntity<Object> erroBancoDeDados(BancoDadosException ex, WebRequest request){
+    protected ResponseEntity<Object> erroBancoDeDados(BancoDadosException ex, WebRequest request) {
         RespostaErro respostaErro = new RespostaErro();
         respostaErro.setTitle("Erro acessando banco de dados.");
         respostaErro.setDetail(ex.getMessage());
-        respostaErro.setInstance(((ServletWebRequest)request).getRequest().getRequestURI());
+        respostaErro.setInstance(((ServletWebRequest) request).getRequest().getRequestURI());
         respostaErro.setStatus(HttpStatus.CONFLICT.value());
+        logger.info(respostaErro);
         return handleExceptionInternal(ex, respostaErro, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
 
-
+    @ExceptionHandler(value = {RelatorioPathException.class})
+    protected ResponseEntity<Object> erroRelatorioPath(RelatorioPathException ex, WebRequest request) {
+        RespostaErro respostaErro = new RespostaErro();
+        respostaErro.setTitle("Erro na configuração pasta de relatórios.");
+        respostaErro.setDetail(ex.getMessage());
+        respostaErro.setInstance(((ServletWebRequest) request).getRequest().getRequestURI());
+        respostaErro.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        logger.error(respostaErro, ex);
+        return handleExceptionInternal(ex, respostaErro, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
+
+}

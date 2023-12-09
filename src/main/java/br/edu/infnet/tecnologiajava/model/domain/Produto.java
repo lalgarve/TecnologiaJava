@@ -9,7 +9,8 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter @EqualsAndHashCode
+@Getter
+@EqualsAndHashCode
 public abstract class Produto implements ValorBD<Integer, Produto>, Imutavel {
 
     private static int proximoCodigo = 1;

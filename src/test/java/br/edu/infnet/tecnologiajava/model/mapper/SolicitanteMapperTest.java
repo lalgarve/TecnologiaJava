@@ -1,13 +1,14 @@
 package br.edu.infnet.tecnologiajava.model.mapper;
 
-import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.ValidadorException;
+import br.edu.infnet.tecnologiajava.model.domain.Solicitante;
 import br.edu.infnet.tecnologiajava.services.mapper.MapperException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SolicitanteMapperTest {
 
@@ -30,8 +31,9 @@ class SolicitanteMapperTest {
         Solicitante esperado = new Solicitante("775.007.216-09", "João", "joao@gmail.com");
         assertEquals(esperado, solicitante);
     }
+
     @ParameterizedTest
-    @CsvSource (value={"775.007.216-08;joão;joao@gmail.com",
+    @CsvSource(value = {"775.007.216-08;joão;joao@gmail.com",
             "775.007.216-09; ;joao@gmail.com",
             "775.007.216-09;joão;joao@gmail"}, delimiter = ';')
     void buildInvalido(String cpf, String nome, String email) {
@@ -60,7 +62,7 @@ class SolicitanteMapperTest {
      * fica errada. Teste identificado pela mutação que retira a chamada do método.
      */
     @Test
-    void testNecessidadeFinaliza(){
+    void testNecessidadeFinaliza() {
         SolicitanteMapper mapper = new SolicitanteMapper();
         mapper.reset();
         mapper.setValor("cpf", "775.007.216-09");

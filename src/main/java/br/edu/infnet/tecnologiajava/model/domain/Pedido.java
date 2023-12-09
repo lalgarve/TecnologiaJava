@@ -117,7 +117,7 @@ public class Pedido implements ValorBD<Integer, Pedido> {
                     codigo, data, descricao, web, produtos.size(), getValorTotal());
         } else {
             return String.format(Locale.forLanguageTag("PT"), "Pedido: codigo=%1$d, data=%2$td %2$tb %2$tY %2$tH:%2$tM, descricao=%3$s, web=%4$b, solicitante=%5$s%6$s, número produtos=%7$d, valor total=%8$.2f",
-                    codigo, data, descricao, web, solicitante.getCpf(), solicitante.podeSerGravadoNoBanco()?"":" (incompleto)", produtos.size(), getValorTotal());
+                    codigo, data, descricao, web, solicitante.getCpf(), solicitante.podeSerGravadoNoBanco() ? "" : " (incompleto)", produtos.size(), getValorTotal());
         }
     }
 

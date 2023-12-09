@@ -27,7 +27,7 @@ class ProdutoControllerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    void consultaProdutoPorChave() throws Exception{
+    void consultaProdutoPorChave() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/produto/11"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.codigo").value(11))
@@ -39,7 +39,7 @@ class ProdutoControllerIT {
     void adicionaSobremesa() throws Exception {
         Sobremesa sobremesa = new Sobremesa("Sobremesa", true, "sobremesa",
                 1.0f, 10.0f);
-        int codigoEsperado = sobremesa.getCodigo()+1;
+        int codigoEsperado = sobremesa.getCodigo() + 1;
         String novaSobremesa = "{\"nome\": \"sobremesa\", \"doce\": true, \"informacao\": \"sobremesa\", " +
                 "\"quantidade\": 1, \"valor\": 10}";
         mvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/produto/sobremesa")
@@ -54,8 +54,8 @@ class ProdutoControllerIT {
         String novaSobremesa = "{\"Nome\": \"sobremesa\", \"doce\": true, \"informacao\": \"sobremesa\", " +
                 "\"quantidade\": 1, \"valor\": 10}";
         mvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/produto/sobremesa")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(novaSobremesa))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(novaSobremesa))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Erro processando JSON."))
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -78,7 +78,7 @@ class ProdutoControllerIT {
     }
 
     @Test
-    void alteraSobremesa () throws Exception {
+    void alteraSobremesa() throws Exception {
         String sobremesa = "   {\n" +
                 "      \"codigo\": 4,\n" +
                 "      \"nome\": \"Brigadeiro Branco com Uva\",\n" +
@@ -95,7 +95,7 @@ class ProdutoControllerIT {
     }
 
     @Test
-    void alteraSobremesaValidacaoErrada () throws Exception {
+    void alteraSobremesaValidacaoErrada() throws Exception {
         String novaSobremesa = "   {\n" +
                 "      \"codigo\": 4,\n" +
                 "      \"nome\": \"Brigadeiro Branco com Uva\",\n" +
@@ -115,12 +115,13 @@ class ProdutoControllerIT {
     }
 
     @Test
-    void apagaProduto() throws Exception{
+    void apagaProduto() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("http://localhost:8080/produto/40")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mensagem").value("O produto com chave 40 foi apagado com sucesso."));
     }
+
     @Test
     void buscaPorProduto() throws Exception {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/produto/busca/doce_tradicional"))
@@ -147,7 +148,7 @@ class ProdutoControllerIT {
     void adicionaBebida() throws Exception {
         Sobremesa sobremesa = new Sobremesa("Sobremesa", true, "sobremesa",
                 1.0f, 10.0f);
-        int codigoEsperado = sobremesa.getCodigo()+1;
+        int codigoEsperado = sobremesa.getCodigo() + 1;
         String novaBebida = "      {\n" +
                 "      \"nome\": \"Café com Leite\",\n" +
                 "      \"valor\": 5.99,\n" +
@@ -183,7 +184,7 @@ class ProdutoControllerIT {
     void adicionaComida() throws Exception {
         Sobremesa sobremesa = new Sobremesa("Sobremesa", true, "sobremesa",
                 1.0f, 10.0f);
-        int codigoEsperado = sobremesa.getCodigo()+1;
+        int codigoEsperado = sobremesa.getCodigo() + 1;
         String novaComida = "{\n" +
                 "      \"nome\": \"Lasanha de carne\",\n" +
                 "      \"valor\": 20.99,\n" +

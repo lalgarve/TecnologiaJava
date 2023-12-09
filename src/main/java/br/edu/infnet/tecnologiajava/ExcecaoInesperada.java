@@ -1,6 +1,6 @@
 package br.edu.infnet.tecnologiajava;
 
-public class ExcecaoInesperada extends RuntimeException{
+public class ExcecaoInesperada extends RuntimeException {
     public ExcecaoInesperada() {
     }
 

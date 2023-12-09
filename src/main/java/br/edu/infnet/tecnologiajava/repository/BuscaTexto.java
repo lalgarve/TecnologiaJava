@@ -15,7 +15,7 @@ public interface BuscaTexto<T> {
     /**
      * @see <a href="https://https://www.baeldung.com/java-remove-accents-from-text/">Remove Accents and Diacritics From a String in Java</a>
      */
-    default String normalizaTexto(String texto){
+    default String normalizaTexto(String texto) {
         Objects.requireNonNull(texto, "Texto não pode ser null");
         String normalized = Normalizer.normalize(texto.toLowerCase(), Normalizer.Form.NFKD);
         return normalized.replaceAll("\\p{M}", "");

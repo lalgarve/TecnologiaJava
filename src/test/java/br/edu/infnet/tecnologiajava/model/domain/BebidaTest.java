@@ -113,7 +113,7 @@ class BebidaTest {
     }
 
     void testValidacao1Erro(String mensagem, int codigo, String nome, String marca,
-                                    float tamanho, boolean gelada, float valor) {
+                            float tamanho, boolean gelada, float valor) {
         ValidadorException excecao = assertThrows(ValidadorException.class, () -> new Bebida(codigo, nome, marca, tamanho, gelada, valor));
         assertEquals("Há campos da bebida inválidos: " + mensagem + ".", excecao.getMessage());
         assertTrue(excecao.getValidador().temErro());
@@ -124,11 +124,11 @@ class BebidaTest {
 
     @ParameterizedTest
     @ValueSource(floats = {0.1f, 10.f})
-    void testLimiteVolume(float limite){
-        try{
+    void testLimiteVolume(float limite) {
+        try {
             new Bebida(20, "Cerveja1", "Brahma", limite, true, 10.5f);
-        }catch(ValidadorException ex){
-            fail(limite+" é válido", ex);
+        } catch (ValidadorException ex) {
+            fail(limite + " é válido", ex);
         }
     }
 

@@ -3,8 +3,8 @@ package br.edu.infnet.tecnologiajava.model.mapper;
 import br.edu.infnet.tecnologiajava.ValidadorException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ProdutoDesconhecidoTest {
 
@@ -21,7 +21,7 @@ class ProdutoDesconhecidoTest {
     }
 
     @Test
-    void testHashCode()  throws ValidadorException {
+    void testHashCode() throws ValidadorException {
         ProdutoDesconhecido produtoDesconhecido = new ProdutoDesconhecido(2);
         assertEquals(2, produtoDesconhecido.hashCode());
     }

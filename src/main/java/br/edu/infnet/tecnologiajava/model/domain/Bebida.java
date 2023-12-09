@@ -9,7 +9,8 @@ import lombok.Getter;
 
 import java.util.Locale;
 
-@Getter @EqualsAndHashCode(callSuper = true)
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @JsonDeserialize(builder = Bebida.Builder.class)
 public final class Bebida extends Produto {
 
@@ -60,7 +61,7 @@ public final class Bebida extends Produto {
     }
 
     @JsonPOJOBuilder
-    static class Builder{
+    static class Builder {
         private int codigo;
         private String nome;
         private String marca;
@@ -68,32 +69,32 @@ public final class Bebida extends Produto {
         private boolean gelada;
         private float valor;
 
-        Builder withCodigo(int codigo){
+        Builder withCodigo(int codigo) {
             this.codigo = codigo;
             return this;
         }
 
-        Builder withNome(String nome){
+        Builder withNome(String nome) {
             this.nome = nome;
             return this;
         }
 
-        Builder withMarca(String marca){
+        Builder withMarca(String marca) {
             this.marca = marca;
             return this;
         }
 
-        Builder withTamanho(float tamanho){
+        Builder withTamanho(float tamanho) {
             this.tamanho = tamanho;
             return this;
         }
 
-        Builder withGelada(boolean gelada){
+        Builder withGelada(boolean gelada) {
             this.gelada = gelada;
             return this;
         }
 
-        Builder withValor(float valor){
+        Builder withValor(float valor) {
             this.valor = valor;
             return this;
         }

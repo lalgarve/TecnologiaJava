@@ -18,7 +18,7 @@ public class PedidoController {
 
     private final RepositorioPedido repositorioPedido;
 
-    public PedidoController(RepositorioPedido repositorioPedido){
+    public PedidoController(RepositorioPedido repositorioPedido) {
         this.repositorioPedido = repositorioPedido;
     }
 

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +24,7 @@ class SolicitanteControllerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    void adicionaSolicitante() throws Exception{
+    void adicionaSolicitante() throws Exception {
         String novoSolicitante = """
                 {
                       "cpf": "313.053.449-01",
@@ -40,7 +39,7 @@ class SolicitanteControllerIT {
     }
 
     @Test
-    void alteraSolicitante() throws Exception{
+    void alteraSolicitante() throws Exception {
         String novoSolicitante = """
                 {
                       "cpf": "186.033.558-60",
@@ -55,7 +54,7 @@ class SolicitanteControllerIT {
     }
 
     @Test
-    void alteraSolicitanteEmailInvalido() throws Exception{
+    void alteraSolicitanteEmailInvalido() throws Exception {
         String novoSolicitante = """
                 {
                       "cpf": "186.033.558-60",
@@ -71,8 +70,9 @@ class SolicitanteControllerIT {
                 .andExpect(jsonPath("$.detail").value("o email é inválido"))
                 .andExpect(jsonPath("$.instance").value("/solicitante"));
     }
+
     @Test
-    void apagaSolicitante() throws Exception{
+    void apagaSolicitante() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("http://localhost:8080/solicitante/961.584.180-30")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
